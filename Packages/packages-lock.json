@@ -1,10 +1,11 @@
 {
   "dependencies": {
     "com.community.netcode.transport.photon-realtime": {
-      "version": "file:D:/dev/GitHub/multiplayer-community-contributions/Transports/com.community.netcode.transport.photon-realtime",
+      "version": "https://github.com/Unity-Technologies/multiplayer-community-contributions.git?path=/Transports/com.community.netcode.transport.photon-realtime",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "095d1c78b77f405b44c9ff4ae20c3a01f6d3cddc"
     },
     "com.unity.burst": {
       "version": "1.6.6",
