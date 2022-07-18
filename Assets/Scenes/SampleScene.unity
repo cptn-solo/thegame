@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 585728679}
   - component: {fileID: 585728678}
+  - component: {fileID: 585728680}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -156,7 +157,7 @@ MonoBehaviour:
   LogLevel: 1
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 0}
+    NetworkTransport: {fileID: 585728680}
     PlayerPrefab: {fileID: 1006748556684010500, guid: 7fff6d320e3cf8746aee1a0ee912da01, type: 3}
     NetworkPrefabs:
     - Override: 0
@@ -194,6 +195,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &585728680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585728676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c005b32a68a254cbe502a4e5cb8eb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NickName: 
+  m_RoomName: 
+  m_MaxPlayers: 16
+  m_NetworkDeliveryEventCodesStartRange: 0
+  m_AttachSupportLogger: 0
+  m_BatchMode: 1
+  m_SendQueueBatchSize: 4096
+  m_BatchedTransportEventCode: 129
+  m_KickEventCode: 130
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
