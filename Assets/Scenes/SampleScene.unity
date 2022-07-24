@@ -207,8 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c005b32a68a254cbe502a4e5cb8eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NickName: 
-  m_RoomName: 
+  m_NickName: mark2
+  m_RoomName: 111
   m_MaxPlayers: 16
   m_NetworkDeliveryEventCodesStartRange: 0
   m_AttachSupportLogger: 0
