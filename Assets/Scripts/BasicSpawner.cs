@@ -1,3 +1,4 @@
+using Cinemachine;
 using Fusion;
 using Fusion.Sockets;
 using System;
@@ -10,6 +11,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
 
