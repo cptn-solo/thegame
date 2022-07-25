@@ -56,6 +56,15 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             // Keep track of the player avatars so we can remove it when they disconnect
             _spawnedCharacters.Add(player, networkPlayerObject);
         }
+        foreach (var playerNetworkObject in _spawnedCharacters)
+        {
+            if (playerNetworkObject.Value.HasInputAuthority)
+            {
+                var playerTransform = playerNetworkObject.Value.transform;
+                _virtualCamera.LookAt = playerTransform;
+                _virtualCamera.Follow = playerTransform;
+            }    
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
