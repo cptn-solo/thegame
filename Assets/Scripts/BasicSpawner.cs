@@ -1,4 +1,3 @@
-using Cinemachine;
 using Fusion;
 using Fusion.Sockets;
 using System;
@@ -11,7 +10,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
 
     [SerializeField] private NetworkPrefabRef _playerPrefab;
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
 
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -55,15 +53,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars so we can remove it when they disconnect
             _spawnedCharacters.Add(player, networkPlayerObject);
-        }
-        foreach (var playerNetworkObject in _spawnedCharacters)
-        {
-            if (playerNetworkObject.Value.HasInputAuthority)
-            {
-                var playerTransform = playerNetworkObject.Value.transform;
-                _virtualCamera.LookAt = playerTransform;
-                _virtualCamera.Follow = playerTransform;
-            }    
         }
     }
 

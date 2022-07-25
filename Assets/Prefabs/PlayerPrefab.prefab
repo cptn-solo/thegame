@@ -255,3 +255,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  cameraPrefab: {fileID: 5009507503877156243, guid: 6146215329893c2429b6234fba7fbd67, type: 3}
