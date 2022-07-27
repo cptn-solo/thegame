@@ -30,6 +30,11 @@ public class Player : NetworkBehaviour
         {
             data.direction.Normalize();
             _cc.Move(5 * data.direction * Runner.DeltaTime);
+            if (data.jumpIfGrounded)
+            {
+                _cc.Jump();
+                data.jumpIfGrounded = false;
+            }
         }
     }
 }

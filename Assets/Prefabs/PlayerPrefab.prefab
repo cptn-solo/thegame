@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793260712208490560}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &793260712208490562
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793260712531019283}
-  - component: {fileID: 793260712531019276}
+  - component: {fileID: 7554545993406497451}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -115,8 +115,8 @@ Transform:
   m_Father: {fileID: 793260713206237695}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &793260712531019276
-BoxCollider:
+--- !u!136 &7554545993406497451
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -125,8 +125,9 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &793260713206237443
 GameObject:
@@ -156,7 +157,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793260713206237443}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.5779843, y: 3.939724, z: 6.654329}
+  m_LocalPosition: {x: -161, y: 3.939724, z: 428}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -235,7 +236,7 @@ MonoBehaviour:
     RotBlendEnd: 0.5
     RotTeleportRadians: 1.5
   gravity: -20
-  jumpImpulse: 8
+  jumpImpulse: 15
   acceleration: 10
   braking: 10
   maxSpeed: 2
@@ -255,4 +256,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  cameraPrefab: {fileID: 5009507503877156243, guid: 6146215329893c2429b6234fba7fbd67, type: 3}
+  cameraPrefab: {fileID: 4494304763496246069, guid: ff9719830d6c86c4ea580c2270388827, type: 3}
