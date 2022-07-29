@@ -13,8 +13,6 @@ namespace Example
 
 		[SerializeField]
 		private PlatformConfiguration _defaultConfiguration;
-		[SerializeField]
-		private PlatformConfiguration _vrConfiguration;
 
 		private PlatformConfiguration _activeConfiguration;
 
@@ -32,7 +30,6 @@ namespace Example
 			_activeConfiguration = _defaultConfiguration;
 
 			_defaultConfiguration.SetActive(false);
-			_vrConfiguration.SetActive(false);
 
 			_activeConfiguration.SetActive(true);
 
