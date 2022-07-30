@@ -11,23 +11,14 @@ namespace Example
 		// PUBLIC MEMBERS
 
 		public Transform Root      => _root;
-		public Transform Head      => _head;
 		public Transform Body      => _body;
-		public Transform LeftHand  => _leftHand;
-		public Transform RightHand => _rightHand;
 
 		// PRIVATE MEMBERS
 
 		[SerializeField]
 		private Transform _root;
 		[SerializeField]
-		private Transform _head;
-		[SerializeField]
 		private Transform _body;
-		[SerializeField]
-		private Transform _leftHand;
-		[SerializeField]
-		private Transform _rightHand;
 
 		// PUBLIC METHODS
 
@@ -38,10 +29,7 @@ namespace Example
 
 		public void SetVisibility(bool headVisible, bool bodyVisible, bool handsVisible)
 		{
-			_head.gameObject.SetActive(headVisible);
 			_body.gameObject.SetActive(bodyVisible);
-			_leftHand.gameObject.SetActive(handsVisible);
-			_rightHand.gameObject.SetActive(handsVisible);
 		}
 	}
 }
