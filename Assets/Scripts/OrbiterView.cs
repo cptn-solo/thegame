@@ -1,35 +1,23 @@
 using Fusion;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OrbiterView : NetworkBehaviour
 {
-    [SerializeField] private float satMoveSpeed = 10;
-    
-    [HideInInspector] public Transform AnchorTransform;
+    private NetworkTransform nt;
+    [Networked, HideInInspector] public NetworkId anchor { get; set; }
 
-    public override void FixedUpdateNetwork()
+
+    private void Awake()
     {
-        Debug.LogFormat("FUN satellite: {0}", AnchorTransform);
-
-        if (!AnchorTransform)
-            return;
-
-        var distance = AnchorTransform.position - transform.position;
-        transform.position += distance * Runner.DeltaTime * satMoveSpeed;
-
+        Debug.Log("ORBITER AWAKE");
+        nt = GetComponent<NetworkTransform>();
     }
 
-    private void Update()
+    public override void Spawned()
     {
-        if (!AnchorTransform)
-            return;
-
-        var distance = (AnchorTransform.position - transform.position) * Time.deltaTime * satMoveSpeed;
-        transform.position += distance;
-
+        nt.InterpolationDataSource = InterpolationDataSources.Snapshots;
+        var no = Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<PlayerSatelliteVisual>(anchor);
+        if (no)
+            transform.parent = no.AnchorPosition;
     }
-
-
 }

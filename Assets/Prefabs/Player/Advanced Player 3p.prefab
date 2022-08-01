@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d05145175356547a48ff7e0eb189b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
+  _interpolationDataSource: 2
   anchorPosition: {fileID: 5047064179038836996}
   satellitePrefab: {fileID: 1903298581982997785, guid: 9d62518104bc4ea48b64114787fe7492, type: 3}
 --- !u!114 &1486246238600804433
