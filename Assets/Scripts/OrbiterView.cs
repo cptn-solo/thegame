@@ -15,9 +15,8 @@ public class OrbiterView : NetworkBehaviour
 
     public override void Spawned()
     {
-        nt.InterpolationDataSource = InterpolationDataSources.Snapshots;
         var no = Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<PlayerSatelliteVisual>(anchor);
         if (no)
-            transform.parent = no.AnchorPosition;
+            nt.transform.parent = no.AnchorPosition;
     }
 }
