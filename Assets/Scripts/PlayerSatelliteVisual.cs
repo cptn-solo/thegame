@@ -1,20 +1,22 @@
 using Fusion;
-using System;
 using UnityEngine;
 
-public class PlayerSatelliteVisual : NetworkBehaviour
+namespace Assets.Scripts
 {
-
-    [SerializeField] private NetworkTransformAnchor anchorPosition;
-    [SerializeField] private GameObject satellitePrefab;
-
-    public NetworkTransformAnchor AnchorPosition => anchorPosition;
-
-    
-
-    public override void Spawned()
+    public class PlayerSatelliteVisual : NetworkBehaviour
     {
-        Runner.Spawn(satellitePrefab, anchorPosition.transform.position, Quaternion.identity, Object.InputAuthority, 
-            (runner, obj) => obj.GetComponent<OrbiterView>().InitSatelliteForAnchorRef(Object.Id));
+
+        [SerializeField] private NetworkTransformAnchor anchorPosition;
+        [SerializeField] private GameObject satellitePrefab;
+
+        public NetworkTransformAnchor AnchorPosition => anchorPosition;
+
+
+
+        public override void Spawned()
+        {
+            Runner.Spawn(satellitePrefab, anchorPosition.transform.position, Quaternion.identity, Object.InputAuthority,
+                (runner, obj) => obj.GetComponent<OrbiterView>().InitSatelliteForAnchorRef(Object.Id));
+        }
     }
 }
