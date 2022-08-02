@@ -5,6 +5,11 @@ namespace Assets.Scripts
 {
     public class OrbiterView : NetworkBehaviour
     {
+        private NetworkTransformAnchor playerSatAnchorNTA;
+        private NetworkTransformAnchor orbiterNTA;
+        
+        [SerializeField] private NetworkMecanimAnimator networkAnimator;
+
         [Networked(OnChanged = nameof(AnchorRefChanged))]
         private NetworkId AnchorRef { get; set; }
 
@@ -18,12 +23,22 @@ namespace Assets.Scripts
             changed.Behaviour.AttachSatellite(changed.Behaviour.AnchorRef);
         }
 
+        private void Start()
+        {
+            networkAnimator.Animator.StartPlayback();
+        }
+
+        private void Awake()
+        {
+            networkAnimator = GetComponent<NetworkMecanimAnimator>();
+        }
+
         private void AttachSatellite(NetworkId curAncorRef)
         {
-            var playerSatAnchorNTA =
+            playerSatAnchorNTA =
                 Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<NetworkTransformAnchor>(
                     curAncorRef);
-            var orbiterNTA = 
+            orbiterNTA = 
                 Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<NetworkTransformAnchor>(
                     Object.Id);
 
@@ -35,7 +50,10 @@ namespace Assets.Scripts
                 orbiterNTA.transform.SetPositionAndRotation(
                     playerSatAnchorNTA.transform.position,
                     playerSatAnchorNTA.transform.rotation);
+                
+                
             }
         }
+
     }
 }
