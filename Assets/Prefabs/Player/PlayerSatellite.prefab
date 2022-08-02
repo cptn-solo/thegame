@@ -169,7 +169,7 @@ SphereCollider:
   m_GameObject: {fileID: 1903298581982997785}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _interpolationTarget: {fileID: 7647263061604281563}
+  _interpolationTarget: {fileID: 0}
   DetachInterpTarget: 0
   SyncParent: 1
 --- !u!1 &5379059108256193706
