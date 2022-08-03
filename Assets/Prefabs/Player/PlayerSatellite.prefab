@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4784571236687306151}
   - component: {fileID: 2830400040800684610}
   - component: {fileID: 2485590401234311836}
-  - component: {fileID: 8091562350915314831}
+  - component: {fileID: 866281050510612974}
   m_Layer: 0
   m_Name: PlayerSatellite
   m_TagString: Untagged
@@ -145,7 +145,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 2830400040800684610}
-  - {fileID: 8091562350915314831}
+  - {fileID: 866281050510612974}
   - {fileID: 1978924681586775339}
   SimulationBehaviours: []
 --- !u!114 &2830400040800684610
@@ -175,7 +175,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8091562350915314831
+--- !u!114 &866281050510612974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

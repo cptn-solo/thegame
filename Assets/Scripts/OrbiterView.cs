@@ -5,10 +5,13 @@ namespace Assets.Scripts
 {
     public class OrbiterView : NetworkBehaviour
     {
+
+        [SerializeField] private NetworkMecanimAnimator networkAnimator;
+
+
         private NetworkTransformAnchor playerSatAnchorNTA;
         private NetworkTransformAnchor orbiterNTA;
         
-        [SerializeField] private NetworkMecanimAnimator networkAnimator;
 
         [Networked(OnChanged = nameof(AnchorRefChanged))]
         private NetworkId AnchorRef { get; set; }
@@ -25,13 +28,10 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            networkAnimator.Animator.StartPlayback();
+            networkAnimator.Animator.SetBool("test_bool_param", false);
+            //networkAnimator.Animator.StartPlayback();
         }
 
-        private void Awake()
-        {
-            networkAnimator = GetComponent<NetworkMecanimAnimator>();
-        }
 
         private void AttachSatellite(NetworkId curAncorRef)
         {
