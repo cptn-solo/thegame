@@ -18,5 +18,6 @@ namespace Assets.Scripts
             Runner.Spawn(satellitePrefab, anchorPosition.transform.position, Quaternion.identity, Object.InputAuthority,
                 (runner, obj) => obj.GetComponent<OrbiterView>().InitSatelliteForAnchorRef(Object.Id));
         }
+
     }
 }
