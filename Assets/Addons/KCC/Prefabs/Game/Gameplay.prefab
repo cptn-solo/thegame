@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 3427936558554746844}
   - component: {fileID: 8078923082400924388}
   - component: {fileID: 7546868333647497775}
-  - component: {fileID: 3885882155170737607}
+  - component: {fileID: 6081164069038783889}
+  - component: {fileID: -8174194444972686084}
   m_Layer: 0
   m_Name: Gameplay
   m_TagString: Untagged
@@ -49,7 +50,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultPlayer: {fileID: 1232840754541928463, guid: a55dd0d7ef8a38947bf585426aaf3553, type: 3}
-  _vrPlayer: {fileID: 0}
 --- !u!114 &3427936558554746844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
   OnReliableData:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3885882155170737607
+--- !u!114 &6081164069038783889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,8 +143,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4753164738901776644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90a93abf1a391964a94e5c139605105b, type: 3}
+  m_Script: {fileID: 11500000, guid: 0faeb797befd69841b7d1c74acb0521a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowHierarchyWindowOverlay: 1
-  PostLoadDelayFrames: 1
+  _dummyScreen: {fileID: 0}
+  _lobbyScreen: {fileID: 0}
+  fader: {fileID: 0}
+--- !u!114 &-8174194444972686084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753164738901776644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717a02054ef2699498e6bd4234fd7995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 0

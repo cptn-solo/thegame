@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace FreeTeam.BP.Services
+namespace Assets.Scripts.Services
 {
     public class AsyncCoroutineRunnerService : MonoBehaviour
     {

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
-
+using Assets.Scripts.Services.Scenes;
 #if UNITY_EDITOR
 using UnityEditor;
 using Fusion.Editor;
@@ -21,7 +21,6 @@ using Fusion.Editor;
 [AddComponentMenu("Fusion/Prototyping/Network Debug Start")]
 [ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class NetworkDebugStart : Fusion.Behaviour {
-
   /// <summary>
   /// Selection for how <see cref="NetworkDebugStart"/> will behave at startup.
   /// </summary>
@@ -130,10 +129,10 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [MultiPropertyDrawersFix]
   protected Stage _currentStage;
 
-  /// <summary>
-  /// Indicates which step of the startup process <see cref="NetworkDebugStart"/> is currently in.
-  /// </summary>
-  public Stage CurrentStage {
+    /// <summary>
+    /// Indicates which step of the startup process <see cref="NetworkDebugStart"/> is currently in.
+    /// </summary>
+    public Stage CurrentStage {
     get => _currentStage;
     internal set {
       _currentStage = value;
@@ -241,7 +240,8 @@ public class NetworkDebugStart : Fusion.Behaviour {
       sceneRef = default;
       return false;
     } else {
-      sceneRef = activeScene.buildIndex;
+            sceneRef = 1;
+        //sceneRef = activeScene.buildIndex;
       return true;
     }
   }
@@ -570,8 +570,8 @@ public class NetworkDebugStart : Fusion.Behaviour {
     
     var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
     if (sceneManager == null) {
-      Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerDefault)}.", runner);
-      sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
+      Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerCustom)}.", runner);
+      sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerCustom>();
     }
 
     return runner.StartGame(new StartGameArgs {
