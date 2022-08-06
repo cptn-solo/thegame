@@ -5,28 +5,31 @@ namespace Assets.Scripts.UI
 {
 	public class UIScreen : MonoBehaviour
 	{
-		public bool isModal = false;
 		[SerializeField] private UIScreen previousScreen = null;
 
-		public static UIScreen activeScreen;
+        public static UIScreen ActiveScreen { get; set; }
 
-		// Class Methods
+        // Class Methods
 
-		public static void Focus(UIScreen screen)
+        public static void Focus(UIScreen screen)
 		{
-			if (screen == activeScreen)
+			if (screen == ActiveScreen)
 				return;
 
-			if (activeScreen)
-				activeScreen.Defocus();
-			screen.previousScreen = activeScreen;
-			activeScreen = screen;
+			if (ActiveScreen)
+				ActiveScreen.Defocus();
+
+			if (!screen)
+				return;
+
+			screen.previousScreen = ActiveScreen;
+			ActiveScreen = screen;
 			screen.Focus();
 		}
 
 		public static void BackToInitial()
 		{
-			activeScreen?.BackTo(null);
+			ActiveScreen?.BackTo(null);
 		}
 
 		// Instance Methods
@@ -53,16 +56,16 @@ namespace Assets.Scripts.UI
 			if (previousScreen)
 			{
 				Defocus();
-				activeScreen = previousScreen;
-				activeScreen.Focus();
+				ActiveScreen = previousScreen;
+				ActiveScreen.Focus();
 				previousScreen = null;
 			}
 		}
 
 		public void BackTo(UIScreen screen)
 		{
-			while (activeScreen != null && activeScreen.previousScreen != null && activeScreen != screen)
-				activeScreen.Back();
+			while (ActiveScreen != null && ActiveScreen.previousScreen != null && ActiveScreen != screen)
+				ActiveScreen.Back();
 		}
-	}
+    }
 }

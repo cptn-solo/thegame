@@ -593,20 +593,6 @@ namespace Example
 					moveDirection.Normalize();
 				}
 
-				// Camera smoothness testing => side walk + rotation with constant speed. You can safely remove it.
-				if (keyboard.qKey.isPressed == true)
-				{
-					moveDirection = Vector2.left;
-					lookRotationDelta = new Vector2(0.0f, 60.0f * Time.deltaTime);
-				}
-
-				// Camera smoothness testing => side walk + rotation with constant speed. You can safely remove it.
-				if (keyboard.eKey.isPressed == true)
-				{
-					moveDirection = Vector2.right;
-					lookRotationDelta = new Vector2(0.0f, -60.0f * Time.deltaTime);
-				}
-
 				_renderInput.Jump   = keyboard.spaceKey.isPressed;
 				_renderInput.Dash   = keyboard.tabKey.isPressed;
 				_renderInput.Sprint = keyboard.leftShiftKey.isPressed;

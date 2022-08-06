@@ -87,7 +87,7 @@ namespace Assets.Scripts.Services.Scenes
 				//{
 				//	player.IsReady = false;
 				//}
-				UIScreen.activeScreen.BackTo(_lobbyScreen);
+				UIScreen.ActiveScreen.BackTo(_lobbyScreen);
 			}
 			else
 			{

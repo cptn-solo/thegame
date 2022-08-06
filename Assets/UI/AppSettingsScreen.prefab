@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7397878564943118947}
   - component: {fileID: 4866315055915066183}
   - component: {fileID: 158002368807691822}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 1864630599400368225}
   - component: {fileID: 4189198260840969521}
   - component: {fileID: 7898022077511664329}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3938719972789053633}
   - component: {fileID: 2048344994561619527}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 3081577433404978409}
   - component: {fileID: 4440656389527674041}
   - component: {fileID: 6816724380546263155}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +410,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4440656389527674041}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 781701846}
+        m_TargetAssemblyTypeName: Assets.Scripts.UI.UIScreen, Assembly-CSharp
+        m_MethodName: Back
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1387890480597510028
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +435,7 @@ GameObject:
   - component: {fileID: 4273929311815686577}
   - component: {fileID: 8566373239863732986}
   - component: {fileID: 934163260351920759}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -528,7 +540,7 @@ GameObject:
   - component: {fileID: 4941474475986161394}
   - component: {fileID: 3822884918362353111}
   - component: {fileID: 8197511728615382696}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -603,7 +615,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4247268194936931257}
   - component: {fileID: 439721346695147567}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Music
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +703,7 @@ GameObject:
   - component: {fileID: 820473446035386031}
   - component: {fileID: 2185772160225120233}
   - component: {fileID: 7932203458262479743}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -826,7 +838,7 @@ GameObject:
   - component: {fileID: 7882630715240486292}
   - component: {fileID: 3385545875544349778}
   - component: {fileID: 1902461454449738481}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -904,7 +916,7 @@ GameObject:
   - component: {fileID: 383567722555014072}
   - component: {fileID: 4248851886633467906}
   - component: {fileID: 2192524867887906318}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Footer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -999,8 +1011,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 858405299497516847}
-  - component: {fileID: 5369103040639904118}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1028,54 +1039,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5369103040639904118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4211605006568124012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  toggleTransition: 1
-  graphic: {fileID: 0}
-  m_Group: {fileID: 0}
-  onValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_IsOn: 1
 --- !u!1 &4802822858721171199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,7 +1050,8 @@ GameObject:
   - component: {fileID: 8004468250864972350}
   - component: {fileID: 2216635923807369163}
   - component: {fileID: 781701846}
-  m_Layer: 0
+  - component: {fileID: 3850498305779641265}
+  m_Layer: 5
   m_Name: AppSettingsScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1148,8 +1112,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ba7713120c33b42897e4af044262bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isModal: 0
   previousScreen: {fileID: 0}
+--- !u!114 &3850498305779641265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4802822858721171199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &5717589326449815367
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,7 +1141,7 @@ GameObject:
   - component: {fileID: 6474958998335409097}
   - component: {fileID: 4609946006392873176}
   - component: {fileID: 7277558283254384102}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1297,7 +1277,7 @@ GameObject:
   - component: {fileID: 4858862778142788981}
   - component: {fileID: 4503657472127014822}
   - component: {fileID: 4240652324497791705}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1393,7 +1373,7 @@ GameObject:
   - component: {fileID: 4933548630127396396}
   - component: {fileID: 196788355470803062}
   - component: {fileID: 625753084162163330}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1528,7 +1508,7 @@ GameObject:
   - component: {fileID: 8660523204698239991}
   - component: {fileID: 1037995609975037269}
   - component: {fileID: 31373916400689880}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

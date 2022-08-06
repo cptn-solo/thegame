@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Services.App;
-using Assets.Scripts.Services.Scenes;
 using Assets.Scripts.UI;
 using UnityEngine;
 using Zenject;
@@ -12,7 +11,7 @@ namespace Assets.Scripts.Global.Installers
         [SerializeField] private ApplicationService applicationService = null;
         [SerializeField] private MainSceneCamera mainCamera = null;
 
-        [SerializeField] private UIScreen mainMenu = null;
+        [SerializeField] private MainMenuScreen mainMenu = null;
 
         #endregion
 
@@ -21,12 +20,17 @@ namespace Assets.Scripts.Global.Installers
         {
             BindApplicationService();
             BindMainSceneCamera();
-
+            BindMainMenuScreen();
         }
-
         #endregion
 
         #region Private methods
+
+        private void BindMainMenuScreen()
+        {
+            Container.Bind<MainMenuScreen>().FromInstance(mainMenu).AsSingle();
+        }
+
         private void BindMainSceneCamera()
         {
             Container.Bind<MainSceneCamera>().FromInstance(mainCamera).AsSingle();
