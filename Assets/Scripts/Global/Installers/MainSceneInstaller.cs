@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Services.App;
 using Assets.Scripts.Services.Scenes;
+using Assets.Scripts.UI;
 using UnityEngine;
 using Zenject;
 
@@ -10,6 +11,9 @@ namespace Assets.Scripts.Global.Installers
         #region SerializeFields
         [SerializeField] private ApplicationService applicationService = null;
         [SerializeField] private MainSceneCamera mainCamera = null;
+
+        [SerializeField] private UIScreen mainMenu = null;
+
         #endregion
 
         #region Public
