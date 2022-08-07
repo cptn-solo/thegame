@@ -19,9 +19,6 @@ namespace Assets.Scripts.UI
 			if (ActiveScreen)
 				ActiveScreen.Defocus();
 
-			if (!screen)
-				return;
-
 			screen.previousScreen = ActiveScreen;
 			ActiveScreen = screen;
 			screen.Focus();
@@ -48,7 +45,10 @@ namespace Assets.Scripts.UI
 		private void Defocus()
 		{
 			if (gameObject)
+            {
 				gameObject.SetActive(false);
+				ActiveScreen = null;
+			}
 		}
 
 		public void Back()
@@ -59,6 +59,10 @@ namespace Assets.Scripts.UI
 				ActiveScreen = previousScreen;
 				ActiveScreen.Focus();
 				previousScreen = null;
+			}
+			else
+            {
+				Defocus();
 			}
 		}
 

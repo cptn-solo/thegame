@@ -13,13 +13,17 @@ namespace Assets.Scripts.UI
 			Keyboard keyboard = Keyboard.current;
 			if (keyboard != null)
             {
-				if (Cursor.lockState == CursorLockMode.Locked && keyboard.eKey.isPressed)
+				if (keyboard.eKey.isPressed)
                 {
                     UIScreen.Focus(mainMenuScreen);
 
                     mainMenuScreen.OnCloseButtonPressed += MainMenuScreen_OnCloseButtonPressed;
 
                     ToggleCursorLockState();
+                }
+                else if (keyboard.escapeKey.isPressed && UIScreen.ActiveScreen != null)
+                {
+                    UIScreen.ActiveScreen.Back();
                 }
 
             }
@@ -29,7 +33,7 @@ namespace Assets.Scripts.UI
         {
             mainMenuScreen.OnCloseButtonPressed -= MainMenuScreen_OnCloseButtonPressed;
 
-            UIScreen.Focus(null);
+            UIScreen.BackToInitial();
             ToggleCursorLockState();
         }
 
