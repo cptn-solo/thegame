@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a65e5d6f25283934aba9b7365eabeb6e, type: 2}
+  m_Motion: {fileID: 7400000, guid: b09f7596dd646ce4dbdc2a2152272a20, type: 2}
   m_Tag: 
   m_SpeedParameter: motion_speed_multiplier_float
   m_MirrorParameter: 
@@ -32,7 +32,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IslandHover
+  m_Name: IslandRotation
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: motion_speed_multiplier_float
@@ -65,7 +65,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -8442358824431132618}
-    m_Position: {x: 480, y: 110, z: 0}
+    m_Position: {x: 240, y: 60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

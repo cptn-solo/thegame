@@ -45,7 +45,7 @@
         "MaxPrediction": 60,
         "DefaultPlayers": 10,
         "ReplicationMode": 0,
-        "ObjectInterest": false,
+        "ObjectInterest": true,
         "SimulationCulling": false,
         "ServerPacketInterval": 1,
         "ClientPacketInterval": 1

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
@@ -16,7 +14,8 @@ namespace Assets.Scripts.Views
         // Start is called before the first frame update
         void Start()
         {
-            animator.SetFloat("motion_speed_multiplier_float", animationMultiplier);
+            if (animator)
+                animator.SetFloat("motion_speed_multiplier_float", animationMultiplier);
         }
 
         // Update is called once per frame
