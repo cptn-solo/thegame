@@ -17,9 +17,11 @@ namespace Assets.Scripts.UI
 				return;
 
 			if (ActiveScreen)
+            {
+				screen.previousScreen = ActiveScreen;
 				ActiveScreen.Defocus();
+			}
 
-			screen.previousScreen = ActiveScreen;
 			ActiveScreen = screen;
 			screen.Focus();
 		}

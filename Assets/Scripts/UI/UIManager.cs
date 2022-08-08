@@ -23,7 +23,7 @@ namespace Assets.Scripts.UI
                 }
                 else if (keyboard.escapeKey.isPressed && UIScreen.ActiveScreen != null)
                 {
-                    UIScreen.ActiveScreen.Back();
+                    MainMenuScreen_OnCloseButtonPressed();
                 }
 
             }
@@ -34,6 +34,8 @@ namespace Assets.Scripts.UI
             mainMenuScreen.OnCloseButtonPressed -= MainMenuScreen_OnCloseButtonPressed;
 
             UIScreen.BackToInitial();
+            if (UIScreen.ActiveScreen)
+                UIScreen.ActiveScreen.Back();
             ToggleCursorLockState();
         }
 
