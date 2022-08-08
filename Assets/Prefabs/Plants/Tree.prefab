@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2524426474089723083}
   - component: {fileID: 5895713675745942208}
   - component: {fileID: 1572748735384846063}
+  - component: {fileID: 5536374140397749802}
   m_Layer: 0
   m_Name: leeves
   m_TagString: Untagged
@@ -83,6 +84,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5536374140397749802
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386227507927329042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: e58713742345b3b4086337eb27a84beb, type: 2}
 --- !u!1 &387855115416055895
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +174,7 @@ GameObject:
   - component: {fileID: 7878002032051562747}
   - component: {fileID: 8752669984774554024}
   - component: {fileID: 3294430289723440468}
+  - component: {fileID: 5906941956026644583}
   m_Layer: 0
   m_Name: trunk
   m_TagString: Untagged
@@ -231,3 +247,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5906941956026644583
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941672824894147613}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: ccd189bcca304ba49b0c92faa018cd90, type: 2}
