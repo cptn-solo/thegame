@@ -19,7 +19,7 @@ namespace Assets.Scripts.UI
 			Keyboard keyboard = Keyboard.current;
 			if (keyboard != null)
             {
-				if (keyboard.eKey.isPressed)
+				if (keyboard.eKey.isPressed && UIScreen.ActiveScreen == null)
                 {
                     ToggleHUD(false);
 
