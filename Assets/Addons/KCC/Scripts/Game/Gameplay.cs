@@ -1,17 +1,17 @@
 namespace Example
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using Fusion;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Fusion;
 
-	/// <summary>
-	/// Main entry point for gameplay logic and spawning players.
-	/// </summary>
-	[RequireComponent(typeof(NetworkRunner))]
+    /// <summary>
+    /// Main entry point for gameplay logic and spawning players.
+    /// </summary>
+    [RequireComponent(typeof(NetworkRunner))]
 	[RequireComponent(typeof(NetworkEvents))]
-	public sealed class Gameplay : MonoBehaviour
+	public sealed class NetworkGameplayCustom : MonoBehaviour
 	{
 		// PRIVATE MEMBERS
 

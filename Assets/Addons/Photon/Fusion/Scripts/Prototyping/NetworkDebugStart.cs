@@ -240,8 +240,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
       sceneRef = default;
       return false;
     } else {
-            sceneRef = 1;
-        //sceneRef = activeScene.buildIndex;
+        sceneRef = activeScene.buildIndex;
       return true;
     }
   }

@@ -1,8 +1,9 @@
-﻿using Example;
+﻿using Assets.Scripts.Views;
 using Fusion;
 using Fusion.KCC;
 using System.Collections.Generic;
 using UnityEngine;
+using Example;
 
 namespace Assets.Scripts
 {
@@ -19,7 +20,7 @@ namespace Assets.Scripts
         {
             if (transform.position.y < fallFromIslandY)
             {
-                List<SpawnPoint> spawnPoints = Runner.SimulationUnityScene.GetComponents<SpawnPoint>();
+                List<PlayerSpawnPoint> spawnPoints = Runner.SimulationUnityScene.GetComponents<PlayerSpawnPoint>();
                 Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].transform;
 
                 transform.position = spawnPoint.position;

@@ -1,14 +1,14 @@
 namespace Example
 {
-	using UnityEngine;
-	using Fusion;
-	using Fusion.KCC;
+    using UnityEngine;
+    using Fusion;
+    using Fusion.KCC;
 
-	/// <summary>
-	/// Base class for Simple and Advanced player implementations.
-	/// Provides references to components and basic setup.
-	/// </summary>
-	[RequireComponent(typeof(KCC))]
+    /// <summary>
+    /// Base class for Simple and Advanced player implementations.
+    /// Provides references to components and basic setup.
+    /// </summary>
+    [RequireComponent(typeof(KCC))]
 	[RequireComponent(typeof(PlayerVisual))]
 	[OrderBefore(typeof(KCC))]
 	[OrderAfter(typeof(BeforeHitboxManagerUpdater))]

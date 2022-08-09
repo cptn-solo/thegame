@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8953277532788236660}
-  - component: {fileID: 3140406705547281127}
+  - component: {fileID: 6343877500311786099}
   - component: {fileID: 3427936558554746844}
   - component: {fileID: 8078923082400924388}
   - component: {fileID: 7546868333647497775}
@@ -37,7 +37,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3140406705547281127
+--- !u!114 &6343877500311786099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4753164738901776644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e21c15b0eff88dc49ba8df1269231c3b, type: 3}
+  m_Script: {fileID: 11500000, guid: 56864fd5c35d99743ac05d7a05d1972d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultPlayer: {fileID: 1232840754541928463, guid: a55dd0d7ef8a38947bf585426aaf3553, type: 3}
@@ -147,9 +147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowHierarchyWindowOverlay: 1
-  _dummyScreen: {fileID: 0}
-  _lobbyScreen: {fileID: 0}
-  fader: {fileID: 0}
 --- !u!114 &-8174194444972686084
 MonoBehaviour:
   m_ObjectHideFlags: 0
