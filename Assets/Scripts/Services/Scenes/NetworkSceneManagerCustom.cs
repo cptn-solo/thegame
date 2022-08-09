@@ -11,7 +11,8 @@ namespace Assets.Scripts.Services.Scenes
     public class NetworkSceneManagerCustom : NetworkSceneManagerBase, INetworkSceneManager
 	{
 		#region Inject
-		[Inject] private MainSceneCamera mainCamera;
+		[Inject] private readonly MainSceneCamera mainCamera;
+		[Inject] private readonly UIManager uiManager;
         #endregion
 
         public const int LOBBY_SCENE = 0;
@@ -50,6 +51,8 @@ namespace Assets.Scripts.Services.Scenes
 				Debug.Log($"Loaded scene {newScene}: {loadedScene}");
 				SceneManager.SetActiveScene(loadedScene);
 				sceneObjects = FindNetworkObjects(loadedScene, disable: false);
+
+				uiManager.ToggleHUD(true);
 			}
 
 			finished(sceneObjects);

@@ -6,7 +6,13 @@ namespace Assets.Scripts.UI
 {
     public class UIManager : MonoBehaviour
     {
-        [Inject] private readonly MainMenuScreen mainMenuScreen;
+        [SerializeField] private HUDScreen hudScreen;
+        [SerializeField] private MainMenuScreen mainMenuScreen;
+
+        public void ToggleHUD(bool toggle)
+        {
+            hudScreen.gameObject.SetActive(toggle);
+        }
 
 		private void Update()
 		{
@@ -15,6 +21,8 @@ namespace Assets.Scripts.UI
             {
 				if (keyboard.eKey.isPressed)
                 {
+                    ToggleHUD(false);
+
                     UIScreen.Focus(mainMenuScreen);
 
                     mainMenuScreen.OnCloseButtonPressed += MainMenuScreen_OnCloseButtonPressed;
@@ -37,6 +45,8 @@ namespace Assets.Scripts.UI
             if (UIScreen.ActiveScreen)
                 UIScreen.ActiveScreen.Back();
             ToggleCursorLockState();
+
+            ToggleHUD(true);
         }
 
         private static void ToggleCursorLockState()
