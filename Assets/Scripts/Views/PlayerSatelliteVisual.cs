@@ -11,8 +11,6 @@ namespace Assets.Scripts
 
         public NetworkTransformAnchor AnchorPosition => anchorPosition;
 
-
-
         public override void Spawned()
         {
             Runner.Spawn(satellitePrefab, anchorPosition.transform.position, Quaternion.identity, Object.InputAuthority,
