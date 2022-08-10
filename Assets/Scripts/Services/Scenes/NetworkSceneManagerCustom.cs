@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.UI;
+using Assets.Scripts.Views;
+using Example;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,6 +42,16 @@ namespace Assets.Scripts.Services.Scenes
 
 			// Delay one frame, so we're sure level objects has spawned locally
 			yield return null;
+		}
+
+		public void SpawnCollectables()
+        {
+			List<CollectableSpawnPoint> spawnPoints = Runner.SimulationUnityScene.GetComponents<CollectableSpawnPoint>();
+			foreach (var point in spawnPoints)
+			{
+				Runner.Spawn(point.Prefab, point.transform.position, point.transform.rotation);
+			}
+
 		}
 	}
 }

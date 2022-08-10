@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
-    public class Collector : MonoBehaviour
+    public class Collector : NetworkBehaviour
     {
         [Networked, Capacity(5)] public NetworkDictionary<CollectableType, int> Collected => default;
 

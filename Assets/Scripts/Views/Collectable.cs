@@ -1,27 +1,32 @@
 using Assets.Scripts.Data;
 using Fusion;
+using Fusion.KCC;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
-    public class Collectable : MonoBehaviour
+    public class Collectable : NetworkBehaviour
     {
-        [SerializeField] private CollectableType collectableType;
-        [SerializeField] private string despawnAnimationClipName;
+        private const string animator_collected_bool = "collected_bool";
+        [SerializeField] private CollectableType collectableType = CollectableType.Diamond;
+        [SerializeField] private Animator animator = null;
 
         [Networked] public NetworkBool collected { get; set; }
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<Collector>(out var collector))
+            Debug.Log($"Collectable entered");
+            
+            if (other.gameObject.transform.parent.TryGetComponent<Collector>(out var collector))
             {
                 collected = true;
-
+                Debug.Log($"Collector present");
                 collector.Collect(collectableType, 1);
 
-                if (TryGetComponent<Animator>(out var animator))
+                if (animator != null)
                 {
-                    animator.Play(despawnAnimationClipName, -1, 0.0f);
+                    animator.SetBool(animator_collected_bool, true);
+                    //animator.Play(despawnAnimationClipName, -1, 0.0f);
                 }
             }
         }

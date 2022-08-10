@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5430342776137973287}
   - component: {fileID: 1982770302104992642}
   - component: {fileID: 3139489890380226065}
-  - component: {fileID: 3903662611826300822}
   m_Layer: 0
   m_Name: Collectable
   m_TagString: Untagged
@@ -59,27 +58,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b529aef63cda9a47a54c98e180d55d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   collectableType: 0
---- !u!95 &3903662611826300822
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8822311691232476184}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  animator: {fileID: 6624938817286125243}
+  _collected:
+    _value: 0
 --- !u!1001 &7051783643303456630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -89,7 +72,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4644779896780234734, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
       propertyPath: m_Name
-      value: "\u0430\u0440\u0442\u0435\u0444\u0430\u043A\u04421 Variant"
+      value: CollectableDiamond
       objectReference: {fileID: 0}
     - target: {fileID: 5421843673954796884, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
       propertyPath: m_RootOrder
@@ -137,6 +120,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
+--- !u!1 &2425581373469569176 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4644779896780234734, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
+  m_PrefabInstance: {fileID: 7051783643303456630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8736934311997389966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2425581373469569176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 0
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 1a3556811a200d14ba8ecfca9644ad7b
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 3139489890380226065}
+  SimulationBehaviours: []
 --- !u!4 &3090232151804045858 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5421843673954796884, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}

@@ -247,6 +247,7 @@ MonoBehaviour:
   - {fileID: 3767138139755513678}
   - {fileID: 1486246238600804433}
   - {fileID: 4044730987639160504}
+  - {fileID: 6820769902135793921}
   - {fileID: 4461038489057012441}
   SimulationBehaviours: []
 --- !u!54 &7259546585572370780
@@ -427,6 +428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0330c6a6f0ff61b48b1a7e341f003887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _Collected:
+    _items: []
 --- !u!1 &7173719459643562894
 GameObject:
   m_ObjectHideFlags: 0
