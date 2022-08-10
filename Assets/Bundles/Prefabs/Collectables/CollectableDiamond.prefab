@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  collectableType: 0
+  collectableType: 2
   animator: {fileID: 6624938817286125243}
   _collected:
     _value: 0
