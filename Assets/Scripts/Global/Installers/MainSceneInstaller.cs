@@ -6,11 +6,13 @@ using Zenject;
 
 namespace Assets.Scripts.Global.Installers
 {
+
     public class MainSceneInstaller : MonoInstaller, IInitializable
     {
         #region SerializeFields
         [SerializeField] private ApplicationService applicationService = null;
         [SerializeField] private PlayerPreferencesService playerPreferencesService = null;
+
         [SerializeField] private AudioPlaybackService audioPlaybackService = null;
 
         [SerializeField] private UIManager uiManager = null;

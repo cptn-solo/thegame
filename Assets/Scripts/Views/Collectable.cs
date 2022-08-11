@@ -9,11 +9,19 @@ namespace Assets.Scripts.Views
         private const string animator_collected_bool = "collected_bool";
         private const string anim_collection_state_name = "Collection";
 
-        [SerializeField] private CollectableType collectableType = CollectableType.Diamond;
         [SerializeField] private Animator animator = null;
+        
+        private CollectableType collectableType;
 
         [Networked] public NetworkBool collected { get; set; }
-        
+
+        private void Awake()
+        {
+            var infoComponents = transform.parent.GetComponentsInChildren<CollectableInfo>();
+            if (infoComponents.Length > 0)
+                collectableType = infoComponents[0].CollectableType;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             Debug.Log($"Collectable entered");
