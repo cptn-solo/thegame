@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +7,7 @@ namespace Assets.Scripts.UI
     {
         internal void SetTargetRawImage(ref RawImage rawImage)
         {
-            var texture = new RenderTexture(80, 300, 16, RenderTextureFormat.ARGB32);
+            var texture = new RenderTexture(160, 600, 16, RenderTextureFormat.ARGB32);
             texture.Create();
 
             var camera = GetComponent<Camera>();
