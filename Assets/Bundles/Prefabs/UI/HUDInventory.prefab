@@ -299,10 +299,10 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.01
+  near clip plane: 1.22
   far clip plane: 10.87
-  field of view: 38
-  orthographic: 1
+  field of view: 80
+  orthographic: 0
   orthographic size: 3.5
   m_Depth: 100
   m_CullingMask:
@@ -1922,6 +1922,7 @@ GameObject:
   - component: {fileID: 8322244720022001670}
   - component: {fileID: 4119057226692734351}
   - component: {fileID: 2384568728552031779}
+  - component: {fileID: 8312299332322585493}
   m_Layer: 6
   m_Name: HUDInventoryCanvas
   m_TagString: Untagged
@@ -1961,7 +1962,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1600935161186781482}
-  m_PlaneDistance: 0.08
+  m_PlaneDistance: 3.8
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -2019,6 +2020,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7987627327854406487}
   m_CullTransparentMesh: 1
+--- !u!114 &8312299332322585493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7987627327854406487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a256e3f2fa7d7d84fb3c9c1bc9ed845e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8306811696810710159
 GameObject:
   m_ObjectHideFlags: 0
