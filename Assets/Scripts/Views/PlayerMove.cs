@@ -1,7 +1,6 @@
 using Example;
 using Fusion;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Views
 {

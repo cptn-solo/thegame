@@ -14,8 +14,7 @@ namespace Assets.Scripts.Views
         public void Collect(CollectableType collectableType, int count)
         {
             playerInventory.AddCollectableItem(collectableType, count);
-
-            if (Collected.TryGet(collectableType, out var typeCount))
+            if (Collected.TryGet(collectableType, out _))
             {
                 Collected.Set(collectableType, playerInventory.Collectables[collectableType]);
             }
