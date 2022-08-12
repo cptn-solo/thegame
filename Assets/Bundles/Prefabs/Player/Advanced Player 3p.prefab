@@ -150,6 +150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7522353906890048630}
   - component: {fileID: 8062720584159705700}
+  - component: {fileID: 2837209101406272283}
   m_Layer: 0
   m_Name: Moves
   m_TagString: Untagged
@@ -184,7 +185,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca991102c9687894693bcb526034c301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   animator: {fileID: 3715801328242183250}
+--- !u!114 &2837209101406272283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4042877025801299326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 0
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 3073
+  NetworkGuid:
+    RawGuidValue: 00000000000000000000000000000000
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8062720584159705700}
+  SimulationBehaviours: []
 --- !u!1 &4211192343366178711
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +313,7 @@ MonoBehaviour:
     RawGuidValue: a55dd0d7ef8a38947bf585426aaf3553
   NestedObjects:
   - {fileID: 1370049813681509724}
+  - {fileID: 2837209101406272283}
   NetworkedBehaviours:
   - {fileID: 8919574295905828463}
   - {fileID: 7311504841356540997}
@@ -295,6 +322,7 @@ MonoBehaviour:
   - {fileID: 1486246238600804433}
   - {fileID: 4044730987639160504}
   - {fileID: 6820769902135793921}
+  - {fileID: 284165908874756612}
   - {fileID: 4461038489057012441}
   SimulationBehaviours: []
 --- !u!54 &7259546585572370780
@@ -817,3 +845,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &284165908874756612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769940011521358883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 1
+  Animator: {fileID: 3715801328242183250}
+  SyncSettings: 68
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 00000000657a199826d42a9b1a162c289e35fac7096efccd5b3483e4564855da04122af3105a0b75921547f0a00ff30605116e29c332fcfc662c61d3c7f7909862e90db7a4ca9f6201d4024d
+  TriggerHashes: 00000000

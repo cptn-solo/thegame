@@ -1,18 +1,18 @@
+using Example;
+using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Views
 {
-    public class PlayerMove : MonoBehaviour
+    public class PlayerMove : NetworkBehaviour
     {
         [SerializeField] private Animator animator;
 
-        void Update()
+        public override void FixedUpdateNetwork()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard != null)
-                animator.SetBool("Forward",
-                    keyboard.wKey.isPressed || keyboard.sKey.isPressed || keyboard.aKey.isPressed || keyboard.dKey.isPressed);
+            if (Runner.TryGetInputForPlayer(Object.InputAuthority, out GameplayInput input))
+                animator.SetBool("Forward", input.MoveDirection.magnitude > 0);
         }
     }
 }
