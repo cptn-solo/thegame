@@ -364,7 +364,7 @@ MonoBehaviour:
     ColliderLayer: 0
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 193
+      m_Bits: 129
     RenderBehavior: 1
     Features: -1
     SpawnColliderOnProxy: 1
