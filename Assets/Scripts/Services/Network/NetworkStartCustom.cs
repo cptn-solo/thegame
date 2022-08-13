@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Services.Scenes;
+#if UNITY_EDITOR
 using UnityEditor;
 using Fusion.Editor;
 #endif
