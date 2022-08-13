@@ -4,11 +4,12 @@
 
     public sealed class CollectableSpawnPoint : WaypointGizmo
     {
-        [SerializeField] private GameObject prefab;
+        [SerializeField] private GameObject[] prefabs;
 
-        public GameObject Prefab => prefab;
+        public GameObject[] Prefabs => prefabs;
 
         protected override Color Color => Color.yellow;
+        protected override float Radius => .5f;
     }
 
 }

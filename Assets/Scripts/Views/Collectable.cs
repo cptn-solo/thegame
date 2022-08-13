@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
+
     public class Collectable : NetworkBehaviour
     {
         private const string animator_collected_bool = "collected_bool";

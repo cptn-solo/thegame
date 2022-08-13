@@ -1,3 +1,4 @@
+using Assets.Scripts.Views;
 using Fusion;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Assets.Scripts
         public override void Spawned()
         {
             Runner.Spawn(satellitePrefab, anchorPosition.transform.position, Quaternion.identity, Object.InputAuthority,
-                (runner, obj) => obj.GetComponent<OrbiterView>().InitSatelliteForAnchorRef(Object.Id));
+                (runner, obj) => obj.GetComponent<AttachableView>().InitForAnchorRef(Object.Id));
         }
 
     }
