@@ -10,7 +10,6 @@ namespace Assets.Scripts.Views
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
-        private bool enqueued;
 
         public CollectableType CollectableType { get; private set; }
 
@@ -57,21 +56,18 @@ namespace Assets.Scripts.Views
 
         }
 
-        internal void EnqueueForCollector()
+        internal void EnqueueForCollector(Collector collector)
         {
-            enqueued = true;
+            if (!Collected.TryGet(Object.Id, out _))
+            {
+                SetCollectedState(CollectionState.Collecting);
+
+                if (collector.Object.InputAuthority == collector.Runner.LocalPlayer)
+                    collector.EnqueueForCollection(CollectableType, 1);
+            }
         }
 
         internal void SetCollectedState(CollectionState state) =>
             Collected.Set(Object.Id, state);
-
-        public override void FixedUpdateNetwork()
-        {
-            if (enqueued && !Collected.TryGet(Object.Id, out _))
-            {
-                SetCollectedState(CollectionState.Collecting);
-                enqueued = false;
-            }
-        }
     }
 }

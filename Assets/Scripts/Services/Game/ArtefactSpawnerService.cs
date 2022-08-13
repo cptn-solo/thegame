@@ -55,7 +55,7 @@ namespace Assets.Scripts.Services.Game
         private void InitCollectable(NetworkRunner runner, NetworkObject obj, NetworkObject parentObj)
         {
             var attachable = obj.GetComponent<AttachableView>();
-            attachable.InitForAnchorRef(parentObj.Id);
+            attachable.InitForAnchorRef(parentObj.Id, false);
         }
 
         private IEnumerator DespawnArtefactsCoroutine(NetworkRunner runner)

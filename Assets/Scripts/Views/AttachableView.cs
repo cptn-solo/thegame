@@ -9,8 +9,11 @@ namespace Assets.Scripts.Views
         [Networked(OnChanged = nameof(AnchorRefChanged))]
         private NetworkId AnchorRef { get; set; }
 
-        public void InitForAnchorRef(NetworkId anchorRef)
+        private bool resetPositionAfterAttach = true;
+
+        public void InitForAnchorRef(NetworkId anchorRef, bool resetPosition = true)
         {
+            resetPositionAfterAttach = resetPosition;
             AnchorRef = anchorRef;
         }
 
@@ -33,9 +36,10 @@ namespace Assets.Scripts.Views
                 childNta.transform.SetParent(
                     parentNta.transform);
 
-                childNta.transform.SetPositionAndRotation(
-                    parentNta.transform.position,
-                    parentNta.transform.rotation);
+                if (resetPositionAfterAttach)
+                    childNta.transform.SetPositionAndRotation(
+                        parentNta.transform.position,
+                        parentNta.transform.rotation);
             }
         }
 
