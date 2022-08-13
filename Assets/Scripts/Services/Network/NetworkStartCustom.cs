@@ -11,10 +11,10 @@ using Assets.Scripts.Services.Scenes;
 #if UNITY_EDITOR
 using UnityEditor;
 using Fusion.Editor;
+#endif
 
 namespace Assets.Scripts.Services.Network
 {
-#endif
 
     /// <summary>
     /// A Fusion prototyping class for starting up basic networking. Add this component to your startup scene, and supply a <see cref="RunnerPrefab"/>.
