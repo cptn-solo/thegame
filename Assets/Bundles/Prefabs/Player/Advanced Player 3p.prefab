@@ -262,6 +262,7 @@ GameObject:
   - component: {fileID: 1486246238600804433}
   - component: {fileID: 4044730987639160504}
   - component: {fileID: 6820769902135793921}
+  - component: {fileID: 540527770505366980}
   - component: {fileID: 4022772107922677182}
   m_Layer: 6
   m_Name: Advanced Player 3p
@@ -322,6 +323,7 @@ MonoBehaviour:
   - {fileID: 1486246238600804433}
   - {fileID: 4044730987639160504}
   - {fileID: 6820769902135793921}
+  - {fileID: 540527770505366980}
   - {fileID: 284165908874756612}
   - {fileID: 4461038489057012441}
   SimulationBehaviours: []
@@ -504,14 +506,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _Collected:
+    _items: []
+--- !u!114 &540527770505366980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5815094185727527531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743e186695c7538468211488046ee128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   collectablePrefabs:
   - {fileID: 1047762238677845885, guid: 9ffc52d66819cb04ba5ea19a0f50ca6e, type: 3}
   - {fileID: 1047762238677845885, guid: db455e0a427e10640856605d5ea26459, type: 3}
   - {fileID: 1047762238677845885, guid: d05eb999a63145144bf842ebeec91d8f, type: 3}
   - {fileID: 1047762238677845885, guid: 7418c192d6100f447a295acc33e8939f, type: 3}
   - {fileID: 1047762238677845885, guid: 2528cbf9ae0b777488877c422b70436a, type: 3}
-  _Collected:
-    _items: []
 --- !u!114 &4022772107922677182
 MonoBehaviour:
   m_ObjectHideFlags: 0
