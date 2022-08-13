@@ -40,12 +40,14 @@ namespace Assets.Scripts.Services.Network
 
         private void OnShutdown(NetworkRunner runner, ShutdownReason reason)
         {
-            artefactSpawnerService.StopSpawning(runner);
+            if (artefactSpawnerService)
+                artefactSpawnerService.StopSpawning(runner);
         }
 
         private void OnSceneLoadDone(NetworkRunner runner)
         {
-            artefactSpawnerService.StartSpawning(runner);
+            if (artefactSpawnerService)
+                artefactSpawnerService.StartSpawning(runner);
         }
 
         // PRIVATE METHODS

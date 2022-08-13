@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
+
     [RequireComponent(typeof(NetworkTransformAnchor), typeof(NetworkObject))]
     public class AttachableView : NetworkBehaviour
     {

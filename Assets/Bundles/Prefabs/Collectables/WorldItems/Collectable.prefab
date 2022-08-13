@@ -104,6 +104,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0.37, z: 0}
+--- !u!114 &306484263463459042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6439110641031758866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d682aaa48d9f243957545464852ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _speed: {x: 0, y: 0, z: 0}
 --- !u!114 &1160627986272127395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,9 +140,11 @@ MonoBehaviour:
     RawGuidValue: e37400ca93ab33e48aee39750ee1eec6
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 306484263463459042}
   - {fileID: 2720614123230000614}
   - {fileID: 3676629508602288210}
   - {fileID: 5386696166899131324}
+  - {fileID: 6831876468991391973}
   SimulationBehaviours: []
 --- !u!114 &2720614123230000614
 MonoBehaviour:
@@ -172,6 +188,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12e882b6fb88f6841be116eb3540cff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+--- !u!114 &6831876468991391973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6439110641031758866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8baff85d28b366047b1ae53e07a747bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
