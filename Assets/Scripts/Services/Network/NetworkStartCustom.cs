@@ -10,6 +10,7 @@ using System.Linq;
 using Assets.Scripts.Services.Scenes;
 using UnityEditor;
 using Fusion.Editor;
+#endif
 
 namespace Assets.Scripts.Services.Network
 {
