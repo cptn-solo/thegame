@@ -9,8 +9,9 @@ namespace Assets.Scripts.Views
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
-        
-        private CollectableType collectableType;
+        private bool enqueued;
+
+        public CollectableType CollectableType { get; private set; }
 
         [Networked(OnChanged = nameof(OnCollectionStateChange))]
         public NetworkDictionary<NetworkId, CollectionState> Collected => default;
@@ -28,9 +29,9 @@ namespace Assets.Scripts.Views
 
         private void Awake()
         {
-            var infoComponents = transform.parent.GetComponentsInChildren<CollectableInfo>();
-            if (infoComponents.Length > 0)
-                collectableType = infoComponents[0].CollectableType;
+            var infoComponent = GetComponentInChildren<CollectableInfo>();
+            if (infoComponent)
+                CollectableType = infoComponent.CollectableType;
         }
 
         public void ApplyCollectionState(CollectionState currentState)
@@ -39,7 +40,7 @@ namespace Assets.Scripts.Views
             {
                 case CollectionState.Collected:
                     {
-                        transform.parent.gameObject.SetActive(false);
+                        gameObject.SetActive(false);
                         break;
 
                     }
@@ -55,18 +56,20 @@ namespace Assets.Scripts.Views
 
         }
 
+        internal void EnqueueForCollector()
+        {
+            enqueued = true;
+        }
+
         internal void SetCollectedState(CollectionState state) =>
             Collected.Set(Object.Id, state);
 
-        private void OnTriggerEnter(Collider other)
+        public override void FixedUpdateNetwork()
         {
-            if (!Collected.TryGet(Object.Id, out _) &&
-                other.gameObject.transform.parent.TryGetComponent<Collector>(out var collector))
+            if (enqueued && !Collected.TryGet(Object.Id, out _))
             {
                 SetCollectedState(CollectionState.Collecting);
-                
-                if (collector.Object.InputAuthority == Runner.LocalPlayer)
-                    collector.Collect(collectableType, 1);
+                enqueued = false;
             }
         }
     }

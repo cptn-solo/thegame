@@ -504,6 +504,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  collectablePrefabs:
+  - {fileID: 6439110641031758866, guid: 01dceb342d6b0ce4db801b85c3f1841e, type: 3}
+  - {fileID: 8751505460030024341, guid: 251f10d974a1df649845201ee19ef529, type: 3}
+  - {fileID: 2425581373469569176, guid: 1a3556811a200d14ba8ecfca9644ad7b, type: 3}
+  - {fileID: 5917224740159275880, guid: 383f3c2159fef504b9f940db6a3e54f4, type: 3}
+  - {fileID: 5105286042702656226, guid: 74a847a48f9f8bb429a1c64f56f1af11, type: 3}
   _Collected:
     _items: []
 --- !u!114 &4022772107922677182
