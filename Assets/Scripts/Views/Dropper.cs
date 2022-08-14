@@ -2,6 +2,7 @@
 using Assets.Scripts.Services.App;
 using Example;
 using Fusion;
+using Fusion.KCC;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,11 +14,21 @@ namespace Assets.Scripts.Views
     {
         [Inject] private readonly PlayerInventoryService playerInventory;
 
-        private readonly float coolDownTime = 1.0f;
 
         [SerializeField] private GameObject[] collectablePrefabs;
 
         [Networked] private TickTimer spawnTimer { get; set; }
+
+        private Collector collector;
+        private PlayerInput input;
+        
+        private readonly float coolDownTime = 1.0f;
+
+        private void Awake()
+        {
+            collector = GetComponent<Collector>();
+            input = GetComponent<PlayerInput>();
+        }
 
         private void InitSpawnTimer()
         {
@@ -26,14 +37,16 @@ namespace Assets.Scripts.Views
 
         public override void FixedUpdateNetwork()
         {
-            if (spawnTimer.ExpiredOrNotRunning(Runner) &&
-                Runner.TryGetInputForPlayer(Object.InputAuthority, out GameplayInput input) &&
-                input.RMB &&
+            if (Object.HasInputAuthority &&
+                spawnTimer.ExpiredOrNotRunning(Runner) &&
+                input.WasActivated(EGameplayInputAction.RMB) &&
                 TryGetCollectableToDrop(out CollectableType collectableType))
             {
                 InitSpawnTimer();
+                
                 Runner.Spawn(collectablePrefabs[(int)collectableType], transform.position + transform.forward * 2.0f, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj));
-                playerInventory.AddCollectableItem(collectableType, -1);
+
+                collector.EnqueueForCollection(collectableType, -1);
             }
         }
 

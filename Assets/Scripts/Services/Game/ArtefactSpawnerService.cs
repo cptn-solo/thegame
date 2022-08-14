@@ -45,7 +45,7 @@ namespace Assets.Scripts.Services.Game
                     runner.Spawn(prefab, position + offset, point.transform.rotation, null,
                         (runner, obj) => InitCollectable(runner, obj, point.GetComponent<NetworkObject>()));
 
-                    yield return new WaitForSeconds(Random.Range(5.0f, 15.0f));
+                    yield return new WaitForSeconds(Random.Range(1.0f, 5.0f));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Assets.Scripts.Services.Game
         private Vector3 RndDirection() =>
             new(
                 Random.Range(-1.0f, 1.0f),
-                Random.Range(0.0f, 1.0f),
+                Random.Range(0.0f, 0.3f),
                 Random.Range(-1.0f, 1.0f));
 
         private void InitCollectable(NetworkRunner runner, NetworkObject obj, NetworkObject parentObj)
@@ -66,10 +66,10 @@ namespace Assets.Scripts.Services.Game
             obj.transform.rotation = Quaternion.LookRotation(moveDirectioin);
 
             var movable = obj.GetComponent<MovableView>();
-            movable.speed = moveDirectioin * Random.Range(1.0f, 5.0f);
+            movable.speed = moveDirectioin * Random.Range(.2f, 2.0f);
 
             var despawnable = obj.GetComponent<Despawnable>();
-            despawnable.InitForLifeTime(Random.Range(5.0f, 15.0f));
+            despawnable.InitForLifeTime(Random.Range(15.0f, 35.0f));
         }
 
 

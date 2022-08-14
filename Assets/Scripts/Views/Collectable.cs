@@ -1,5 +1,6 @@
 using Assets.Scripts.Data;
 using Fusion;
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
@@ -14,17 +15,17 @@ namespace Assets.Scripts.Views
         public CollectableType CollectableType { get; private set; }
 
         [Networked(OnChanged = nameof(OnCollectionStateChange))]
-        public NetworkDictionary<NetworkId, CollectionState> Collected => default;
+        public NetworkDictionary<CollectionState, NetworkId> Collected => default;
 
         private static void OnCollectionStateChange(Changed<Collectable> changed)
         {
-            var hasValue = changed.Behaviour.Collected.TryGet(changed.Behaviour.Object.Id, out var currentState);
+            var currState = changed.Behaviour.Collected;
 
             changed.LoadOld();
-            changed.Behaviour.Collected.TryGet(changed.Behaviour.Object.Id, out var prevState);
+            var prevState = changed.Behaviour.Collected;
 
-            if (hasValue && currentState != prevState)
-                changed.Behaviour.ApplyCollectionState(currentState);
+            if (!currState.Equals(prevState))
+                changed.Behaviour.ApplyCollectionState(currState);
         }
 
         private void Awake()
@@ -34,40 +35,50 @@ namespace Assets.Scripts.Views
                 CollectableType = infoComponent.CollectableType;
         }
 
-        public void ApplyCollectionState(CollectionState currentState)
+        internal void SetCollectedState()
         {
-            switch (currentState)
+            Collected.Set(CollectionState.Collected, Object.Id);
+        }
+
+        public void ApplyCollectionState(NetworkDictionary<CollectionState, NetworkId> current)
+        {
+            foreach (var state in current)
             {
-                case CollectionState.Collected:
-                    {
-                        gameObject.SetActive(false);
-                        break;
-
-                    }
-                case CollectionState.Collecting:
-                    {
-                        if (!animator)
+                Debug.Log($"ApplyCollectionState {state.Key} {state.Value}");
+                switch (state.Key)
+                {
+                    case CollectionState.Collected:
+                        {
+                            var collectable =
+                                Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
+                                    Collectable>(state.Value);
+                            collectable.gameObject.SetActive(false);
                             break;
+                        }
+                    case CollectionState.Collecting:
+                        {
+                            if (current.TryGet(CollectionState.Collected, out var _))
+                                break;
 
-                        animator.SetBool(animator_collected_bool, true);
-                        break;
-                    }
+                            var collector =
+                                Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
+                                    Collector>(state.Value);
+
+                            if (collector && collector.Object.HasInputAuthority)
+                                collector.EnqueueForCollection(CollectableType, 1);
+
+                            if (animator)
+                                animator.SetBool(animator_collected_bool, true);
+
+                            break;
+                        }
+                }
             }
-
         }
 
         internal void EnqueueForCollector(Collector collector)
         {
-            if (!Collected.TryGet(Object.Id, out _))
-            {
-                SetCollectedState(CollectionState.Collecting);
-
-                if (collector.Object.InputAuthority == collector.Runner.LocalPlayer)
-                    collector.EnqueueForCollection(CollectableType, 1);
-            }
+            Collected.Set(CollectionState.Collecting, collector.Object.Id);
         }
-
-        internal void SetCollectedState(CollectionState state) =>
-            Collected.Set(Object.Id, state);
     }
 }
