@@ -10,7 +10,8 @@ namespace Assets.Scripts.Views
 
         public override void FixedUpdateNetwork()
         {
-            transform.position += speed * Runner.DeltaTime;
+            if (Runner.Stage == SimulationStages.Forward)
+                transform.position += speed * Runner.DeltaTime;
         }
     }
 }

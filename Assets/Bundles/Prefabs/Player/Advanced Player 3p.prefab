@@ -363,7 +363,7 @@ MonoBehaviour:
     Height: 1
     Extent: 0.035
     Mass: 1
-    ColliderLayer: 0
+    ColliderLayer: 7
     CollisionLayerMask:
       serializedVersion: 2
       m_Bits: 129
@@ -381,6 +381,7 @@ MonoBehaviour:
     Processors:
     - {fileID: 6733955975318150615, guid: 0b1fae6ab34a6e0478cb92d6e1a62e44, type: 3}
     - {fileID: -3592675505127058418, guid: 93e6d39666b21fe4ea884554d8526c00, type: 3}
+    - {fileID: -4514500717821726082, guid: 6e87955e8fb019e42a2c1b1ad4ccbeab, type: 3}
     - {fileID: -4514500717821726082, guid: 6e87955e8fb019e42a2c1b1ad4ccbeab, type: 3}
     PositionAccuracy:
       _value: 0.0001

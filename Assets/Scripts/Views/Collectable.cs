@@ -1,17 +1,16 @@
 using Assets.Scripts.Data;
 using Fusion;
-using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
 
-    public class Collectable : NetworkBehaviour
+    public class Collectable : NetworkBehaviour, IPredictedSpawnBehaviour
     {
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
-
+        
         public CollectableType CollectableType { get; private set; }
 
         [Networked(OnChanged = nameof(OnCollectionStateChange))]
@@ -37,7 +36,8 @@ namespace Assets.Scripts.Views
 
         internal void SetCollectedState()
         {
-            Collected.Set(CollectionState.Collected, Object.Id);
+            if (Object.HasStateAuthority)
+                Collected.Set(CollectionState.Collected, Object.Id);
         }
 
         public void ApplyCollectionState(NetworkDictionary<CollectionState, NetworkId> current)
@@ -52,7 +52,9 @@ namespace Assets.Scripts.Views
                             var collectable =
                                 Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
                                     Collectable>(state.Value);
-                            collectable.gameObject.SetActive(false);
+
+                            Runner.Despawn(collectable.Object);
+
                             break;
                         }
                     case CollectionState.Collecting:
@@ -64,7 +66,7 @@ namespace Assets.Scripts.Views
                                 Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
                                     Collector>(state.Value);
 
-                            if (collector && collector.Object.HasInputAuthority)
+                            if (collector)
                                 collector.EnqueueForCollection(CollectableType, 1);
 
                             if (animator)
@@ -78,7 +80,47 @@ namespace Assets.Scripts.Views
 
         internal void EnqueueForCollector(Collector collector)
         {
-            Collected.Set(CollectionState.Collecting, collector.Object.Id);
+            Debug.Log($"EnqueueForCollector {collector.Object.Id} {collector.Object.HasStateAuthority} {Runner.IsServer}");
+
+            if (Runner.IsServer)
+                Collected.Set(CollectionState.Collecting, collector.Object.Id);
+
+            //localCollectionState = CollectionState.Collecting;
+            //collectorRef = collector.Object.Id;
         }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnSpawned()
+        {
+            Debug.Log($"PredictedSpawnSpawned {Object.Id}");
+            Spawned();
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnUpdate()
+        {
+            FixedUpdateNetwork();
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnRender()
+        {
+            
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnFailed()
+        {
+            Debug.Log($"PredictedSpawnFailed {Object.Id}");
+            Runner.Despawn(Object, true);
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnSuccess()
+        {
+            Debug.Log($"PredictedSpawnSuccess {Object.Id}");
+        }
+
+        public override void Spawned()
+        {
+            Debug.Log($"Spawned {Object.Id}");
+
+        }
+
     }
 }

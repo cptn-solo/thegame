@@ -1,8 +1,14 @@
 ﻿using Fusion;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
+    public enum AttachableOffsetKeys
+    {
+        Position, RotationDirection
+    }
 
     [RequireComponent(typeof(NetworkTransformAnchor), typeof(NetworkObject))]
     public class AttachableView : NetworkBehaviour
@@ -10,17 +16,53 @@ namespace Assets.Scripts.Views
         [Networked(OnChanged = nameof(AnchorRefChanged))]
         private NetworkId AnchorRef { get; set; }
 
-        private bool resetPositionAfterAttach = true;
+        [Networked(OnChanged = nameof(OffsetChanged))]
+        private NetworkDictionary<AttachableOffsetKeys, Vector3> Offset => default;
 
-        public void InitForAnchorRef(NetworkId anchorRef, bool resetPosition = true)
+        public void InitForAnchorRef(NetworkId anchorRef, Vector3? offset = null, Vector3? rotationDirection = null)
         {
-            resetPositionAfterAttach = resetPosition;
             AnchorRef = anchorRef;
+
+            if (offset == null || rotationDirection == null)
+                return;
+
+
+            if (offset != null)
+                Offset.Add(AttachableOffsetKeys.Position, (Vector3)offset);
+
+            if (rotationDirection != null)
+                Offset.Add(AttachableOffsetKeys.RotationDirection, (Vector3)rotationDirection);
         }
 
         protected static void AnchorRefChanged(Changed<AttachableView> changed)
         {
             changed.Behaviour.Attach(changed.Behaviour.AnchorRef);
+        }
+
+        protected static void OffsetChanged(Changed<AttachableView> changed)
+        {
+            changed.Behaviour.Offset.TryGet(AttachableOffsetKeys.Position, out var position);
+            changed.Behaviour.Offset.TryGet(AttachableOffsetKeys.RotationDirection, out var rotationDirection);
+
+            changed.Behaviour.SetOffset(position, rotationDirection);
+        }
+
+
+        private void SetOffset(Vector3 offset, Vector3 rotationDirection)
+        {
+            var childNta =
+                Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
+                    NetworkTransformAnchor>(Object.Id);
+
+            if (childNta)
+            {
+                if (offset != default)
+                    childNta.transform.position = offset;
+                
+                if (rotationDirection != default)
+                    childNta.transform.rotation = Quaternion.LookRotation(rotationDirection);
+            }
+
         }
 
         private void Attach(NetworkId anchorRef)
@@ -37,10 +79,9 @@ namespace Assets.Scripts.Views
                 childNta.transform.SetParent(
                     parentNta.transform);
 
-                if (resetPositionAfterAttach)
-                    childNta.transform.SetPositionAndRotation(
-                        parentNta.transform.position,
-                        parentNta.transform.rotation);
+                childNta.transform.SetPositionAndRotation(
+                    parentNta.transform.position,
+                    parentNta.transform.rotation);
             }
         }
 

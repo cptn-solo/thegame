@@ -12,7 +12,7 @@ namespace Assets.Scripts.Views
 
         public override void FixedUpdateNetwork()
         {
-            if (life.Expired(Runner))
+            if (Runner.Stage == SimulationStages.Forward && life.Expired(Runner))
                 Runner.Despawn(Object);
         }
     }

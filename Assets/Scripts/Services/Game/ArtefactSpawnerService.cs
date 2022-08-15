@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Views;
 using Example;
 using Fusion;
-using Fusion.KCC;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,13 +13,14 @@ namespace Assets.Scripts.Services.Game
 
         private bool spawning;
 
-        private float timer;
         private readonly float cooldown;
 
         internal void StartSpawning(NetworkRunner runner)
         {
             spawning = true;
-            StartCoroutine(nameof(SpawnArtefactsCoroutine), runner);
+            
+            if (runner.IsServer)
+                StartCoroutine(nameof(SpawnArtefactsCoroutine), runner);
         }
 
         internal void StopSpawning(NetworkRunner runner)
@@ -35,14 +35,11 @@ namespace Assets.Scripts.Services.Game
             List<CollectableSpawnPoint> spawnPoints = runner.SimulationUnityScene.GetComponents<CollectableSpawnPoint>();
             while (spawning)
             {
-
                 foreach (var point in spawnPoints)
                 {
                     var prefab = point.Prefabs[Random.Range(0, point.Prefabs.Length)];
-                    var position = point.transform.position;
-                    var offset = RndDirection() * Random.Range(1, 5);
 
-                    runner.Spawn(prefab, position + offset, point.transform.rotation, null,
+                    runner.Spawn(prefab, Vector3.zero, Quaternion.identity, null,
                         (runner, obj) => InitCollectable(runner, obj, point.GetComponent<NetworkObject>()));
 
                     yield return new WaitForSeconds(Random.Range(1.0f, 5.0f));
@@ -58,16 +55,17 @@ namespace Assets.Scripts.Services.Game
 
         private void InitCollectable(NetworkRunner runner, NetworkObject obj, NetworkObject parentObj)
         {
-            var attachable = obj.GetComponent<AttachableView>();
-            attachable.InitForAnchorRef(parentObj.Id, false);
-            
-            var moveDirectioin = RndDirection();
-            
-            obj.transform.rotation = Quaternion.LookRotation(moveDirectioin);
 
+            var position = parentObj.transform.position;
+            var offset = RndDirection() * Random.Range(1, 5);
+            var moveDirectioin = RndDirection();
+
+            var attachable = obj.GetComponent<AttachableView>();
+            attachable.InitForAnchorRef(parentObj.Id, position + offset, moveDirectioin);
+            
             var movable = obj.GetComponent<MovableView>();
             movable.speed = moveDirectioin * Random.Range(.2f, 2.0f);
-
+            
             var despawnable = obj.GetComponent<Despawnable>();
             despawnable.InitForLifeTime(Random.Range(15.0f, 35.0f));
         }
