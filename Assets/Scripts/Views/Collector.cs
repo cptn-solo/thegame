@@ -69,14 +69,15 @@ namespace Assets.Scripts.Views
 
         private void UpdateBalance(NetworkDictionary<CollectableType, int> current)
         {
+            if (!Object.HasInputAuthority)
+                return;
+
             if (speedEnhancer)
                 speedEnhancer.Enhance(current);
 
             if (jumpEnhancer)
                 jumpEnhancer.Enhance(current);
 
-            if (!Object.HasInputAuthority)
-                return;
 
             foreach(var collectable in current)
                 playerInventory.SetCollectableBalance(collectable.Key, collectable.Value);
