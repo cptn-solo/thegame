@@ -1,12 +1,16 @@
 ﻿using Assets.Scripts.Data;
+using Assets.Scripts.Services.App;
 using Fusion;
 using Fusion.KCC;
 using UnityEngine;
+using Zenject;
 
 namespace Assets.Scripts.Views
 {
     public abstract class PlayerEnhancerBase : NetworkBehaviour
     {
+        [Inject] private readonly PlayerSpecsService playerSpecsService;
+
         [SerializeField] private CollectableType collectable = CollectableType.Box;
         [SerializeField] private int maxBalance = 10;
         [SerializeField] private float step = .1f;
@@ -30,8 +34,13 @@ namespace Assets.Scripts.Views
             if (balance.TryGet(collectable, out var count))
             {
                 EnhancementApplier(count);
-                Debug.Log($"KinematicSpeed: {groundKCC.KinematicSpeed + groundKCC.KinemSpeedEnhancer}");
-                Debug.Log($"JumpMultiplier: {groundKCC.JumpMultiplier + groundKCC.JumpEnhancer}");
+                var speedValue = 1 + groundKCC.KinemSpeedEnhancer;
+                Debug.Log($"KinematicSpeed: {speedValue}");
+                var jumpValue = 1 + groundKCC.JumpEnhancer;
+                Debug.Log($"JumpMultiplier: {jumpValue}");
+
+                playerSpecsService.HUDScreen.SpeedValue = speedValue.ToString("0.00");
+                playerSpecsService.HUDScreen.JumpValue = jumpValue.ToString("0.00");
             }
 
         }

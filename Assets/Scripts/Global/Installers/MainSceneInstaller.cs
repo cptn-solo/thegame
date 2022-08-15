@@ -9,6 +9,8 @@ namespace Assets.Scripts.Global.Installers
 
     public class MainSceneInstaller : MonoInstaller, IInitializable
     {
+        [Inject] private readonly PlayerSpecsService playerSpecsService;
+
         #region SerializeFields
         [SerializeField] private ApplicationService applicationService = null;
         [SerializeField] private PlayerPreferencesService playerPreferencesService = null;
@@ -41,6 +43,7 @@ namespace Assets.Scripts.Global.Installers
         {
             playerPreferencesService.InitPlayerPreferences();
             audioPlaybackService.InitAudioPlayback();
+            playerSpecsService.HUDScreen = uiManager.HUDScreen;
         }
         #endregion
 
