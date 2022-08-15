@@ -9,11 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1160627986272127395, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
-      value: 345397734487030943
+      value: 7210401825527055835
       objectReference: {fileID: 0}
     - target: {fileID: 1160627986272127395, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
-      value: 7983281317416623802
+      value: 6441451893223872008
       objectReference: {fileID: 0}
     - target: {fileID: 5915339226451451560, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_RootOrder
@@ -59,9 +59,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6416654292541759145, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: collectableType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6439110641031758866, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_Name
-      value: Collectable Variant
+      value: CollectableSnowflake
       objectReference: {fileID: 0}
+    - target: {fileID: 8264275471743424186, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 0e508ddc5a0e9734bbd5598ff5c63ea3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}

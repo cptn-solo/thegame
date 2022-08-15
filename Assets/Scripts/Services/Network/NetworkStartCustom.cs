@@ -680,6 +680,8 @@ namespace Assets.Scripts.Services.Network
                 sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerCustom>();
             }
 
+            runner.AddCallbacks();
+
             return runner.StartGame(new StartGameArgs
             {
                 GameMode = gameMode,

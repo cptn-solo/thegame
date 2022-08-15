@@ -2,6 +2,6 @@
 {
     public enum CollectableType
     {
-        Box, SnowFlake, Diamond, Frame, Ring
+        Box = 0, SnowFlake = 1, Diamond = 2, Frame = 3, Ring = 4
     }
 }

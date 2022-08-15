@@ -6,12 +6,13 @@ namespace Assets.Scripts.Views
     {
 
         protected virtual Color Color { get => Color.blue; }
+        protected virtual float Radius { get => 5; }
 
         private void OnDrawGizmos()
         {
             #if UNITY_EDITOR
             Gizmos.color = Color;
-            Gizmos.DrawSphere(transform.position, 5);
+            Gizmos.DrawSphere(transform.position, Radius);
             #endif
         }
     }

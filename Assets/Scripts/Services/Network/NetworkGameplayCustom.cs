@@ -1,12 +1,14 @@
 namespace Assets.Scripts.Services.Network
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using Fusion;
     using Assets.Scripts.Views;
     using Example;
+    using Assets.Scripts.Services.Game;
+    using Zenject;
+    using System;
 
     /// <summary>
     /// Main entry point for gameplay logic and spawning players.
@@ -15,6 +17,9 @@ namespace Assets.Scripts.Services.Network
     [RequireComponent(typeof(NetworkEvents))]
     public sealed class NetworkGameplayCustom : MonoBehaviour
     {
+
+        [Inject] private readonly ArtefactSpawnerService artefactSpawnerService; 
+
         // PRIVATE MEMBERS
 
         [SerializeField]
@@ -29,6 +34,20 @@ namespace Assets.Scripts.Services.Network
             events.OnReliableData.AddListener(OnDataReceived);
             events.PlayerJoined.AddListener(OnPlayerJoined);
             events.PlayerLeft.AddListener(OnPlayerLeft);
+            events.OnSceneLoadDone.AddListener(OnSceneLoadDone);
+            events.OnShutdown.AddListener(OnShutdown);
+        }
+
+        private void OnShutdown(NetworkRunner runner, ShutdownReason reason)
+        {
+            if (artefactSpawnerService)
+                artefactSpawnerService.StopSpawning(runner);
+        }
+
+        private void OnSceneLoadDone(NetworkRunner runner)
+        {
+            if (artefactSpawnerService)
+                artefactSpawnerService.StartSpawning(runner);
         }
 
         // PRIVATE METHODS
@@ -67,7 +86,7 @@ namespace Assets.Scripts.Services.Network
             runner.SendReliableDataToServer(PlayerConfig.Serialize(playerConfig));
         }
 
-        private void OnDataReceived(NetworkRunner runner, PlayerRef playerRef, ArraySegment<byte> data)
+        private void OnDataReceived(NetworkRunner runner, PlayerRef playerRef, System.ArraySegment<byte> data)
         {
             if (runner.IsServer == false)
                 return;

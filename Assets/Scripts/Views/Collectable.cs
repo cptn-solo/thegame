@@ -4,70 +4,123 @@ using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
-    public class Collectable : NetworkBehaviour
+
+    public class Collectable : NetworkBehaviour, IPredictedSpawnBehaviour
     {
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
         
-        private CollectableType collectableType;
+        public CollectableType CollectableType { get; private set; }
 
         [Networked(OnChanged = nameof(OnCollectionStateChange))]
-        public NetworkDictionary<NetworkId, CollectionState> Collected => default;
+        public NetworkDictionary<CollectionState, NetworkId> Collected => default;
 
         private static void OnCollectionStateChange(Changed<Collectable> changed)
         {
-            var hasValue = changed.Behaviour.Collected.TryGet(changed.Behaviour.Object.Id, out var currentState);
+            var currState = changed.Behaviour.Collected;
 
             changed.LoadOld();
-            changed.Behaviour.Collected.TryGet(changed.Behaviour.Object.Id, out var prevState);
+            var prevState = changed.Behaviour.Collected;
 
-            if (hasValue && currentState != prevState)
-                changed.Behaviour.ApplyCollectionState(currentState);
+            if (!currState.Equals(prevState))
+                changed.Behaviour.ApplyCollectionState(currState);
         }
 
         private void Awake()
         {
-            var infoComponents = transform.parent.GetComponentsInChildren<CollectableInfo>();
-            if (infoComponents.Length > 0)
-                collectableType = infoComponents[0].CollectableType;
+            var infoComponent = GetComponentInChildren<CollectableInfo>();
+            if (infoComponent)
+                CollectableType = infoComponent.CollectableType;
         }
 
-        public void ApplyCollectionState(CollectionState currentState)
+        internal void SetCollectedState()
         {
-            switch (currentState)
-            {
-                case CollectionState.Collected:
-                    {
-                        transform.parent.gameObject.SetActive(false);
-                        break;
+            if (Object.HasStateAuthority)
+                Collected.Set(CollectionState.Collected, Object.Id);
+        }
 
-                    }
-                case CollectionState.Collecting:
-                    {
-                        if (!animator)
+        public void ApplyCollectionState(NetworkDictionary<CollectionState, NetworkId> current)
+        {
+            foreach (var state in current)
+            {
+                Debug.Log($"ApplyCollectionState {state.Key} {state.Value}");
+                switch (state.Key)
+                {
+                    case CollectionState.Collected:
+                        {
+                            var collectable =
+                                Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
+                                    Collectable>(state.Value);
+
+                            Runner.Despawn(collectable.Object);
+
                             break;
+                        }
+                    case CollectionState.Collecting:
+                        {
+                            if (current.TryGet(CollectionState.Collected, out var _))
+                                break;
 
-                        animator.SetBool(animator_collected_bool, true);
-                        break;
-                    }
+                            var collector =
+                                Runner.TryGetNetworkedBehaviourFromNetworkedObjectRef<
+                                    Collector>(state.Value);
+
+                            if (collector)
+                                collector.EnqueueForCollection(CollectableType, 1);
+
+                            if (animator)
+                                animator.SetBool(animator_collected_bool, true);
+
+                            break;
+                        }
+                }
             }
-
         }
 
-        internal void SetCollectedState(CollectionState state) =>
-            Collected.Set(Object.Id, state);
-
-        private void OnTriggerEnter(Collider other)
+        internal void EnqueueForCollector(Collector collector)
         {
-            if (!Collected.TryGet(Object.Id, out _) &&
-                other.gameObject.transform.parent.TryGetComponent<Collector>(out var collector))
-            {
-                SetCollectedState(CollectionState.Collecting);
-                
-                if (collector.Object.InputAuthority == Runner.LocalPlayer)
-                    collector.Collect(collectableType, 1);
-            }
+            Debug.Log($"EnqueueForCollector {collector.Object.Id} {collector.Object.HasStateAuthority} {Runner.IsServer}");
+
+            if (Runner.IsServer)
+                Collected.Set(CollectionState.Collecting, collector.Object.Id);
+
+            //localCollectionState = CollectionState.Collecting;
+            //collectorRef = collector.Object.Id;
         }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnSpawned()
+        {
+            Debug.Log($"PredictedSpawnSpawned {Object.Id}");
+            Spawned();
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnUpdate()
+        {
+            FixedUpdateNetwork();
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnRender()
+        {
+            
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnFailed()
+        {
+            Debug.Log($"PredictedSpawnFailed {Object.Id}");
+            Runner.Despawn(Object, true);
+        }
+
+        void IPredictedSpawnBehaviour.PredictedSpawnSuccess()
+        {
+            Debug.Log($"PredictedSpawnSuccess {Object.Id}");
+        }
+
+        public override void Spawned()
+        {
+            Debug.Log($"Spawned {Object.Id}");
+
+        }
+
     }
 }

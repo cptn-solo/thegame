@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 2830400040800684610}
   - component: {fileID: 2485590401234311836}
   - component: {fileID: 866281050510612974}
+  - component: {fileID: 3793381669483133200}
   m_Layer: 0
   m_Name: PlayerSatellite
   m_TagString: Untagged
@@ -146,6 +147,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 2830400040800684610}
   - {fileID: 866281050510612974}
+  - {fileID: 3793381669483133200}
   - {fileID: 1978924681586775339}
   SimulationBehaviours: []
 --- !u!114 &2830400040800684610
@@ -191,6 +193,19 @@ MonoBehaviour:
   _interpolationTarget: {fileID: 0}
   DetachInterpTarget: 0
   SyncParent: 1
+--- !u!114 &3793381669483133200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903298581982997785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12e882b6fb88f6841be116eb3540cff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
 --- !u!1 &5379059108256193706
 GameObject:
   m_ObjectHideFlags: 0

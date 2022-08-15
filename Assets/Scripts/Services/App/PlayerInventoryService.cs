@@ -22,13 +22,12 @@ namespace Assets.Scripts.Services.App
             collectables.Add(CollectableType.SnowFlake, 0);
         }
 
-        public void AddCollectableItem(CollectableType itemType, int count)
+        public void SetCollectableBalance(CollectableType collectableType, int balance)
         {
-            collectables[itemType] += count;
-
-            OnInventoryChange?.Invoke(new KeyValuePair<CollectableType, int>(itemType, collectables[itemType]));
+            Debug.Log($"SetCollectableBalance {collectableType} {balance}");
+            collectables[collectableType] = balance;
+            OnInventoryChange?.Invoke(new KeyValuePair<CollectableType, int>(collectableType, balance));
         }
-
 
     }
 }

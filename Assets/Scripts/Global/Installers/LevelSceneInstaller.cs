@@ -13,6 +13,7 @@ namespace Assets.Scripts.Global.Installers
         #region Public methods
         public override void InstallBindings()
         {
+            BindInstallerInterfaces();
         }
 
         public void Initialize()

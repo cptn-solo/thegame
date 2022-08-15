@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 110917764}
   - component: {fileID: 110917767}
   - component: {fileID: 110917766}
+  - component: {fileID: 110917768}
   m_Layer: 0
   m_Name: General
   m_TagString: Untagged
@@ -243,6 +244,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c82bce6def19b4289fe994d4bbb625, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &110917768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110917763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dabb0390029eae4a93e077104b189df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &263750782
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,6 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applicationService: {fileID: 110917764}
   playerPreferencesService: {fileID: 110917767}
+  artefactSpawnerService: {fileID: 110917768}
   audioPlaybackService: {fileID: 110917766}
   uiManager: {fileID: 24783480}
   mainCamera: {fileID: 1831779264}

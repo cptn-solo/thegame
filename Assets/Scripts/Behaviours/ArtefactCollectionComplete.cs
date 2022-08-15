@@ -1,4 +1,3 @@
-using Assets.Scripts.Data;
 using Assets.Scripts.Views;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ namespace Assets.Scripts.Behaviours
         {
             var collectable = animator.gameObject.transform.parent.GetComponentInChildren<Collectable>();
             if (collectable)
-                collectable.SetCollectedState(CollectionState.Collected);
+                collectable.SetCollectedState();
         }
 
         // OnStateMove is called right after Animator.OnAnimatorMove()
