@@ -264,6 +264,8 @@ GameObject:
   - component: {fileID: 6820769902135793921}
   - component: {fileID: 540527770505366980}
   - component: {fileID: 4022772107922677182}
+  - component: {fileID: 594027641398068154}
+  - component: {fileID: 133791875688194447}
   m_Layer: 6
   m_Name: Advanced Player 3p
   m_TagString: Untagged
@@ -324,6 +326,8 @@ MonoBehaviour:
   - {fileID: 4044730987639160504}
   - {fileID: 6820769902135793921}
   - {fileID: 540527770505366980}
+  - {fileID: 594027641398068154}
+  - {fileID: 133791875688194447}
   - {fileID: 284165908874756612}
   - {fileID: 4461038489057012441}
   SimulationBehaviours: []
@@ -381,7 +385,6 @@ MonoBehaviour:
     Processors:
     - {fileID: 6733955975318150615, guid: 0b1fae6ab34a6e0478cb92d6e1a62e44, type: 3}
     - {fileID: -3592675505127058418, guid: 93e6d39666b21fe4ea884554d8526c00, type: 3}
-    - {fileID: -4514500717821726082, guid: 6e87955e8fb019e42a2c1b1ad4ccbeab, type: 3}
     - {fileID: -4514500717821726082, guid: 6e87955e8fb019e42a2c1b1ad4ccbeab, type: 3}
     PositionAccuracy:
       _value: 0.0001
@@ -541,6 +544,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _containerSource: 1
+--- !u!114 &594027641398068154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5815094185727527531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f304eea591d2943aa322328619d534, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  collectable: 0
+  maxBalance: 10
+  step: 0.1
+--- !u!114 &133791875688194447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5815094185727527531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed16e5d2866aeb04d9b0e85509ab2bf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  collectable: 3
+  maxBalance: 10
+  step: 0.1
 --- !u!1 &7173719459643562894
 GameObject:
   m_ObjectHideFlags: 0
