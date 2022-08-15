@@ -62,7 +62,7 @@ namespace Assets.Scripts.Views
         {
             collectableType = default;
 
-            var available = playerInventory.Collectables.Where(c => c.Value > 0).Select(c => c.Key).ToArray();
+            var available = collector.Collected.Where(c => c.Value > 0).Select(c => c.Key).ToArray();
             if (available.Length > 0)
             {
                 collectableType = available[Random.Range(0, available.Length)];
