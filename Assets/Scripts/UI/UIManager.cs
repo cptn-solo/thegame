@@ -9,6 +9,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private HUDScreen hudScreen;
         [SerializeField] private MainMenuScreen mainMenuScreen;
 
+        public HUDScreen HUDScreen => hudScreen;
+
         public void ToggleHUD(bool toggle)
         {
             hudScreen.gameObject.SetActive(toggle);

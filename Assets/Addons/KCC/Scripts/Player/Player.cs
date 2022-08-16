@@ -3,6 +3,7 @@ namespace Example
     using UnityEngine;
     using Fusion;
     using Fusion.KCC;
+    using Assets.Scripts.Views;
 
     /// <summary>
     /// Base class for Simple and Advanced player implementations.
@@ -54,13 +55,17 @@ namespace Example
 		private SceneCamera    _camera;
 		private NetworkCulling _culling;
 
-		// PUBLIC METHODS
+        //Enhancers
+		protected SpeedEnhancer speedEnhancer;
+		protected JumpEnhancer jumpEnhancer;
 
-		/// <summary>
-		/// Called from menu to speed up character for faster navigation through example levels.
-		/// Players should not be able to define their speed unless this is a design decision.
-		/// </summary>
-		[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        // PUBLIC METHODS
+
+        /// <summary>
+        /// Called from menu to speed up character for faster navigation through example levels.
+        /// Players should not be able to define their speed unless this is a design decision.
+        /// </summary>
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
 		public void ToggleSpeedRPC(int direction)
 		{
 			if (direction > 0)
@@ -124,18 +129,13 @@ namespace Example
 		public override EKCCStages GetValidStages(KCC kcc, KCCData data)
 		{
 			// Only SetKinematicSpeed stage is used, rest are filtered out and corresponding method calls will be skipped.
-			return EKCCStages.SetKinematicSpeed;
+			return EKCCStages.SetKinematicSpeed | EKCCStages.SetInputProperties;
 		}
 
-		public override void SetKinematicSpeed(KCC kcc, KCCData data)
-		{
-			// Applying multiplier.
-			data.KinematicSpeed *= SpeedMultiplier;
-		}
 
-		// MonoBehaviour INTERFACE
+        // MonoBehaviour INTERFACE
 
-		private void Awake()
+        private void Awake()
 		{
 			_kcc     = gameObject.GetComponent<KCC>();
 			_input   = gameObject.GetComponent<PlayerInput>();
@@ -143,6 +143,11 @@ namespace Example
 			_culling = gameObject.GetComponent<NetworkCulling>();
 
 			_culling.Updated = OnCullingUpdated;
+
+			//Enhancers
+			speedEnhancer = gameObject.GetComponent<SpeedEnhancer>();
+			jumpEnhancer = gameObject.GetComponent<JumpEnhancer>();
+
 		}
 
 		// PRIVATE METHODS

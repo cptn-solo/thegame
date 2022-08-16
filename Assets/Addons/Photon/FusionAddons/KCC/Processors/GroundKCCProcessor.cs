@@ -91,13 +91,12 @@ namespace Fusion.KCC
 			{
 				data.DynamicVelocity += data.Gravity * data.DeltaTime;
 			}
-
-			if (data.JumpImpulse.IsZero() == false && _jumpMultiplier > 0.0f)
+			if (data.JumpImpulse.IsZero() == false && (_jumpMultiplier * data.JumpEnhancerValue) > 0.0f)
 			{
 				Vector3 jumpDirection = data.JumpImpulse.normalized;
 
 				data.DynamicVelocity -= Vector3.Scale(data.DynamicVelocity, jumpDirection);
-				data.DynamicVelocity += (data.JumpImpulse / kcc.Settings.Mass) * _jumpMultiplier;
+				data.DynamicVelocity += (data.JumpImpulse / kcc.Settings.Mass) * (_jumpMultiplier * data.JumpEnhancerValue);
 
 				data.HasJumped = true;
 			}
@@ -158,12 +157,12 @@ namespace Fusion.KCC
 		{
 			if (data.GroundAngle <= _slowWalkAngle || Vector3.Dot(data.KinematicTangent, Vector3.up) <= 0.0f)
 			{
-				data.KinematicSpeed = _kinematicSpeed;
+				data.KinematicSpeed = _kinematicSpeed * data.SpeedEnhancerValue;
 			}
 			else
 			{
 				float slowdown = KCCMathUtility.Map(_slowWalkAngle, data.MaxGroundAngle, 0.0f, 1.0f, data.GroundAngle);
-				data.KinematicSpeed = Mathf.Lerp(0.0f, _kinematicSpeed, 1.0f - slowdown);
+				data.KinematicSpeed = Mathf.Lerp(0.0f, _kinematicSpeed * data.SpeedEnhancerValue, 1.0f - slowdown);
 			}
 
 			SuppressOtherProcessors(kcc);

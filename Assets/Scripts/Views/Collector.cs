@@ -2,7 +2,6 @@
 using Assets.Scripts.Services.App;
 using Fusion;
 using Fusion.KCC;
-using System;
 using UnityEngine;
 using Zenject;
 
@@ -17,11 +16,16 @@ namespace Assets.Scripts.Views
         public NetworkDictionary<CollectableType, int> Collected => default;
 
         private KCC kcc;
+        private SpeedEnhancer speedEnhancer;
+        private JumpEnhancer jumpEnhancer;
 
         private void Awake()
         {
             kcc = GetComponent<KCC>();
             kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
+
+            speedEnhancer = GetComponent<SpeedEnhancer>();
+            jumpEnhancer = GetComponent<JumpEnhancer>();
         }
 
         private void OnDestroy()
@@ -67,6 +71,13 @@ namespace Assets.Scripts.Views
         {
             if (!Object.HasInputAuthority)
                 return;
+
+            if (speedEnhancer)
+                speedEnhancer.Enhance(current);
+
+            if (jumpEnhancer)
+                jumpEnhancer.Enhance(current);
+
 
             foreach(var collectable in current)
                 playerInventory.SetCollectableBalance(collectable.Key, collectable.Value);

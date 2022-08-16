@@ -10,6 +10,9 @@ namespace Fusion.KCC
 
 		public bool Sprint;
 
+		public float JumpEnhancerValue;
+		public float SpeedEnhancerValue;
+
 		// PARTIAL METHODS
 
 		partial void ClearUserData()
@@ -24,6 +27,9 @@ namespace Fusion.KCC
 			// This method is also executed after fixed updates to copy fixed data to render data.
 
 			Sprint = other.Sprint;
+
+			JumpEnhancerValue = other.JumpEnhancerValue;
+			SpeedEnhancerValue = other.SpeedEnhancerValue;
 		}
 	}
 }
