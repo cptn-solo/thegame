@@ -400,5 +400,19 @@ namespace Example
 			MouseMovement = 1 << 3, // Look rotation is updated on mouse move
 			Dash          = 1 << 4, // Look rotation is updated on dash
 		}
+
+        // Enhancements
+
+		public override void SetInputProperties(KCC kcc, KCCData data)
+		{
+			if (speedEnhancer != null)
+				speedEnhancer.Enhance(kcc, data);
+
+			if (jumpEnhancer != null)
+				jumpEnhancer.Enhance(kcc, data);
+
+			base.SetInputProperties(kcc, data);
+		}
+
 	}
 }
