@@ -723,7 +723,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: "\u0443\u0441\u043A\u043E\u0440\u0438\u0442\u0435\u043B\u044C"
+  - m_Name: booster
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1173,7 +1173,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: "\u0443\u0441\u043A\u043E\u0440\u0438\u0442\u0435\u043B\u044C"
+    m_ConditionEvent: booster
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8397545420817492249}

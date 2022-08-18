@@ -8,34 +8,28 @@ namespace Assets.Scripts.Views
 {
     public class PlayerModulesView : NetworkBehaviour
     {
-        private const string animationDeployBool = "deploy";
-        private const string animationRetractBool = "retract";
         private const string animationHatchJetpack = "джетпак";
         private const string animationHatchBooster = "booster";
+
         private const string animationReadyBool = "ready";
 
-        private const string animationMoveForward = "Forward";
-
         [SerializeField] private Animator hatchesAnimator = null;
-        
+
         [SerializeField] private Animator boosterAnimator = null;
         [SerializeField] private Animator jetpackAnimator = null;
 
-        [SerializeField] private GameObject jetpackDeploy = null;
-        [SerializeField] private GameObject jetpackMain = null;
-
-        [Networked(OnChanged = nameof(OnJetpackDeployChange))]
-        public NetworkBool JetpackDeploy { get; set; } = false;
+        [Networked(OnChanged = nameof(OnJetpackReadyChange))]
+        public NetworkBool JetpackReady { get; set; } = false;
 
         [Networked(OnChanged = nameof(OnBoosterReadyChange))]
         public NetworkBool BoosterReady { get; set; } = false;
 
-        private static void OnJetpackDeployChange(Changed<PlayerModulesView> changed)
+        private static void OnJetpackReadyChange(Changed<PlayerModulesView> changed)
         {
-            var current = changed.Behaviour.JetpackDeploy;
+            var current = changed.Behaviour.JetpackReady;
             changed.LoadOld();
 
-            var old = changed.Behaviour.JetpackDeploy;
+            var old = changed.Behaviour.JetpackReady;
 
             if (!old.Equals(current))
                 changed.Behaviour.ToggleJetpack(current);
@@ -61,7 +55,7 @@ namespace Assets.Scripts.Views
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void JetpackDeployRPC()
         {
-            JetpackDeploy = !JetpackDeploy;
+            JetpackReady = !JetpackReady;
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -92,31 +86,21 @@ namespace Assets.Scripts.Views
 
         }
 
-        public void ToggleJetpack(bool deploy)
+        public void ToggleJetpack(bool state)
         {
-            Debug.Log($"ToggleJetpack {deploy}");
+            Debug.Log($"ToggleJetpack {state}");
 
-            StartCoroutine(nameof(ToggleJetpackCoroutine), deploy);
-        }
+            StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchJetpack);
 
-        public IEnumerator ToggleJetpackCoroutine(bool deploy)
-        {   
-            Debug.Log($"ToggleJetpackCoroutine {deploy}");
-
-            ToggleDeployedState(deploy);
-            yield return new WaitForSeconds(4);
-            SwitchVisual(deploy);
+            jetpackAnimator.SetBool(animationReadyBool, state);
         }
 
         private void ToggleBooster(bool state)
         {
             Debug.Log($"ToggleBooster {state}");
 
-            hatchesAnimator.SetBool(animationMoveForward, false);
-            hatchesAnimator.gameObject.transform.localRotation = Quaternion.identity;
-            
             StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchBooster);
-            
+
             boosterAnimator.SetBool(animationReadyBool, state);
         }
 
@@ -127,54 +111,6 @@ namespace Assets.Scripts.Views
             hatchesAnimator.SetBool(hatched, true);
             yield return new WaitForSeconds(2);
             hatchesAnimator.SetBool(hatched, false);
-        }
-
-
-        private void ToggleDeployedState(bool deploy)
-        {
-            Debug.Log($"ToggleDeployedState {deploy}");
-            
-            hatchesAnimator.SetBool(animationMoveForward, false);
-            hatchesAnimator.gameObject.transform.localRotation = Quaternion.identity;
-            hatchesAnimator.SetBool(animationHatchJetpack, true);
-
-            if (deploy)
-            {
-
-                jetpackDeploy.SetActive(true);
-                jetpackMain.SetActive(false);
-
-                jetpackAnimator.SetBool(animationRetractBool, false);
-                jetpackAnimator.SetBool(animationDeployBool, true);
-            }
-            else
-            {
-                jetpackDeploy.SetActive(true);
-                jetpackMain.SetActive(false);
-
-                jetpackAnimator.SetBool(animationRetractBool, true);
-                jetpackAnimator.SetBool(animationDeployBool, false);
-            }
-        }
-
-        private void SwitchVisual(bool deployed)
-        {
-            Debug.Log($"SwitchVisual {deployed}");
-
-            jetpackAnimator.SetBool(animationDeployBool, false);
-            jetpackAnimator.SetBool(animationRetractBool, false);
-            hatchesAnimator.SetBool(animationHatchJetpack, false);
-
-            if (deployed)
-            {
-                jetpackDeploy.SetActive(false);
-                jetpackMain.SetActive(true);
-            }
-            else
-            {
-                jetpackDeploy.SetActive(false);
-                jetpackMain.SetActive(false);
-            }
         }
     }
 }
