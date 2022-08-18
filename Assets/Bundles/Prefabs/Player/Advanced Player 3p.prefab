@@ -2477,7 +2477,7 @@ MonoBehaviour:
   m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 1
+  _interpolationDataSource: 0
   Animator: {fileID: 3715801328242183250}
   SyncSettings: 68
   FloatAccuracy:

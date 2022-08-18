@@ -76,7 +76,7 @@ namespace Assets.Scripts.Views
             Debug.Log($"ToggleJetpackCoroutine {deploy}");
 
             ToggleDeployedState(deploy);
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(4);
             SwitchVisual(deploy);
         }
 
