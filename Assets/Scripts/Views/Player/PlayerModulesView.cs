@@ -8,8 +8,9 @@ namespace Assets.Scripts.Views
 {
     public class PlayerModulesView : NetworkBehaviour
     {
-        private const string animationHatchJetpack = "джетпак";
+        private const string animationHatchJetpack = "jetpack";
         private const string animationHatchBooster = "booster";
+        private const string animationHatchDrone = "drone";
 
         private const string animationReadyBool = "ready";
 
@@ -17,12 +18,18 @@ namespace Assets.Scripts.Views
 
         [SerializeField] private Animator boosterAnimator = null;
         [SerializeField] private Animator jetpackAnimator = null;
+        [SerializeField] private Animator droneAnimator = null;
+
+        [SerializeField] private JetpackView jetpackView;
 
         [Networked(OnChanged = nameof(OnJetpackReadyChange))]
         public NetworkBool JetpackReady { get; set; } = false;
 
         [Networked(OnChanged = nameof(OnBoosterReadyChange))]
         public NetworkBool BoosterReady { get; set; } = false;
+
+        [Networked(OnChanged = nameof(OnDroneReadyChange))]
+        public NetworkBool DroneReady { get; set; } = false;
 
         private static void OnJetpackReadyChange(Changed<PlayerModulesView> changed)
         {
@@ -44,12 +51,15 @@ namespace Assets.Scripts.Views
             if (!old.Equals(current))
                 changed.Behaviour.ToggleBooster(current);
         }
-
-        private Player player = null;
-
-        private void Awake()
+        private static void OnDroneReadyChange(Changed<PlayerModulesView> changed)
         {
-            player = transform.parent.gameObject.GetComponent<ThirdPersonPlayer>();
+            var current = changed.Behaviour.DroneReady;
+            changed.LoadOld();
+
+            var old = changed.Behaviour.DroneReady;
+
+            if (!old.Equals(current))
+                changed.Behaviour.ToggleDrone(current);
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -62,6 +72,12 @@ namespace Assets.Scripts.Views
         public void BoosterDeployRPC()
         {
             BoosterReady = !BoosterReady;
+        }
+
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public void DroneDeployRPC()
+        {
+            DroneReady = !DroneReady;
         }
 
         private void Update()
@@ -84,12 +100,15 @@ namespace Assets.Scripts.Views
             if (keyboard.digit2Key.wasPressedThisFrame)
                 BoosterDeployRPC();
 
+            if (keyboard.digit3Key.wasPressedThisFrame)
+                DroneDeployRPC();
+
+            if (JetpackReady && keyboard.spaceKey.wasPressedThisFrame)
+                jetpackView.ToggleJet(true);
         }
 
         public void ToggleJetpack(bool state)
         {
-            Debug.Log($"ToggleJetpack {state}");
-
             StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchJetpack);
 
             jetpackAnimator.SetBool(animationReadyBool, state);
@@ -97,19 +116,22 @@ namespace Assets.Scripts.Views
 
         private void ToggleBooster(bool state)
         {
-            Debug.Log($"ToggleBooster {state}");
-
             StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchBooster);
 
             boosterAnimator.SetBool(animationReadyBool, state);
         }
 
+        private void ToggleDrone(bool state)
+        {
+            StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchDrone);
+
+            droneAnimator.SetBool(animationReadyBool, state);
+        }
+
         public IEnumerator ToggleHatchetCoroutine(string hatched)
         {
-            Debug.Log($"ToggleHatchetCoroutine {hatched}");
-
             hatchesAnimator.SetBool(hatched, true);
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
             hatchesAnimator.SetBool(hatched, false);
         }
     }
