@@ -13,6 +13,16 @@ namespace Example
 		Sprint       = 5,
 		LeftTrigger  = 6,
 		RightTrigger = 7,
+		Button1		 = 8,
+		Button2		 = 9,
+		Button3		 = 10,
+		Button4		 = 11,
+		Button5		 = 12,
+		Button6		 = 13,
+		Button7		 = 14,
+		Button8		 = 15,
+		Button9		 = 16,
+		Button0		 = 17,
 	}
 
 	/// <summary>
@@ -40,6 +50,16 @@ namespace Example
 		public bool Sprint       { get { return Actions.IsSet(EGameplayInputAction.Sprint);       } set { Actions.Set(EGameplayInputAction.Sprint,       value); } }
 		public bool LeftTrigger  { get { return Actions.IsSet(EGameplayInputAction.LeftTrigger);  } set { Actions.Set(EGameplayInputAction.LeftTrigger,  value); } }
 		public bool RightTrigger { get { return Actions.IsSet(EGameplayInputAction.RightTrigger); } set { Actions.Set(EGameplayInputAction.RightTrigger, value); } }
+		public bool Button1 { get { return Actions.IsSet(EGameplayInputAction.Button1); } set { Actions.Set(EGameplayInputAction.Button1, value); } }
+		public bool Button2 { get { return Actions.IsSet(EGameplayInputAction.Button2); } set { Actions.Set(EGameplayInputAction.Button2, value); } }
+		public bool Button3 { get { return Actions.IsSet(EGameplayInputAction.Button3); } set { Actions.Set(EGameplayInputAction.Button3, value); } }
+		public bool Button4 { get { return Actions.IsSet(EGameplayInputAction.Button4); } set { Actions.Set(EGameplayInputAction.Button4, value); } }
+		public bool Button5 { get { return Actions.IsSet(EGameplayInputAction.Button5); } set { Actions.Set(EGameplayInputAction.Button5, value); } }
+		public bool Button6 { get { return Actions.IsSet(EGameplayInputAction.Button6); } set { Actions.Set(EGameplayInputAction.Button6, value); } }
+		public bool Button7 { get { return Actions.IsSet(EGameplayInputAction.Button7); } set { Actions.Set(EGameplayInputAction.Button7, value); } }
+		public bool Button8 { get { return Actions.IsSet(EGameplayInputAction.Button8); } set { Actions.Set(EGameplayInputAction.Button8, value); } }
+		public bool Button9 { get { return Actions.IsSet(EGameplayInputAction.Button9); } set { Actions.Set(EGameplayInputAction.Button9, value); } }
+		public bool Button0 { get { return Actions.IsSet(EGameplayInputAction.Button0); } set { Actions.Set(EGameplayInputAction.Button0, value); } }
 	}
 
 	public static class GameplayInputActionExtensions
