@@ -597,6 +597,17 @@ namespace Example
 				_renderInput.Dash   = keyboard.tabKey.isPressed;
 				_renderInput.Sprint = keyboard.leftShiftKey.isPressed;
 
+				_renderInput.Button1 = keyboard.digit1Key.isPressed;
+				_renderInput.Button2 = keyboard.digit2Key.isPressed;
+				_renderInput.Button3 = keyboard.digit3Key.isPressed;
+				_renderInput.Button4 = keyboard.digit4Key.isPressed;
+				_renderInput.Button5 = keyboard.digit5Key.isPressed;
+				_renderInput.Button6 = keyboard.digit6Key.isPressed;
+				_renderInput.Button7 = keyboard.digit7Key.isPressed;
+				_renderInput.Button8 = keyboard.digit8Key.isPressed;
+				_renderInput.Button9 = keyboard.digit9Key.isPressed;
+				_renderInput.Button0 = keyboard.digit0Key.isPressed;
+
 				if (Object.HasInputAuthority == true)
 				{
 					// Here we can use KeyControl.wasPressedThisFrame / Input.GetKeyDown() because it is not part of input structure and we send actions through RPC.

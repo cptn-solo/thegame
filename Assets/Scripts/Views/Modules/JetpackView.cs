@@ -3,13 +3,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
-    public class JetpackView : MonoBehaviour
+    public class JetpackView : ModuleView<JetpackView>, IModuleView
     {
+        protected override string HatchName => "sides";
+
         [SerializeField] private ParticleSystem[] jets;
 
-        public void ToggleJet(bool toggle)
+        protected override void EngageVisual(bool engage)
         {
-            if (toggle)
+            if (engage)
                 StartCoroutine(nameof(ToggleJetsVisual));
             else
                 foreach (var jet in jets)
