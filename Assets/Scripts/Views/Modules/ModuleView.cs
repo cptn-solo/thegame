@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,49 +7,69 @@ namespace Assets.Scripts.Views
 {
     public class ModuleView <T> : NetworkBehaviour, IModuleView where T : ModuleView<T>, IModuleView
     {
-        private Animator animator = null;
-        private UnityAction<string, IModuleView> onHatchOpenRequest;
-
+        protected Animator Animator = null;
+        
         protected virtual string HatchName { get; }
+        protected virtual string EngageName { get; }
+        protected virtual float EngageTime { get; } = 1.0f;
         protected virtual string AnimationReadyBool { get; } = "ready";
 
         public event UnityAction<string, IModuleView> HatchOpenRequest;
 
-        public virtual void Toggle(UnityAction<string, IModuleView> OnHatchOpenRequest)
+        [Networked] public NetworkBool ModuleReady { get; set; }
+        [Networked] public NetworkBool Engaged { get; set; }
+
+        private bool localModuleReady;
+        private bool localEngaged;
+
+        private void Awake() => Animator = GetComponent<Animator>();
+        public override void Render()
         {
-            onHatchOpenRequest = OnHatchOpenRequest;
-            HatchOpenRequest += OnHatchOpenRequest;
-            
-            ModuleReady = !ModuleReady;
+            if (localModuleReady != ModuleReady)
+                ToggleVisual(ModuleReady);
+
+            localModuleReady = ModuleReady;
+
+            if (localEngaged != Engaged)
+                EngageVisual(Engaged);
+
+            localEngaged = Engaged;
         }
 
-        public virtual NetworkBool ModuleReady { get; set; } = false;
-        protected static void OnModuleReadyChange(Changed<T> changed)
+        public virtual void Toggle()
         {
-            var current = changed.Behaviour.ModuleReady;
-            changed.LoadOld();
-
-            var old = changed.Behaviour.ModuleReady;
-
-            if (!old.Equals(current))
-                changed.Behaviour.ToggleVisual(current);
-        }
-        private void Awake()
-        {
-            animator = GetComponent<Animator>();
+            if (Runner.IsServer)
+                ModuleReady = !ModuleReady;
         }
 
         protected virtual void ToggleVisual(bool state)
         {
-            if (HatchOpenRequest != null)
-            {
-                HatchOpenRequest.Invoke(HatchName, this);
-                HatchOpenRequest -= onHatchOpenRequest;
-            }
+            HatchOpenRequest?.Invoke(HatchName, this);
 
-            animator.SetBool(AnimationReadyBool, state);
+            Animator.SetBool(AnimationReadyBool, state);
         }
-        public virtual void Engage(bool engage) { }
+
+        public virtual void Engage(bool engage) {
+            if (Runner.IsServer)
+            {
+                Engaged = engage;
+                if (engage)
+                    StartCoroutine(nameof(Disengage), EngageTime);
+            }
+        }
+
+        protected virtual void EngageVisual(bool engage)
+        {
+            if (EngageName != null)
+                Animator.SetBool(EngageName, engage);
+        }
+
+        protected virtual IEnumerator Disengage(float interval)
+        {
+            yield return new WaitForSeconds(interval);
+            Engage(false);
+        }
+
 
     }
 }

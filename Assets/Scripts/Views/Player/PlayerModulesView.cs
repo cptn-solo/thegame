@@ -1,7 +1,7 @@
+using Example;
 using Fusion;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Views
 {
@@ -13,43 +13,66 @@ namespace Assets.Scripts.Views
 
         [SerializeField] private Animator hatchesAnimator = null;
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void JetpackDeployRPC() => jetpackView.Toggle(OnHatchOpenRequest);
-
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void BoosterDeployRPC() => boosterView.Toggle(OnHatchOpenRequest);
-
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void DroneDeployRPC() => droneView.Toggle(OnHatchOpenRequest);
+        private TickTimer moduleToggleTimer;
 
         private void OnHatchOpenRequest(string hatch, IModuleView module) =>
             StartCoroutine(nameof(ToggleHatchCoroutine), hatch);
 
+        private void Start()
+        {
+            jetpackView.HatchOpenRequest += OnHatchOpenRequest;
+            boosterView.HatchOpenRequest += OnHatchOpenRequest;
+            droneView.HatchOpenRequest += OnHatchOpenRequest;
+        }
+        private void OnDestroy()
+        {
+            jetpackView.HatchOpenRequest -= OnHatchOpenRequest;
+            boosterView.HatchOpenRequest -= OnHatchOpenRequest;
+            droneView.HatchOpenRequest -= OnHatchOpenRequest;
+        }
+
         private void Update()
         {
-            //transform.localRotation = 
-            //    hatchesAnimator.gameObject.transform.parent.localRotation;
             var speed = 2.0f * Time.deltaTime;
             var bodyDir = Vector3.RotateTowards(
                 transform.forward,
                 hatchesAnimator.gameObject.transform.parent.forward, speed, 0.0f);
             transform.rotation = Quaternion.LookRotation(bodyDir);
+        }
+        private void InitModuleToggleTimer() =>
+            moduleToggleTimer = TickTimer.CreateFromSeconds(Runner, .3f);
 
-            if (!Object.HasInputAuthority)
+        public override void FixedUpdateNetwork()
+        {
+            if (!moduleToggleTimer.ExpiredOrNotRunning(Runner))
                 return;
 
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard.digit1Key.wasPressedThisFrame)
-                JetpackDeployRPC();
+            if (Runner.Stage == SimulationStages.Forward &&
+                Runner.TryGetInputForPlayer<GameplayInput>(Object.InputAuthority, out var input))
+            {
+                if (jetpackView.ModuleReady && input.Jump)
+                    jetpackView.Engage(true);
 
-            if (keyboard.digit2Key.wasPressedThisFrame)
-                BoosterDeployRPC();
+                if (boosterView.ModuleReady && input.Dash)
+                    boosterView.Engage(true);
 
-            if (keyboard.digit3Key.wasPressedThisFrame)
-                DroneDeployRPC();
+                if (input.Button1)
+                    jetpackView.Toggle();
 
-            if (jetpackView.ModuleReady && keyboard.spaceKey.wasPressedThisFrame)
-                jetpackView.Engage(true);
+                if (input.Button2)
+                    boosterView.Toggle();
+
+                if (input.Button3)
+                    droneView.Toggle();
+
+                if (input.Jump ||
+                    input.Button1 ||
+                    input.Button2 ||
+                    input.Button3)
+                {
+                    InitModuleToggleTimer();
+                }
+            }
         }
 
         public IEnumerator ToggleHatchCoroutine(string hatch)

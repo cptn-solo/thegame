@@ -1351,7 +1351,7 @@ MonoBehaviour:
   _maxRepeatTime: 0.25
   _ignoreInputOnPause: 2
   _maxIgnoreInputExtension: 5
-  _logMissingInputs: 1
+  _logMissingInputs: 0
 --- !u!114 &4044730987639160504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1625,7 +1625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6711161126537081052}
   - component: {fileID: 6711161126537081055}
-  - component: {fileID: 7266308154566889814}
+  - component: {fileID: 1450622454077737511}
   m_Layer: 0
   m_Name: booster
   m_TagString: Untagged
@@ -1673,7 +1673,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7266308154566889814
+--- !u!114 &1450622454077737511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1687,6 +1687,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _ModuleReady:
+    _value: 0
+  _Engaged:
     _value: 0
 --- !u!1 &6711161127471367686
 GameObject:
@@ -1756,6 +1758,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _ModuleReady:
+    _value: 0
+  _Engaged:
     _value: 0
 --- !u!1 &7005470750435234735
 GameObject:
@@ -6676,7 +6680,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7173719459643562894}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.39999998, z: -3}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6781,7 +6785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   jetpackView: {fileID: 133694220121986374}
-  boosterView: {fileID: 7266308154566889814}
+  boosterView: {fileID: 1450622454077737511}
   droneView: {fileID: 2221435378249028871}
   hatchesAnimator: {fileID: 3715801328242183250}
 --- !u!114 &5603384970658786296
@@ -6808,7 +6812,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1512047212547305293}
   - {fileID: 133694220121986374}
-  - {fileID: 7266308154566889814}
+  - {fileID: 1450622454077737511}
   - {fileID: 2221435378249028871}
   SimulationBehaviours: []
 --- !u!1 &7769940011521358883
@@ -6898,7 +6902,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 00000000657a199826d42a9b1a162c289e35fac7096efccd5b3483e4564855da04122af3105a0b75921547f0a00ff30605116e29c332fcfc662c61d3c7f7909862e90db7a4ca9f6201d4024d
+  StateHashes: 00000000657a1998cf2c106f1a162c28ba55d81e096efccd590e5aa7564855da0628f3b0105a0b7584ad0a1ea00ff3067f5b9e2ac332fcfc1c6691d0c7f7909818a3fdb4a4ca9f627b9ef24eca1fd91e901385ca15b524dcf3514e5702ed38a2a4725f89e8516ce9e213c4ae130926a00a8e8d83e10a0583f662fbfe4c757444ef3b1efb37c1ce6dcd4ff44a
   TriggerHashes: 00000000
 --- !u!1 &7917982407387272742
 GameObject:
@@ -6924,7 +6928,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7917982407387272742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12082,6 +12086,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _ModuleReady:
+    _value: 0
+  _Engaged:
     _value: 0
   jets:
   - {fileID: 5949558314897717513}
