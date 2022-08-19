@@ -1,4 +1,3 @@
-using Example;
 using Fusion;
 using System.Collections;
 using UnityEngine;
@@ -8,77 +7,23 @@ namespace Assets.Scripts.Views
 {
     public class PlayerModulesView : NetworkBehaviour
     {
-        private const string animationHatchJetpack = "jetpack";
-        private const string animationHatchBooster = "booster";
-        private const string animationHatchDrone = "drone";
-
-        private const string animationReadyBool = "ready";
+        [SerializeField] private JetpackView jetpackView;
+        [SerializeField] private BoosterView boosterView;
+        [SerializeField] private DroneView droneView;
 
         [SerializeField] private Animator hatchesAnimator = null;
 
-        [SerializeField] private Animator boosterAnimator = null;
-        [SerializeField] private Animator jetpackAnimator = null;
-        [SerializeField] private Animator droneAnimator = null;
-
-        [SerializeField] private JetpackView jetpackView;
-
-        [Networked(OnChanged = nameof(OnJetpackReadyChange))]
-        public NetworkBool JetpackReady { get; set; } = false;
-
-        [Networked(OnChanged = nameof(OnBoosterReadyChange))]
-        public NetworkBool BoosterReady { get; set; } = false;
-
-        [Networked(OnChanged = nameof(OnDroneReadyChange))]
-        public NetworkBool DroneReady { get; set; } = false;
-
-        private static void OnJetpackReadyChange(Changed<PlayerModulesView> changed)
-        {
-            var current = changed.Behaviour.JetpackReady;
-            changed.LoadOld();
-
-            var old = changed.Behaviour.JetpackReady;
-
-            if (!old.Equals(current))
-                changed.Behaviour.ToggleJetpack(current);
-        }
-        private static void OnBoosterReadyChange(Changed<PlayerModulesView> changed)
-        {
-            var current = changed.Behaviour.BoosterReady;
-            changed.LoadOld();
-
-            var old = changed.Behaviour.BoosterReady;
-
-            if (!old.Equals(current))
-                changed.Behaviour.ToggleBooster(current);
-        }
-        private static void OnDroneReadyChange(Changed<PlayerModulesView> changed)
-        {
-            var current = changed.Behaviour.DroneReady;
-            changed.LoadOld();
-
-            var old = changed.Behaviour.DroneReady;
-
-            if (!old.Equals(current))
-                changed.Behaviour.ToggleDrone(current);
-        }
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public void JetpackDeployRPC() => jetpackView.Toggle(OnHatchOpenRequest);
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void JetpackDeployRPC()
-        {
-            JetpackReady = !JetpackReady;
-        }
+        public void BoosterDeployRPC() => boosterView.Toggle(OnHatchOpenRequest);
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void BoosterDeployRPC()
-        {
-            BoosterReady = !BoosterReady;
-        }
+        public void DroneDeployRPC() => droneView.Toggle(OnHatchOpenRequest);
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void DroneDeployRPC()
-        {
-            DroneReady = !DroneReady;
-        }
+        private void OnHatchOpenRequest(string hatch, IModuleView module) =>
+            StartCoroutine(nameof(ToggleHatchCoroutine), hatch);
 
         private void Update()
         {
@@ -103,36 +48,15 @@ namespace Assets.Scripts.Views
             if (keyboard.digit3Key.wasPressedThisFrame)
                 DroneDeployRPC();
 
-            if (JetpackReady && keyboard.spaceKey.wasPressedThisFrame)
-                jetpackView.ToggleJet(true);
+            if (jetpackView.ModuleReady && keyboard.spaceKey.wasPressedThisFrame)
+                jetpackView.Engage(true);
         }
 
-        public void ToggleJetpack(bool state)
+        public IEnumerator ToggleHatchCoroutine(string hatch)
         {
-            StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchJetpack);
-
-            jetpackAnimator.SetBool(animationReadyBool, state);
-        }
-
-        private void ToggleBooster(bool state)
-        {
-            StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchBooster);
-
-            boosterAnimator.SetBool(animationReadyBool, state);
-        }
-
-        private void ToggleDrone(bool state)
-        {
-            StartCoroutine(nameof(ToggleHatchetCoroutine), animationHatchDrone);
-
-            droneAnimator.SetBool(animationReadyBool, state);
-        }
-
-        public IEnumerator ToggleHatchetCoroutine(string hatched)
-        {
-            hatchesAnimator.SetBool(hatched, true);
+            hatchesAnimator.SetBool(hatch, true);
             yield return new WaitForSeconds(1);
-            hatchesAnimator.SetBool(hatched, false);
+            hatchesAnimator.SetBool(hatch, false);
         }
     }
 }

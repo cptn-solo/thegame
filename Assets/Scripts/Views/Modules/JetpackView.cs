@@ -1,15 +1,24 @@
+using Fusion;
 using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
-    public class JetpackView : MonoBehaviour
+    public class JetpackView : ModuleView<JetpackView>, IModuleView
     {
+        protected override string HatchName => "sides";
+        
+        [Networked(OnChanged = nameof(OnChanged))]
+        public override NetworkBool ModuleReady { get; set; } = false;
+
+        private static void OnChanged(Changed<JetpackView> changed) => 
+            OnModuleReadyChange(changed);
+
         [SerializeField] private ParticleSystem[] jets;
 
-        public void ToggleJet(bool toggle)
+        public override void Engage(bool engage)
         {
-            if (toggle)
+            if (engage)
                 StartCoroutine(nameof(ToggleJetsVisual));
             else
                 foreach (var jet in jets)
