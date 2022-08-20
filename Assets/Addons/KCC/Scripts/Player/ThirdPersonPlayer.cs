@@ -199,6 +199,7 @@ namespace Example
 			if (Input.WasActivated(EGameplayInputAction.LMB) == true)
 			{
 				// Left mouse button action
+				KCC.FixedData.ShotDirection = CameraPivot.forward.normalized;
 			}
 
 			if (Input.WasActivated(EGameplayInputAction.RMB) == true)

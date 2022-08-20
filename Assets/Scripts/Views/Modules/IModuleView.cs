@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Assets.Scripts.Views
@@ -7,6 +8,6 @@ namespace Assets.Scripts.Views
     {
         event UnityAction<string, IModuleView> HatchOpenRequest;
         NetworkBool ModuleReady { get; set; }
-        void Engage(bool engage);
+        void Engage(bool engage, Vector3 direction);
     }
 }

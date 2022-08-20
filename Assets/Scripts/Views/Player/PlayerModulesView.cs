@@ -1,5 +1,6 @@
 using Example;
 using Fusion;
+using Fusion.KCC;
 using System.Collections;
 using UnityEngine;
 
@@ -15,12 +16,15 @@ namespace Assets.Scripts.Views
         [SerializeField] private Animator hatchesAnimator = null;
 
         private TickTimer moduleToggleTimer;
+        private KCC kcc;
 
         private void OnHatchOpenRequest(string hatch, IModuleView module) =>
             StartCoroutine(nameof(ToggleHatchCoroutine), hatch);
 
         private void Start()
         {
+            kcc = GetComponentInParent<KCC>();
+            
             jetpackView.HatchOpenRequest += OnHatchOpenRequest;
             boosterView.HatchOpenRequest += OnHatchOpenRequest;
             droneView.HatchOpenRequest += OnHatchOpenRequest;
@@ -58,6 +62,9 @@ namespace Assets.Scripts.Views
 
                 if (boosterView.ModuleReady && input.Dash)
                     boosterView.Engage(true);
+
+                if (ballView.ModuleReady && input.LMB)
+                    ballView.Engage(true, kcc.FixedData.ShotDirection.normalized);
 
                 if (input.Button1)
                     ballView.Toggle();

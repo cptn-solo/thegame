@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Fusion.KCC
 {
 	/// <summary>
@@ -12,6 +14,8 @@ namespace Fusion.KCC
 
 		public float JumpEnhancerValue;
 		public float SpeedEnhancerValue;
+		
+		public Vector3 ShotDirection;
 
 		// PARTIAL METHODS
 
@@ -30,6 +34,7 @@ namespace Fusion.KCC
 
 			JumpEnhancerValue = other.JumpEnhancerValue;
 			SpeedEnhancerValue = other.SpeedEnhancerValue;
+			ShotDirection = other.ShotDirection;
 		}
 	}
 }

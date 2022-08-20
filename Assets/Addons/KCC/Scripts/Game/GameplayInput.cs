@@ -42,6 +42,8 @@ namespace Example
 		public Quaternion     RightHandRotation;
 		public NetworkButtons Actions;
 
+		public Vector3 ShotDirection;
+
 		public bool LMB          { get { return Actions.IsSet(EGameplayInputAction.LMB);          } set { Actions.Set(EGameplayInputAction.LMB,          value); } }
 		public bool RMB          { get { return Actions.IsSet(EGameplayInputAction.RMB);          } set { Actions.Set(EGameplayInputAction.RMB,          value); } }
 		public bool MMB          { get { return Actions.IsSet(EGameplayInputAction.MMB);          } set { Actions.Set(EGameplayInputAction.MMB,          value); } }

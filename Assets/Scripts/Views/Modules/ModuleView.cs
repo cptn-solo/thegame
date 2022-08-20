@@ -18,6 +18,7 @@ namespace Assets.Scripts.Views
 
         [Networked] public NetworkBool ModuleReady { get; set; }
         [Networked] public NetworkBool Engaged { get; set; }
+        [Networked] public Vector3 EngageDir { get; set; }
 
         private bool localModuleReady;
         private bool localEngaged;
@@ -49,10 +50,11 @@ namespace Assets.Scripts.Views
             Animator.SetBool(AnimationReadyBool, state);
         }
 
-        public virtual void Engage(bool engage) {
+        public virtual void Engage(bool engage, Vector3 direction = default) {
             if (Runner.IsServer)
             {
                 Engaged = engage;
+                EngageDir = direction;
                 if (engage)
                     StartCoroutine(nameof(Disengage), EngageTime);
             }
@@ -67,7 +69,7 @@ namespace Assets.Scripts.Views
         protected virtual IEnumerator Disengage(float interval)
         {
             yield return new WaitForSeconds(interval);
-            Engage(false);
+            Engage(false, default);
         }
 
 

@@ -47,7 +47,7 @@ namespace Assets.Scripts.Services.Game
             }
         }
 
-        private Vector3 RndDirection() =>
+        public static Vector3 RndDirection() =>
             new(
                 Random.Range(-1.0f, 1.0f),
                 Random.Range(0.0f, 0.3f),
