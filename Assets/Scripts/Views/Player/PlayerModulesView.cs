@@ -10,6 +10,7 @@ namespace Assets.Scripts.Views
         [SerializeField] private JetpackView jetpackView;
         [SerializeField] private BoosterView boosterView;
         [SerializeField] private DroneView droneView;
+        [SerializeField] private BallView ballView;
 
         [SerializeField] private Animator hatchesAnimator = null;
 
@@ -23,12 +24,14 @@ namespace Assets.Scripts.Views
             jetpackView.HatchOpenRequest += OnHatchOpenRequest;
             boosterView.HatchOpenRequest += OnHatchOpenRequest;
             droneView.HatchOpenRequest += OnHatchOpenRequest;
+            ballView.HatchOpenRequest += OnHatchOpenRequest;
         }
         private void OnDestroy()
         {
             jetpackView.HatchOpenRequest -= OnHatchOpenRequest;
             boosterView.HatchOpenRequest -= OnHatchOpenRequest;
             droneView.HatchOpenRequest -= OnHatchOpenRequest;
+            ballView.HatchOpenRequest -= OnHatchOpenRequest;
         }
 
         private void Update()
@@ -57,18 +60,22 @@ namespace Assets.Scripts.Views
                     boosterView.Engage(true);
 
                 if (input.Button1)
-                    jetpackView.Toggle();
+                    ballView.Toggle();
 
                 if (input.Button2)
-                    boosterView.Toggle();
+                    jetpackView.Toggle();
 
                 if (input.Button3)
+                    boosterView.Toggle();
+
+                if (input.Button4)
                     droneView.Toggle();
 
                 if (input.Jump ||
                     input.Button1 ||
                     input.Button2 ||
-                    input.Button3)
+                    input.Button3 ||
+                    input.Button4)
                 {
                     InitModuleToggleTimer();
                 }
