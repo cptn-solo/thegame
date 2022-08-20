@@ -851,7 +851,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7522353906890048630}
   - component: {fileID: 8062720584159705700}
-  - component: {fileID: 2837209101406272283}
   m_Layer: 0
   m_Name: Moves
   m_TagString: Untagged
@@ -888,30 +887,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   animator: {fileID: 3715801328242183250}
---- !u!114 &2837209101406272283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4042877025801299326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 0
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 3073
-  NetworkGuid:
-    RawGuidValue: 00000000000000000000000000000000
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 8062720584159705700}
-  SimulationBehaviours: []
+  speedEnhancer: {fileID: 594027641398068154}
 --- !u!1 &4063300370978538020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,9 +1106,9 @@ GameObject:
   - component: {fileID: 4044730987639160504}
   - component: {fileID: 6820769902135793921}
   - component: {fileID: 540527770505366980}
-  - component: {fileID: 4022772107922677182}
   - component: {fileID: 594027641398068154}
   - component: {fileID: 133791875688194447}
+  - component: {fileID: 4022772107922677182}
   m_Layer: 6
   m_Name: Advanced Player 3p
   m_TagString: Untagged
@@ -1183,9 +1159,7 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: a55dd0d7ef8a38947bf585426aaf3553
   NestedObjects:
-  - {fileID: 2837209101406272283}
   - {fileID: 1370049813681509724}
-  - {fileID: 5603384970658786296}
   NetworkedBehaviours:
   - {fileID: 8919574295905828463}
   - {fileID: 7311504841356540997}
@@ -1199,6 +1173,11 @@ MonoBehaviour:
   - {fileID: 133791875688194447}
   - {fileID: 284165908874756612}
   - {fileID: 4461038489057012441}
+  - {fileID: 8062720584159705700}
+  - {fileID: 1512047212547305293}
+  - {fileID: 133694220121986374}
+  - {fileID: 1450622454077737511}
+  - {fileID: 2221435378249028871}
   SimulationBehaviours: []
 --- !u!54 &7259546585572370780
 Rigidbody:
@@ -1400,19 +1379,6 @@ MonoBehaviour:
   - {fileID: 1047762238677845885, guid: d05eb999a63145144bf842ebeec91d8f, type: 3}
   - {fileID: 1047762238677845885, guid: 7418c192d6100f447a295acc33e8939f, type: 3}
   - {fileID: 1047762238677845885, guid: 2528cbf9ae0b777488877c422b70436a, type: 3}
---- !u!114 &4022772107922677182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5815094185727527531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 717a02054ef2699498e6bd4234fd7995, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _containerSource: 1
 --- !u!114 &594027641398068154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1447,6 +1413,19 @@ MonoBehaviour:
   maxBalance: 10
   step: 0.1
   _JumpEnhancerValue: 1
+--- !u!114 &4022772107922677182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5815094185727527531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717a02054ef2699498e6bd4234fd7995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 1
 --- !u!1 &6234473114544147199
 GameObject:
   m_ObjectHideFlags: 0
@@ -6745,7 +6724,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8222985304058715665}
   - component: {fileID: 1512047212547305293}
-  - component: {fileID: 5603384970658786296}
   m_Layer: 0
   m_Name: Modules
   m_TagString: Untagged
@@ -6788,33 +6766,6 @@ MonoBehaviour:
   boosterView: {fileID: 1450622454077737511}
   droneView: {fileID: 2221435378249028871}
   hatchesAnimator: {fileID: 3715801328242183250}
---- !u!114 &5603384970658786296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7445572111793203048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 0
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 3073
-  NetworkGuid:
-    RawGuidValue: 00000000000000000000000000000000
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1512047212547305293}
-  - {fileID: 133694220121986374}
-  - {fileID: 1450622454077737511}
-  - {fileID: 2221435378249028871}
-  SimulationBehaviours: []
 --- !u!1 &7769940011521358883
 GameObject:
   m_ObjectHideFlags: 0
