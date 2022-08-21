@@ -18,7 +18,8 @@ namespace Assets.Scripts
         }
         public override void FixedUpdateNetwork()
         {
-            if (transform.position.y < fallFromIslandY)
+            if (Runner.Stage == SimulationStages.Forward &&
+                transform.position.y < fallFromIslandY)
             {
                 List<PlayerSpawnPoint> spawnPoints = Runner.SimulationUnityScene.GetComponents<PlayerSpawnPoint>();
                 Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].transform;
