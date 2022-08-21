@@ -199,6 +199,7 @@ namespace Example
 			if (Input.WasActivated(EGameplayInputAction.LMB) == true)
 			{
 				// Left mouse button action
+				KCC.FixedData.ShotDirection = CameraPivot.forward.normalized;
 			}
 
 			if (Input.WasActivated(EGameplayInputAction.RMB) == true)
@@ -242,7 +243,7 @@ namespace Example
 				// Some conditions are met, we can apply pending render look rotation delta to KCC
 				if (_renderLookRotationDelta.IsZero() == false)
 				{
-					KCC.SetLookRotation(lookRotation + _renderLookRotationDelta);
+					KCC.SetLookRotation(lookRotation + (_renderLookRotationDelta * Runner.DeltaTime));
 				}
 			}
 

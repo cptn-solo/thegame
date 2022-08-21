@@ -1,5 +1,6 @@
 using Example;
 using Fusion;
+using Fusion.KCC;
 using System.Collections;
 using UnityEngine;
 
@@ -10,25 +11,31 @@ namespace Assets.Scripts.Views
         [SerializeField] private JetpackView jetpackView;
         [SerializeField] private BoosterView boosterView;
         [SerializeField] private DroneView droneView;
+        [SerializeField] private BallView ballView;
 
         [SerializeField] private Animator hatchesAnimator = null;
 
         private TickTimer moduleToggleTimer;
+        private KCC kcc;
 
         private void OnHatchOpenRequest(string hatch, IModuleView module) =>
             StartCoroutine(nameof(ToggleHatchCoroutine), hatch);
 
         private void Start()
         {
+            kcc = GetComponentInParent<KCC>();
+            
             jetpackView.HatchOpenRequest += OnHatchOpenRequest;
             boosterView.HatchOpenRequest += OnHatchOpenRequest;
             droneView.HatchOpenRequest += OnHatchOpenRequest;
+            ballView.HatchOpenRequest += OnHatchOpenRequest;
         }
         private void OnDestroy()
         {
             jetpackView.HatchOpenRequest -= OnHatchOpenRequest;
             boosterView.HatchOpenRequest -= OnHatchOpenRequest;
             droneView.HatchOpenRequest -= OnHatchOpenRequest;
+            ballView.HatchOpenRequest -= OnHatchOpenRequest;
         }
 
         private void Update()
@@ -40,7 +47,7 @@ namespace Assets.Scripts.Views
             transform.rotation = Quaternion.LookRotation(bodyDir);
         }
         private void InitModuleToggleTimer() =>
-            moduleToggleTimer = TickTimer.CreateFromSeconds(Runner, .3f);
+            moduleToggleTimer = TickTimer.CreateFromSeconds(Runner, 2.0f);
 
         public override void FixedUpdateNetwork()
         {
@@ -56,19 +63,26 @@ namespace Assets.Scripts.Views
                 if (boosterView.ModuleReady && input.Dash)
                     boosterView.Engage(true);
 
+                if (ballView.ModuleReady && input.LMB)
+                    ballView.Engage(true, kcc.FixedData.ShotDirection.normalized);
+
                 if (input.Button1)
-                    jetpackView.Toggle();
+                    ballView.Toggle();
 
                 if (input.Button2)
-                    boosterView.Toggle();
+                    jetpackView.Toggle();
 
                 if (input.Button3)
+                    boosterView.Toggle();
+
+                if (input.Button4)
                     droneView.Toggle();
 
                 if (input.Jump ||
                     input.Button1 ||
                     input.Button2 ||
-                    input.Button3)
+                    input.Button3 ||
+                    input.Button4)
                 {
                     InitModuleToggleTimer();
                 }

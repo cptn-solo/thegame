@@ -7,8 +7,10 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private TextMeshProUGUI speedValue;
         [SerializeField] private TextMeshProUGUI jumpValue;
+        [SerializeField] private TextMeshProUGUI sizeValue;
 
         public string SpeedValue { get => speedValue.text; set => speedValue.text = value; }
         public string JumpValue { get => jumpValue.text; set => jumpValue.text = value; }
+        public string SizeValue { get => sizeValue.text; set => sizeValue.text = value; }
     }
 }

@@ -9,6 +9,11 @@ namespace Assets.Scripts.Services.Game
 {
     public class ArtefactSpawnerService : MonoBehaviour
     {
+        [SerializeField] private float mass = 0.05f;
+        [SerializeField] private float speed = .5f;
+        [SerializeField] private float spawnFrequency = 5.0f;
+        [SerializeField] private float offsetMax = 5;
+
         private List<NetworkObject> spawned = new List<NetworkObject>();
 
         private bool spawning;
@@ -42,12 +47,12 @@ namespace Assets.Scripts.Services.Game
                     runner.Spawn(prefab, Vector3.zero, Quaternion.identity, null,
                         (runner, obj) => InitCollectable(runner, obj, point.GetComponent<NetworkObject>()));
 
-                    yield return new WaitForSeconds(Random.Range(1.0f, 5.0f));
+                    yield return new WaitForSeconds(Random.Range(1.0f, spawnFrequency));
                 }
             }
         }
 
-        private Vector3 RndDirection() =>
+        public static Vector3 RndDirection() =>
             new(
                 Random.Range(-1.0f, 1.0f),
                 Random.Range(0.0f, 0.3f),
@@ -57,14 +62,17 @@ namespace Assets.Scripts.Services.Game
         {
 
             var position = parentObj.transform.position;
-            var offset = RndDirection() * Random.Range(1, 5);
+            var offset = RndDirection() * Random.Range(1, offsetMax);
             var moveDirectioin = RndDirection();
 
             var attachable = obj.GetComponent<AttachableView>();
             attachable.InitForAnchorRef(parentObj.Id, position + offset, moveDirectioin);
             
             var movable = obj.GetComponent<MovableView>();
-            movable.speed = moveDirectioin * Random.Range(.2f, 2.0f);
+            movable.speed = moveDirectioin * Random.Range(
+                speed * .9f,
+                speed * 1.1f);
+            movable.mass = mass;
             
             var despawnable = obj.GetComponent<Despawnable>();
             despawnable.InitForLifeTime(Random.Range(15.0f, 35.0f));

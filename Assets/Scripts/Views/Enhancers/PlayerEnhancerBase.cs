@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Assets.Scripts.Views
 {
-    public abstract class PlayerEnhancerBase : NetworkBehaviour
+    public abstract class PlayerEnhancerBase : NetworkBehaviour, IPlayerEnhancer
     {
         [Inject] protected readonly PlayerSpecsService playerSpecsService;
 
