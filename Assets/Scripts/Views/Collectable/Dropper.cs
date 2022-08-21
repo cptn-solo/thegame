@@ -32,7 +32,7 @@ namespace Assets.Scripts.Views
             collector = GetComponent<Collector>();
             input = GetComponent<PlayerInput>();
             kcc = GetComponent<KCC>();
-            
+
             kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
         }
 
@@ -138,8 +138,12 @@ namespace Assets.Scripts.Views
 
         private void Kcc_OnCollisionEnter(KCC arg1, KCCCollision arg2)
         {
-            if (arg2.NetworkObject.TryGetBehaviour<ShellView>(out var shell))
-                hitDetected = true;
+            if (arg2.NetworkObject.TryGetBehaviour<ShellView>(out var shell) ||
+                arg2.NetworkObject.TryGetBehaviour<Dropper>(out var dropper))
+            {
+               hitDetected = true;
+                Debug.Log($"Hit with shell {shell}");
+            }
         }
     }
 }
