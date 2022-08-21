@@ -7,7 +7,7 @@ namespace Assets.Scripts.Views
         [SerializeField] private BallLauncherView ballLauncher = null;
         protected override string HatchName => "top";
         protected override string EngageName => "engage";
-        protected override float EngageTime => 1.0f;
+        protected override float EngageTime => 2.0f;
 
 
         protected override void EngageVisual(bool engage)

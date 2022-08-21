@@ -47,7 +47,7 @@ namespace Assets.Scripts.Views
             transform.rotation = Quaternion.LookRotation(bodyDir);
         }
         private void InitModuleToggleTimer() =>
-            moduleToggleTimer = TickTimer.CreateFromSeconds(Runner, .3f);
+            moduleToggleTimer = TickTimer.CreateFromSeconds(Runner, 2.0f);
 
         public override void FixedUpdateNetwork()
         {
