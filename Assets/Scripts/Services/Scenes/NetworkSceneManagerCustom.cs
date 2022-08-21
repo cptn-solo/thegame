@@ -23,7 +23,9 @@ namespace Assets.Scripts.Services.Scenes
 
 			if (newScene != prevScene)
 			{
-				yield return SceneManager.LoadSceneAsync(newScene, LoadSceneMode.Additive);
+				SceneManager.LoadScene(newScene, LoadSceneMode.Additive);
+
+                yield return null;
 
 				mainCamera.gameObject.SetActive(false);
 

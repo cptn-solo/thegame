@@ -2,6 +2,162 @@
 
 ## Nightly
 
+### Build 560 (Aug 20, 2022)
+
+**What's New**
+
+- Holding Shift, Alt, Ctr/Cmd key while clicking Visibility or Input Provider icons in the Runner Visibility Controls window will solo that Runner
+
+**Changes**
+
+- NetworkDebugStartUI background made opaque for consistency across Mac/PC and general easier readability of UI
+
+### Build 559 (Aug 18, 2022)
+
+**Bug Fixes**
+
+- Fixed: WebGL Builds not updating Sessions
+
+### Build 558 (Aug 17, 2022)
+
+**Bug Fixes**
+
+- Fixed: Rpcs not being sent to other peers for some objects in Shared mode
+
+### Build 557 (Aug 17, 2022)
+
+**Changes**
+
+- Removed the automatic SimulationCulling setting. If you need to/want to cull objects dynamically from having FixedUpdateNetwork/etc called, use the new NetworkRunner.SetSimulationState method
+
+**Bug Fixes**
+
+- Fixed: Scene Objects not being attached to in some scenarios
+- Fixed: Per-object interest groups not working
+
+### Build 556 (Aug 15, 2022)
+
+**Breaking Changes**
+
+- `ILWeaverSettings` is no longer static class. Partial user class definitions may need to be updated
+
+**Changes**
+
+- Moving config in the project no longer requires `ILWeaverSettings.OverrideNetworkProjectConfigPath` being implemented
+
+### Build 555 (Aug 12, 2022)
+
+**What's New**
+
+- Added distance based priority send scheduling when using area of interest
+- Added round-robin priority scheduler for object sends when not using area of interest
+- NetworkRunner.PushHostMigrationSnapshot
+
+**Changes**
+
+- NetworkObjectConnectionDataStatus enum is no longer public
+
+**Bug Fixes**
+
+- Fixed: Issue with client input redundancy consuming too much bandwidth (especially in VR games with big input structs)
+- Fixed: Issue with SetPlayerObject mapping not being replicated when area of interest was being used
+- Fixed: Issue with 'All Players' interested mode not working in shared mode properly
+- Fixed: NetCommandConnect Size Check
+- Fixed: SharedMode: StateAuthority being potentially lost when running under poor network conditions
+
+### Build 554 (Aug 11, 2022)
+
+**Bug Fixes**
+
+- Fixed: Dispose order on NetBitBufferBlock causing rare crash on ARM
+- Fixed: WarnIfAttribute render order changed to work in Unity 2020 and 2021 both
+
+### Build 552 (Aug 09, 2022)
+
+**What's New**
+
+- Client UniqueId Support
+
+### Build 549 (Aug 04, 2022)
+
+**Changes**
+
+- SessionProperty.Convert throw exception if type not supported
+
+**Bug Fixes**
+
+- Fixed: Missing NullCheck when building Session Custom Properties
+- Fixed: Missing NetAddress.CreateFromIpPort args validation
+
+### Build 548 (Aug 03, 2022)
+
+**Changes**
+
+- Removed NanoSockets VCRuntime Dependency
+
+### Build 546 (Jul 28, 2022)
+
+**Bug Fixes**
+
+- Fixed: Potential `NullReferenceException` when performing a lag-compensated query against a `HitboxRoot` that is alive but has a network `Object` that is not alive
+
+### Build 545 (Jul 27, 2022)
+
+**What's New**
+
+- Support to Session Creation Control
+- SimulationBehaviour and NetworkBehaviour property shortcuts for HasStateAuthority, HasInputAuthority and IsProxy added. Runner.Tick shortcut added
+
+### Build 543 (Jul 25, 2022)
+
+**Removed**
+
+- Old NanoSockets libs for macOS
+
+**Bug Fixes**
+
+- Fixed: NanoSockets signature for macOS
+- Fixed: TickRate increasing with each Play Mode enter when Domain Reloading is off
+- Fixed: Mixing `OnChanged` callbacks for statically and dynamically defined properties
+
+### Build 542 (Jul 24, 2022)
+
+**Bug Fixes**
+
+- Fixed: Fixxed isssues with NetBitBuffer and burst delta compressor
+
+### Build 540 (Jul 22, 2022)
+
+**Bug Fixes**
+
+- Fixed: `NetworkRunner.Shutdown` invoked in `DisconnectedFromServer` callback not preventing simulation from updating
+
+### Build 539 (Jul 21, 2022)
+
+**Bug Fixes**
+
+- Fixed: Removed all pre-allocation of packet buffers
+
+### Build 538 (Jul 20, 2022)
+
+**What's New**
+
+- Experimental support for disabled `Domain Reloading` for faster Enter Play Mode
+
+**Bug Fixes**
+
+- Fixed: `NetworkProjectConfig` inspector's `Apply` and `Revert` buttons being permanently disabled
+
+### Build 537 (Jul 19, 2022)
+
+**Changes**
+
+- NetworkRunner.AddPlayerAreaOfInterest() argument renamed from radius to extent, to better reflect the rectangular nature of the query
+
+**Bug Fixes**
+
+- Fixed: Local prefab being occasionally respawned when the spawn is followed by a despawn in next update (shared mode)
+
 ### Build 535 (Jul 14, 2022)
 
 **Changes**
