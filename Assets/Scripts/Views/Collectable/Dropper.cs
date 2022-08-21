@@ -4,6 +4,7 @@ using Assets.Scripts.Services.Game;
 using Example;
 using Fusion;
 using Fusion.KCC;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -58,16 +59,18 @@ namespace Assets.Scripts.Views
             {
                 InitSpawnTimer();
 
-                DropItems(hitDetected);
+                StartCoroutine(nameof(DropItems), hitDetected);
             }
         }
 
-        private void DropItems(bool wasHit = false)
+        private IEnumerator DropItems(bool wasHit = false)
         {
             var dropCount = GetRandomDropCount();
 
             if (!wasHit && dropCount > 0)
                 dropCount = 1;
+
+            yield return null;
 
             for (var i = 0; i < dropCount; i++)
             {
@@ -78,9 +81,12 @@ namespace Assets.Scripts.Views
                 GetRandomDropPosition() :
                 transform.position + transform.forward * 2.0f;
                 
+                yield return null;
+
                 Runner.Spawn(collectablePrefabs[(int)collectableType], dropPosition, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj, dropPosition));
 
                 collector.EnqueueForCollection(collectableType, -1);
+                yield return null;
             }
 
             hitDetected = false;
