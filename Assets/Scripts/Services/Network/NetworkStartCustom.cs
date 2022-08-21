@@ -79,14 +79,14 @@ namespace Assets.Scripts.Services.Network
         /// </summary>
         [InlineHelp]
         [UnityEngine.Serialization.FormerlySerializedAs("Server")]
-        [DrawIf(nameof(StartMode), (long)StartModes.Automatic, DrawIfHideType.Hide)]
+        [DrawIf(nameof(StartMode), (long)StartModes.Automatic, Hide = true)]
         public GameMode AutoStartAs = GameMode.Shared;
 
         /// <summary>
         /// <see cref="NetworkDebugStartGUI"/> will not render GUI elements while <see cref="CurrentStage"/> == <see cref="Stage.AllConnected"/>.
         /// </summary>
         [InlineHelp]
-        [DrawIf(nameof(StartMode), (long)StartModes.UserInterface, DrawIfHideType.Hide)]
+        [DrawIf(nameof(StartMode), (long)StartModes.UserInterface, Hide = true)]
         public bool AutoHideGUI = true;
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Assets.Scripts.Services.Network
         /// When using the Select start mode, this number will be the default value for the additional clients option box.
         /// </summary>
         [InlineHelp]
-        [DrawIf(nameof(ShowAutoClients), true, DrawIfHideType.Hide)]
+        [DrawIf(nameof(ShowAutoClients), true, Hide = true)]
         public int AutoClients = 1;
 
 

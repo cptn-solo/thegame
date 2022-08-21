@@ -1352,7 +1352,7 @@ namespace Fusion.Editor {
     protected double GetCompareValue(SerializedProperty property, string conditionMember, FieldInfo finfo) {
 
       if (conditionMember == null || conditionMember == "") {
-        Debug.LogWarning("Invalid Condition.");
+        Debug.LogWarning("Invalid Condition."); 
       }
 
       var condDelegate = finfo.DeclaringType.GetDelegateFromMember(conditionMember);
@@ -1376,6 +1376,7 @@ namespace Fusion.Editor {
         case DoIfCompareOperator.GreaterOrEqual: return referenceValue >= warnIf.CompareToValue;
         case DoIfCompareOperator.Greater: return referenceValue > warnIf.CompareToValue;
         case DoIfCompareOperator.NotZero: return referenceValue != 0;
+        case DoIfCompareOperator.IsZero:  return referenceValue == 0;
       }
       return false;
     }
@@ -1390,6 +1391,7 @@ namespace Fusion.Editor {
         case DoIfCompareOperator.GreaterOrEqual: return referenceValue >= compareToValue;
         case DoIfCompareOperator.Greater: return referenceValue > compareToValue;
         case DoIfCompareOperator.NotZero: return referenceValue != 0;
+        case DoIfCompareOperator.IsZero:  return referenceValue == 0;
       }
       return false;
     }
@@ -1415,7 +1417,7 @@ namespace Fusion.Editor {
       
       double otherValue = GetCompareValue(property, Attribute.ConditionMember, fieldInfo);
 
-      if (Attribute.Hide == DrawIfHideType.ReadOnly || CheckDraw(Attribute, otherValue)) {
+      if (Attribute.Hide == false || CheckDraw(Attribute, otherValue)) {
         return base.GetPropertyHeightInternal(property, label);
       }
 
@@ -1424,10 +1426,10 @@ namespace Fusion.Editor {
     }
 
     protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
-      
+
       double otherValue = GetCompareValue(property, Attribute.ConditionMember, fieldInfo);
       
-      var readOnly = Attribute.Hide == DrawIfHideType.ReadOnly;
+      var readOnly = Attribute.Hide == false;
       var draw = CheckDraw(Attribute, otherValue);
 
       if (readOnly || draw) {
@@ -1490,7 +1492,11 @@ namespace Fusion.Editor {
   [CustomPropertyDrawer(typeof(EditorDisabledGroupAttribute))]
   public class EditorDisabledGroupAttributeDrawer : DecoratorDrawer {
     public override void OnGUI(Rect position) {
-      EditorGUI.BeginDisabledGroup(((EditorDisabledGroupAttribute)attribute).Begin);
+      if (((EditorDisabledGroupAttribute)attribute).Begin) {
+        EditorGUI.BeginDisabledGroup(true);
+      } else {
+        EditorGUI.EndDisabledGroup();
+      }
     }
 
     public override float GetHeight() {
@@ -4085,7 +4091,8 @@ namespace Fusion.Editor {
 
     static Dictionary<Units, (GUIStyle, (string l , string s))> _unitStyles = new Dictionary<Units, (GUIStyle, (string l, string s))>();
 
-    public static (GUIStyle, (string l, string s)) GetOverlayStyle(Units unit) {
+    // Style used for the units name which overlays on top of the edit field.
+    internal static (GUIStyle, (string l, string s)) GetOverlayStyle(Units unit) {
       if (_unitStyles.TryGetValue(unit, out var styleAndName) == false) {
         GUIStyle style;
         style               = new GUIStyle(EditorStyles.miniLabel);
@@ -4100,12 +4107,20 @@ namespace Fusion.Editor {
       return styleAndName;
     }
 
+    static GUIStyle _inverseLabel;
+
+    static GUIStyle InverseLabel {
+      get => _inverseLabel != null ? _inverseLabel : _inverseLabel = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic };
+    }
+
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
       var attr = attribute as UnitAttribute;
       if (attr.UseInverse) {
-        return EditorGUI.GetPropertyHeight(property) * 2 + 6;
+        return base.GetPropertyHeight(property, label) * 2 + 6;
+        //return EditorGUI.GetPropertyHeight(property) * 2 + 6;
       }
-      return EditorGUI.GetPropertyHeight(property);
+      return base.GetPropertyHeight(property, label);
+      //return EditorGUI.GetPropertyHeight(property);
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
@@ -4120,21 +4135,21 @@ namespace Fusion.Editor {
 
       EditorGUI.BeginProperty(position, label, property);
       var holdIndent = EditorGUI.indentLevel;
+      EditorGUI.indentLevel = 0;
 
       var useInverse = attr.UseInverse;
 
-      if (useInverse) {
-        EditorGUI.DrawRect(new Rect(position) { xMin = position.xMin - 2 }, new Color(0, 0, 0, .2f));
-        position.xMax -= 2;
-        position.yMin += 2;
-        position.yMax -= 2;
-      }
+      // Draw testing background for inverse
+      //if (useInverse) {
+      //  EditorGUI.DrawRect(new Rect(position) { xMin = position.xMin - 2 }, new Color(0, 0, 0, .2f));
+      //}
 
       Rect secondRow;
       if (useInverse) {
-        position.height = 17;
+        position.height = 18;
         secondRow = new Rect(position) { y = position.y + 20 };
       } else {
+        position.height = 18;
         secondRow = default;
       }
 
@@ -4150,214 +4165,235 @@ namespace Fusion.Editor {
       Rect rightSide2 = (useInverse) ? new Rect(secondRow) { xMin = secondRow.xMin + EditorGUIUtility.labelWidth + 2 } : default;
       Rect sliderRect1 = new Rect(rightSide1) { xMax = rightSide1.xMax - FIELD_WIDTH - 4 };
       Rect sliderRect2 = new Rect(rightSide2) { xMax = rightSide2.xMax - FIELD_WIDTH - 4 };
-      bool useSlider = (min != 0 || max != 0) && sliderRect1.width > 20;
+      bool useSlider = attr.UseSlider &&/* (min != 0 || max != 0) &&*/ sliderRect1.width > 20;
 
-      /*if (min != 0 || max != 0) */
-      {
 
-        Rect valRect1 = new Rect(rightSide1);
-        Rect valRect2 = new Rect(rightSide2);
+      Rect valRect1 = new Rect(rightSide1);
+      Rect valRect2 = new Rect(rightSide2);
 
+      if (useSlider) {
+        var valwidth = rightSide1.xMax - FIELD_WIDTH;
+        valRect1.xMin = valwidth;
+        valRect2.xMin = valwidth;
+      }
+
+      if (property.propertyType == SerializedPropertyType.Float) {
+
+        // Slider is always float based, even for doubles
         if (useSlider) {
-          var valwidth = rightSide1.xMax - FIELD_WIDTH;
-          valRect1.xMin = valwidth;
-          valRect2.xMin = valwidth;
-        }
+          bool isDouble = proptype == "double";
 
-        if (property.propertyType == SerializedPropertyType.Float) {
-
-          // Slider is always float based, even for doubles
-          if (useSlider) {
-            bool isDouble = proptype == "double";
-
-            // Slider is the same for double and float, it just casts differently at the end.
+          // Slider is the same for double and float, it just casts differently at the end.
+          using (new EditorGUI.IndentLevelScope(holdIndent)) {
             EditorGUI.LabelField(position, label, GUIContent.none);
+          }
+          EditorGUI.BeginChangeCheck();
+          //EditorGUI.indentLevel = 0;
+          float sliderval = GUI.HorizontalSlider(sliderRect1, property.floatValue, (float)min, (float)max);
+          if (EditorGUI.EndChangeCheck()) {
+            double rounded = Math.Round(sliderval, attr.DecimalPlaces);
+            double clamped = Clamp(rounded, realmin, realmax, attr);
+            property.doubleValue = clamped;
+            property.serializedObject.ApplyModifiedProperties();
+          }
+          if (useInverse) {
+            using (new EditorGUI.IndentLevelScope(holdIndent)) {
+              EditorGUI.LabelField(secondRow, attr.InverseName, InverseLabel);
+            }
             EditorGUI.BeginChangeCheck();
-            EditorGUI.indentLevel = 0;
-            float sliderval = GUI.HorizontalSlider(sliderRect1, property.floatValue, (float)min, (float)max);
+            //EditorGUI.indentLevel = 0;
+            float sliderinv = 1f / GUI.HorizontalSlider(sliderRect2, property.floatValue, (float)max, (float)min);
+
+
             if (EditorGUI.EndChangeCheck()) {
-              double rounded = Math.Round(sliderval, attr.DecimalPlaces);
-              double clamped = (attr.Clamp ? (rounded < realmin ? realmin : (rounded > realmax ? realmax : rounded)) : rounded);
+              double rounded = Math.Round(1d / sliderinv, attr.InverseDecimalPlaces);
+              double clamped = Clamp(rounded, realmin, realmax, attr);
+              if (isDouble) {
+                property.doubleValue = clamped;
+              } else {
+                property.floatValue = (float)clamped;
+              }
+              property.serializedObject.ApplyModifiedProperties();
+            }
+          }
+            
+          // Double editable fields
+          if (isDouble) {
+            EditorGUI.BeginChangeCheck();
+            double newval = EditorGUI.DelayedDoubleField(valRect1, GUIContent.none, Math.Round(property.doubleValue, MAX_PLACES));
+            if (EditorGUI.EndChangeCheck()) {
+              //double rounded = Math.Round(d, places);
+              double clamped = Clamp(newval, realmin, realmax, attr);
               property.doubleValue = clamped;
               property.serializedObject.ApplyModifiedProperties();
             }
-            if (useInverse) {
-              EditorGUI.LabelField(secondRow, attr.InverseName);
-              EditorGUI.BeginChangeCheck();
-              EditorGUI.indentLevel = 0;
-              float sliderinv = 1f / GUI.HorizontalSlider(sliderRect2, property.floatValue, (float)max, (float)min);
-              double val = Math.Round(1d / sliderinv, attr.InverseDecimalPlaces);
-              double clamped = attr.Clamp ? (val < realmin ? realmin : (val > realmax ? realmax : val)) : val;
-              if (EditorGUI.EndChangeCheck()) {
-                if (isDouble) {
-                  property.doubleValue = clamped;
-                } else {
-                  property.floatValue = (float)clamped;
-                }
-                property.serializedObject.ApplyModifiedProperties();
-              }
-            }
-            
-            // Double editable fields
-            if (isDouble) {
-              EditorGUI.BeginChangeCheck();
-              double newval = EditorGUI.DelayedDoubleField(valRect1, GUIContent.none, Math.Round(property.doubleValue, MAX_PLACES));
-              if (EditorGUI.EndChangeCheck()) {
-                //double rounded = Math.Round(d, places);
-                double clamped = attr.Clamp ? (newval < realmin ? realmin : (newval > realmax ? realmax : newval)) : newval;
-                property.doubleValue = clamped;
-                property.serializedObject.ApplyModifiedProperties();
-              }
 
-              if (useInverse) {
-                EditorGUI.BeginChangeCheck();
-                // Cast to float going into the field rendering, to limit the number of shown characters, but doesn't actually affect the accuracy of the value.
-                double newinv = 1d / EditorGUI.DelayedDoubleField(valRect2, Math.Round(1d / property.doubleValue, MAX_PLACES));
-                if (EditorGUI.EndChangeCheck()) {
-                  //double rounded = Math.Round(newinv, attr.InverseDecimalPlaces);
-                  double clamped = (float)(attr.Clamp ? (newinv < realmin ? realmin : (newinv > realmax ? realmax : newinv)) : newinv);
-                  property.doubleValue = clamped;
-                  property.serializedObject.ApplyModifiedProperties();
-                }
-              }
-            }
-            // Float editable fields
-            else {
-              EditorGUI.BeginChangeCheck();
-              float newval = EditorGUI.DelayedFloatField(valRect1, property.floatValue);
-              if (EditorGUI.EndChangeCheck()) {
-                //double rounded = Math.Round(newval, places);
-                float clamped = (float)(attr.Clamp ? (newval < realmin ? realmin : (newval > realmax ? realmax : newval)) : newval);
-                property.doubleValue = clamped;
-                property.serializedObject.ApplyModifiedProperties();
-              }
-
-              if (useInverse) {
-                EditorGUI.BeginChangeCheck();
-                float newinv = 1f / EditorGUI.DelayedFloatField(valRect2, 1f / property.floatValue);
-                if (EditorGUI.EndChangeCheck()) {
-                  //double rounded = Math.Round(newinv, places);
-                  float clamped = (float)(attr.Clamp ? (newinv < realmin ? realmin : (newinv > realmax ? realmax : newinv)) : newinv);
-                  property.floatValue = clamped;
-                  property.serializedObject.ApplyModifiedProperties();
-                }
-              }
-            } 
-
-            // No slider handling. Just using a regular property so that dragging over the label works.
-          } else {
-
-            EditorGUI.BeginChangeCheck();
-            EditorGUI.PropertyField(position, property, label);
-            if (EditorGUI.EndChangeCheck()) {
-              double newval = property.doubleValue;
-              if (realmin != 0 || realmax != 0) {
-                double clamped = attr.Clamp ? newval < realmin ? realmin : (newval > realmax ? realmax : newval) : newval;
-                property.doubleValue = clamped;
-                property.serializedObject.ApplyModifiedProperties();
-              }
-            }
             if (useInverse) {
               EditorGUI.BeginChangeCheck();
-              double newval = 1d / EditorGUI.DelayedFloatField(secondRow, attr.InverseName, (float)Math.Round(1d / property.doubleValue, MAX_PLACES));
+              // Cast to float going into the field rendering, to limit the number of shown characters, but doesn't actually affect the accuracy of the value.
+              double newinv = 1d / EditorGUI.DelayedDoubleField(valRect2, Math.Round(1d / property.doubleValue, MAX_PLACES));
               if (EditorGUI.EndChangeCheck()) {
-                if (realmin != 0 || realmax != 0) {
-                  double clamped = attr.Clamp ? newval < realmin ? realmin : (newval > realmax ? realmax : newval) : newval;
-                  property.doubleValue = clamped;
-                } else {
-                  property.doubleValue = newval;
-                }
+                //double rounded = Math.Round(newinv, attr.InverseDecimalPlaces);
+                double clamped = Clamp(newinv, realmin, realmax, attr);
+                property.doubleValue = clamped;
                 property.serializedObject.ApplyModifiedProperties();
               }
             }
           }
-
-        } else if (property.propertyType == SerializedPropertyType.Integer) {
-          // Slider
-          if (useSlider) {
-            EditorGUI.LabelField(position, label, GUIContent.none);
-
-            //float drag = DrawLabelDrag(position);
-            //if (drag != 0) {
-            //  int draggedval = property.intValue + (int)drag;
-            //  int clamped = attr.Clamp ? (int)(draggedval < realmin ? realmin : (draggedval > realmax ? realmax : draggedval)) : draggedval;
-            //  property.intValue = clamped;
-            //  property.serializedObject.ApplyModifiedProperties();
-            //}
-
-            // Int slider
+          // Float editable fields
+          else {
             EditorGUI.BeginChangeCheck();
-            EditorGUI.indentLevel = 0;
-            int sliderval = (int)GUI.HorizontalSlider(sliderRect1, property.intValue, (float)min, (float)max);
+            float newval = EditorGUI.DelayedFloatField(valRect1, property.floatValue);
             if (EditorGUI.EndChangeCheck()) {
-              property.intValue = sliderval;
-              property.serializedObject.ApplyModifiedProperties();
-            }
-
-            // Int input Field
-            EditorGUI.BeginChangeCheck();
-            int i = EditorGUI.DelayedIntField(valRect1, property.intValue);
-            if (EditorGUI.EndChangeCheck()) {
-              property.intValue = (int)(i < realmin ? realmin : (i > realmax ? realmax : i));
+              //double rounded = Math.Round(newval, places);
+              double clamped = Clamp(newval, realmin, realmax, attr);
+              property.doubleValue = clamped;
               property.serializedObject.ApplyModifiedProperties();
             }
 
             if (useInverse) {
-              EditorGUI.LabelField(secondRow, attr.InverseName);
-
-              // Inverse slider for Ints
               EditorGUI.BeginChangeCheck();
-              EditorGUI.indentLevel = 0;
-              float sliderinv = 1f / GUI.HorizontalSlider(sliderRect2, property.intValue, (float)max, (float)min);
+              float newinv = 1f / EditorGUI.DelayedFloatField(valRect2, 1f / property.floatValue);
               if (EditorGUI.EndChangeCheck()) {
-                property.intValue = (int)Math.Round(1f / sliderinv);
-                property.serializedObject.ApplyModifiedProperties();
-              }
-
-              // inverse Int field when slider exists
-              EditorGUI.BeginChangeCheck();
-              float newinv = 1f / EditorGUI.DelayedFloatField(valRect2, (float)Math.Round(1d / property.intValue, MAX_PLACES));
-              if (EditorGUI.EndChangeCheck()) {
-                int val = (int)(1d / newinv);
-                int clamped = (int)(attr.Clamp ? (val < realmin ? realmin : (val > realmax ? realmax : val)) : val);
-                property.intValue = clamped;
+                //double rounded = Math.Round(newinv, places);
+                float clamped = (float)Clamp(newinv, realmin, realmax, attr);
+                property.floatValue = clamped;
                 property.serializedObject.ApplyModifiedProperties();
               }
             }
+          } 
 
+          // No slider handling. Just using a regular property so that dragging over the label works.
+        } else {
 
-            // No slider handling. Just using a regular property so that dragging over the label works.
-          } else {
-            EditorGUI.BeginChangeCheck();
+          EditorGUI.BeginChangeCheck();
+
+          using (new EditorGUI.IndentLevelScope(holdIndent)) {
             EditorGUI.PropertyField(position, property, label);
-            if (EditorGUI.EndChangeCheck() && (realmin != 0 || realmax != 0)) {
-              int intval = property.intValue;
-              int clamped = attr.Clamp ? (int)(intval < realmin ? realmin : (intval > realmax ? realmax : intval)) : intval;
+          }
+
+          if (EditorGUI.EndChangeCheck()) {
+            double newval = property.doubleValue;
+            if (realmin != 0 || realmax != 0) {
+              double clamped = Clamp(newval, realmin, realmax, attr);
+              property.doubleValue = clamped;
+              property.serializedObject.ApplyModifiedProperties();
+            }
+          }
+          if (useInverse) {
+            EditorGUI.BeginChangeCheck();
+            using (new EditorGUI.IndentLevelScope(holdIndent)) {
+              EditorGUI.LabelField(secondRow, attr.InverseName, InverseLabel);
+            }
+            double newval = 1d / EditorGUI.DelayedFloatField(secondRow, " "/*attr.InverseName*/, (float)Math.Round(1d / property.doubleValue, MAX_PLACES));
+            if (EditorGUI.EndChangeCheck()) {
+              if (realmin != 0 || realmax != 0) {
+                double clamped = Clamp(newval, realmin, realmax, attr);
+                property.doubleValue = clamped;
+              } else {
+                property.doubleValue = newval;
+              }
+              property.serializedObject.ApplyModifiedProperties();
+            }
+          }
+        }
+
+      } else if (property.propertyType == SerializedPropertyType.Integer) {
+        // Slider
+        if (useSlider) {
+          using (new EditorGUI.IndentLevelScope(holdIndent)) {
+            EditorGUI.LabelField(position, label, GUIContent.none);
+          }
+
+          //float drag = DrawLabelDrag(position);
+          //if (drag != 0) {
+          //  int draggedval = property.intValue + (int)drag;
+          //  int clamped = attr.Clamp ? (int)(draggedval < realmin ? realmin : (draggedval > realmax ? realmax : draggedval)) : draggedval;
+          //  property.intValue = clamped;
+          //  property.serializedObject.ApplyModifiedProperties();
+          //}
+
+          // Int slider
+          EditorGUI.BeginChangeCheck();
+          //EditorGUI.indentLevel = 0;
+          int sliderval = (int)GUI.HorizontalSlider(sliderRect1, property.intValue, (float)min, (float)max);
+          if (EditorGUI.EndChangeCheck()) {
+            property.intValue = sliderval;
+            property.serializedObject.ApplyModifiedProperties();
+          }
+
+          // Int input Field
+          EditorGUI.BeginChangeCheck();
+          int i = EditorGUI.DelayedIntField(valRect1, property.intValue);
+          if (EditorGUI.EndChangeCheck()) {
+            property.intValue = (int)Clamp(i, realmin, realmax, attr);
+            property.serializedObject.ApplyModifiedProperties();
+          }
+
+          if (useInverse) {
+            using (new EditorGUI.IndentLevelScope(holdIndent)) {
+              EditorGUI.LabelField(secondRow, attr.InverseName, InverseLabel);
+            }
+
+            // Inverse slider for Ints
+            EditorGUI.BeginChangeCheck();
+            //EditorGUI.indentLevel = 0;
+            float sliderinv = 1f / GUI.HorizontalSlider(sliderRect2, property.intValue, (float)max, (float)min);
+            if (EditorGUI.EndChangeCheck()) {
+              property.intValue = (int)Math.Round(1f / sliderinv);
+              property.serializedObject.ApplyModifiedProperties();
+            }
+
+            // inverse Int field when slider exists
+            EditorGUI.BeginChangeCheck();
+            float newinv = 1f / EditorGUI.DelayedFloatField(valRect2, (float)Math.Round(1d / property.intValue, MAX_PLACES));
+            if (EditorGUI.EndChangeCheck()) {
+              //int val = (int)(1d / newinv);
+              int clamped = (int)Clamp(newinv, realmin, realmax, attr);
               property.intValue = clamped;
               property.serializedObject.ApplyModifiedProperties();
             }
-
-            if (useInverse) {
-              EditorGUI.BeginChangeCheck();
-              double newval = EditorGUI.DelayedFloatField(secondRow, attr.InverseName, (float)Math.Round(1d / property.intValue, MAX_PLACES));
-              if (EditorGUI.EndChangeCheck()) {
-                double rounded = 1d / newval;
-                if (realmin != 0 || realmax != 0) {
-                  double clamped = attr.Clamp ? rounded < realmin ? realmin : (rounded > realmax ? realmax : rounded) : rounded;
-                  property.doubleValue = clamped;
-                } else
-                  property.doubleValue = rounded;
-              }
-            }
           }
 
-          // Fallback for unsupported field types
+
+          // No slider handling. Just using a regular property so that dragging over the label works.
         } else {
-          Debug.LogWarning(nameof(UnitAttribute) + " only is applicable to double, float and integer field types.");
+          EditorGUI.BeginChangeCheck();
+          using (new EditorGUI.IndentLevelScope(holdIndent)) {
+            EditorGUI.PropertyField(position, property, label);
+          }
+          if (EditorGUI.EndChangeCheck() && (realmin != 0 || realmax != 0)) {
+            int intval = property.intValue;
+            int clamped = (int)Clamp(intval, realmin, realmax, attr);
+            property.intValue = clamped;
+            property.serializedObject.ApplyModifiedProperties();
+          }
+
+          if (useInverse) {
+            EditorGUI.BeginChangeCheck();
+            using (new EditorGUI.IndentLevelScope(holdIndent)) {
+              EditorGUI.LabelField(secondRow, attr.InverseName, InverseLabel);
+            }
+            double newval = EditorGUI.DelayedFloatField(secondRow, " "/*attr.InverseName*/, (float)Math.Round(1d / property.intValue, MAX_PLACES));
+
+            if (EditorGUI.EndChangeCheck()) {
+              double rounded = 1d / newval;
+              if (realmin != 0 || realmax != 0) {
+                double clamped = Clamp(rounded, realmin, realmax, attr);
+                property.doubleValue = clamped;
+              } else
+                property.doubleValue = rounded;
+            }
+          }
+        }
+
+        // Fallback for unsupported field types
+      } else {
+        Debug.LogWarning(nameof(UnitAttribute) + " only is applicable to double, float and integer field types.");
+        using (new EditorGUI.IndentLevelScope(holdIndent)) {
           EditorGUI.PropertyField(position, property, label, true);
         }
       }
-
 
       if (attr.Unit != Units.None) {
         var (style, name) = GetOverlayStyle(attr.Unit);
@@ -4371,9 +4407,16 @@ namespace Fusion.Editor {
       }
 
       EditorGUI.indentLevel = holdIndent;
+
       EditorGUI.EndProperty();
     }
 
+    static double Clamp(double val, double min, double max, UnitAttribute attr) {
+      return 
+        (val < min) ? attr.ClampMin ? min : val :
+        (val > max) ? attr.ClampMax ? max : val :
+        val;
+    }
 
     // Makes the label field draggable - TODO: doesn't handle dragging out of window
     private static float DrawLabelDrag(Rect rect) {
@@ -4695,9 +4738,7 @@ namespace Fusion.Editor {
 #region Assets/Photon/Fusion/Scripts/Editor/CustomTypes/WarnIfAttributeDrawer.cs
 
 namespace Fusion.Editor {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
+
   using System.Reflection;
   using UnityEditor;
   using UnityEngine;
@@ -4705,32 +4746,169 @@ namespace Fusion.Editor {
   [CustomPropertyDrawer(typeof(WarnIfAttribute))]
   public class WarnIfAttributeDrawer : DoIfAttributeDrawer {
 
+
+
     public WarnIfAttribute Attribute => (WarnIfAttribute)attribute;
 
     protected override float GetPropertyHeightInternal(SerializedProperty property, GUIContent label) {
-      return base.GetPropertyHeightInternal(property, label);
+
+      float height = base.GetPropertyHeightInternal(property, label);
+      if (height <= 0) {
+        return height;
+      }
+
+      // Not inserting message box inline. No height changes will occur.
+      if (Attribute.UseMsgIconOnly) {
+        return height;
+      }
+
+      bool showWarningBox;
+
+      if (Attribute.ConditionMember != null) {
+        double condValue = GetCompareValue(property, Attribute.ConditionMember, fieldInfo);
+        showWarningBox = CheckDraw(Attribute, condValue);
+      } else {
+
+        if (realTargetObject == null) {
+          realTargetObject = property.GetParent();
+        }
+
+        int msgType = DetermineMsgType();
+        showWarningBox = msgType > 0;
+      }
+
+      if (showWarningBox) {
+        string msg = DetermineMessage();
+        float extra = FusionEditorGUI.GetMessageBoxRect(new GUIContent(msg, FusionGUIStyles.WarnIcon), MessageType.Warning).height;
+        return height + extra;
+      } else {
+        return height;
+      }
+
     }
 
     protected override void OnGUIInternal(Rect position, SerializedProperty property, GUIContent label) {
 
-      //property.DrawPropertyUsingFusionAttributes(position, label, fieldInfo);
-      base.OnGUIInternal(position, property, label);
-     
-      double condValue = GetCompareValue(property, Attribute.ConditionMember, fieldInfo);
+      bool showWarning;
+      int msgType;
 
-      // Try is needed because when first selecting or after recompile, Unity throws errors when trying to inline a element like this.
-      try {
-        if (CheckDraw(Attribute, condValue)) {
-          BehaviourEditorUtils.DrawWarnBox(Attribute.Message, (MessageType)Attribute.MessageType, (FusionGUIStyles.GroupBoxType)Attribute.MessageType);
+      // Determine if we are showing a warning at all. ConditionMember is the first priority. If that is null, the MsgTypeMember is checked.
+      if (Attribute.ConditionMember != null) {
+        double condValue = GetCompareValue(property, Attribute.ConditionMember, fieldInfo);
+        showWarning = CheckDraw(Attribute, condValue);
+        msgType = Attribute.MsgType;
+      } else {
+
+        if (realTargetObject == null) {
+          realTargetObject = property.GetParent();
         }
-      } catch {
 
+        msgType = DetermineMsgType();
+        showWarning = msgType > 0;
       }
-      
+
+      // No warning - we are done here.
+      if (showWarning == false) {
+        base.OnGUIInternal(position, property, label);
+        return;
+      }
+
+      string message = DetermineMessage();
+
+      var icon =
+        msgType == 1 ? FusionGUIStyles.InfoIcon :
+        msgType == 2 ? FusionGUIStyles.WarnIcon :
+        msgType == 3 ? FusionGUIStyles.ErrorIcon :
+        null;
+
+
+      if (Attribute.UseMsgIconOnly) {
+        base.OnGUIInternal(position, property, new GUIContent(label) { tooltip = message });
+      } else {
+        var boxContent = new GUIContent(message, icon);
+        var boxRect = FusionEditorGUI.GetMessageBoxRect(boxContent, MessageType.Warning);
+
+        base.OnGUIInternal(new Rect(position) { height = position.height - boxRect.height },
+          property, new GUIContent(label) { tooltip = message });
+
+        FusionEditorGUI.DrawMesssageBox(boxContent, (MessageType)msgType, position, boxRect);
+      }
+
+      // Draw MsgIcon? Shows if explicitly using only the icon.. or if we have an action (which needs a button)
+      if (Attribute.UseMsgIconOnly || Attribute.ActionMethod != null) {
+        var toppos = position;
+        toppos.width = toppos.height > 18 ? 18 : toppos.height;
+        toppos.height = toppos.width;
+
+        // position just to the left of the typical field area (this attribute obviously will not work with unusual drawer layouts)
+        toppos.x = toppos.xMin + EditorGUIUtility.labelWidth - toppos.width;
+
+        var buttonWidth = new Rect(toppos) { xMin = toppos.xMin - 2, xMax = toppos.xMax + 2 };
+
+        if (GUI.Button(buttonWidth, new GUIContent(icon, message))) {
+          ExecuteAction(Attribute.ActionMethod);
+        }
+      }
+    }
+
+    void ExecuteAction(string actionMethodName) {
+
+      if (Attribute.ActionMethod != null) {
+        var a = fieldInfo.DeclaringType.GetMethod(actionMethodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+        if (a != null) {
+          a.Invoke(realTargetObject, null);
+        }
+      }
+    }
+
+    int DetermineMsgType() {
+
+      var msgTypeProvider = Attribute.MsgTypeProvider;
+
+      if (msgTypeProvider != null) {
+        var a = fieldInfo.DeclaringType.GetMember(msgTypeProvider, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+        if (a != null && a.Length > 0) {
+          if (a[0] is MethodInfo) {
+            return (int)(a[0] as MethodInfo).Invoke(realTargetObject, null);
+          }
+          if (a[0] is PropertyInfo) {
+            return (int)(a[0] as PropertyInfo).GetValue(realTargetObject);
+          }
+          if (a[0] is FieldInfo) {
+            return (int)(a[0] as FieldInfo).GetValue(realTargetObject);
+          }
+        }
+      }
+      return Attribute.MsgType;
+    }
+
+    string DetermineMessage() {
+
+      var msgProvider = Attribute.MsgProvider;
+
+      if (msgProvider == null) {
+        return Attribute.Message;
+      }
+
+      var a = fieldInfo.DeclaringType.GetMember(msgProvider, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+      if (a != null && a.Length > 0) {
+        if (a[0] is MethodInfo) {
+          return (string)(a[0] as MethodInfo).Invoke(realTargetObject, null);
+        }
+        if (a[0] is PropertyInfo) {
+          return (string)(a[0] as PropertyInfo).GetValue(realTargetObject);
+        }
+        if (a[0] is FieldInfo) {
+          return (string)(a[0] as FieldInfo).GetValue(realTargetObject);
+        }
+      }
+
+      // if the member isn't found, fallback to the message supplied to the attribute.
+      return Attribute.Message;
     }
   }
-
 }
+
 
 #endregion
 
@@ -4824,6 +5002,8 @@ namespace Fusion.Editor {
 #region Assets/Photon/Fusion/Scripts/Editor/EditorRecompileHook.cs
 
 namespace Fusion.Editor {
+  using System;
+  using System.IO;
   using UnityEditor;
   using UnityEditor.Compilation;
   
@@ -4831,7 +5011,9 @@ namespace Fusion.Editor {
   public static class EditorRecompileHook {
     static EditorRecompileHook() {
       AssemblyReloadEvents.beforeAssemblyReload += ShutdownRunners;
+
       CompilationPipeline.compilationStarted    += _ => ShutdownRunners();
+      CompilationPipeline.compilationStarted    += _ => StoreConfigPath();
     }
 
     static void ShutdownRunners() {
@@ -4840,6 +5022,28 @@ namespace Fusion.Editor {
       while (runners.MoveNext()) {
         if (runners.Current) {
           runners.Current.Shutdown();
+        }
+      }
+    }
+
+    static void StoreConfigPath() {
+      const string ConfigPathCachePath = "Temp/FusionILWeaverConfigPath.txt";
+
+      var configPath = NetworkProjectConfigUtilities.GetGlobalConfigPath(false);
+      if (string.IsNullOrEmpty(configPath)) {
+        // delete
+        try {
+          File.Delete(ConfigPathCachePath);
+        } catch (FileNotFoundException) {
+          // ok
+        } catch (Exception ex) {
+          FusionEditorLog.ErrorConfig($"Error when clearing the config path file for the Weaver. Weaving results may be invalid: {ex}");
+        }
+      } else {
+        try {
+          System.IO.File.WriteAllText(ConfigPathCachePath, configPath);
+        } catch (Exception ex) {
+          FusionEditorLog.ErrorConfig($"Error when writing the config path file for the Weaver. Weaving results may be invalid: {ex}");
         }
       }
     }
@@ -4961,14 +5165,14 @@ namespace Fusion.Editor {
       public int? BorderWidth;
       public bool? RichTextBox;
       public GroupBoxInfo(string name, Color? backColor = null, Color? outlineColor = null, Color? fontColor = null, int? padding = null, int? borderWidth = null, bool? richTextBox = null, RectOffset margin = null) {
-        Name = name;
-        BackColor = backColor;
+        Name         = name;
+        BackColor    = backColor;
         OutlineColor = outlineColor;
-        FontColor = fontColor;
-        Padding = padding;
-        Margin = margin;
-        BorderWidth = borderWidth;
-        RichTextBox = richTextBox;
+        FontColor    = fontColor;
+        Padding      = padding;
+        Margin       = margin;
+        BorderWidth  = borderWidth;
+        RichTextBox  = richTextBox;
       }
     }
 
@@ -4979,12 +5183,25 @@ namespace Fusion.Editor {
       // None
       new GroupBoxInfo(),
       // Info
-      new GroupBoxInfo() { BackColor = new Color(0.50f, 0.50f, 0.50f, 0.20f),   OutlineColor = Color.black},
+      new GroupBoxInfo() { 
+        BackColor = EditorGUIUtility.isProSkin ?
+        new Color(0.30f, 0.30f, 0.30f, 1.00f) :
+        new Color(0.90f, 0.90f, 0.90f, 0.50f),
+        OutlineColor = Color.black},
       // Warn
       new GroupBoxInfo() {
-        BackColor = EditorGUIUtility.isProSkin ? new Color(0.80f, 0.65f, 0.20f, 0.25f) : new Color(1.00f, 0.96f, 0.80f, 0.20f),   OutlineColor = Color.black},
+        BackColor = EditorGUIUtility.isProSkin ? 
+        new Color(0.36f, 0.33f, 0.22f, 1.00f) : 
+        new Color(0.98f, 0.94f, 0.80f, 0.90f),
+        OutlineColor = Color.black},
+
       // Error
-      new GroupBoxInfo() { BackColor = new Color(0.80f, 0.00f, 0.00f, 0.66f),   OutlineColor = Color.black},
+      new GroupBoxInfo() { 
+        BackColor = EditorGUIUtility.isProSkin ? 
+        new Color(0.40f, 0.15f, 0.10f, 1.00f) : 
+        new Color(0.9f, 0.70f, 0.70f, 1.00f),   
+        OutlineColor = EditorGUIUtility.isProSkin ? Color.black: Color.red},
+      
       // Help
       new GroupBoxInfo() { BackColor = new Color(0.50f, 0.50f, 0.50f, 0.20f),   OutlineColor = Color.black},
       // Gray
@@ -5490,6 +5707,7 @@ namespace Fusion.Editor {
       style.wordWrap = true;
       style.normal.background = GroupBoxTextures[groupBoxType];
       style.normal.scaledBackgrounds = new Texture2D[] { GroupBoxTexturesHiRez[groupBoxType] };
+      style.fontSize = 11;
 
       if (info.RichTextBox.GetValueOrDefault()) {
         style.alignment = TextAnchor.UpperLeft;
@@ -5498,8 +5716,6 @@ namespace Fusion.Editor {
       return style;
     }
   }
-
-
 }
 
 
@@ -5898,7 +6114,7 @@ namespace Fusion.Editor {
     internal const string DOCUMENTATION_TEXT = "Open the documentation.";
     internal const string DOCUMENTATION_HEADER = "Documentation";
     internal const string WELCOME_TEXT = "Thank you for installing Photon Fusion, " +
-      "and welcome to the Photon Fusion Beta.\n\n" +
+      "and welcome to the Photon Fusion.\n\n" +
       "Once you have set up your Fusion App Id, explore the sections on the left to get started. " +
       "More samples, tutorials, and documentation are being added regularly - so check back often.";
 
@@ -6244,6 +6460,7 @@ namespace Fusion.Editor {
         var cfg = NetworkProjectConfigImporter.LoadConfigFromFile(configPath);
 
         var hash = new Hash128();
+
         foreach (var key in cfg.AccuracyDefaults.coreKeys) {
           hash.Append(key);
         }
@@ -7342,8 +7559,14 @@ namespace Fusion.Editor {
 
           if (runner.IsServer && playerCount > 0) {
             foreach (var item in runner.ActivePlayers) {
+
+              // skip local player
+              if (runner.LocalPlayer == item) { continue; }
+
               Label("Player:PlayerId", item.PlayerId);
               Label("Player:ConnectionType", runner.GetPlayerConnectionType(item));
+              Label("Player:UserId", runner.GetPlayerUserId(item));
+              Label("Player:RTT", runner.GetPlayerRtt(item));
             }
           }
 
@@ -7523,13 +7746,13 @@ namespace Fusion.Editor {
 
     static readonly Lazy<GUIStyle> _sbDerivedLabelStyle = new Lazy<GUIStyle>(() => {
       var result = new GUIStyle(_defaultLabelStyle.Value);
-      //result.normal.textColor = EditorGUIUtility.isProSkin ? new Color(.5f, 1, .5f) : new Color(0,0,0);
+      result.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.80f, 0.9f, 0.80f) : new Color(0, 0, 0);
       return result;
     });
 
     static readonly Lazy<GUIStyle> _nbDerivedLabelStyle = new Lazy<GUIStyle>(() => {
       var result = new GUIStyle(_defaultLabelStyle.Value);
-      result.normal.textColor = EditorGUIUtility.isProSkin ? new Color(.5f, .75f, 1f) : new Color(0,0,.4f);
+      result.normal.textColor = EditorGUIUtility.isProSkin ? new Color(0.7f, 0.85f, 1.00f) : new Color(0,0,.4f);
       return result;
     });
 
@@ -7657,7 +7880,7 @@ namespace Fusion.Editor {
 
           var val = node.SimFlags;
 
-          if (node.Type == typeof(SimulationBehaviour) || (val.modes & _modes) != 0 || (val.stages & _stages) != 0) {
+          if (node.Type == typeof(SimulationBehaviour) || node.Type == typeof(NetworkBehaviour) || (val.modes & _modes) != 0 || (val.stages & _stages) != 0) {
             DrawRow(node);
           }
         }
@@ -7741,10 +7964,14 @@ namespace Fusion.Editor {
         (!selectedIsNull && _rolloverNode.OrigBefore.Contains(node)) ? _beforeStyle.Value :
         (!selectedIsNull) ? _fadedLabelStyle.Value :
         isSimulationBehaviour ? _sbStyle.Value :
-        isNetworkBehaviour    ? _nbStyle.Value :
+        isNetworkBehaviour ? _nbStyle.Value :
         typeof(NetworkBehaviour).IsAssignableFrom(node.Type) ? _nbDerivedLabelStyle.Value : _sbDerivedLabelStyle.Value;
 
-      GUIStyle back = thisItemIsSelected ? _classLabelButtonSelectedStyle.Value : _classLabelButtonStyle.Value;
+      if (isSimulationBehaviour || isNetworkBehaviour) {
+        name = $"[ {name} ]";
+      }
+
+     GUIStyle back = thisItemIsSelected ? _classLabelButtonSelectedStyle.Value : _classLabelButtonStyle.Value;
 
       Rect r = EditorGUILayout.GetControlRect(GUILayout.MinWidth(CLASS_WIDTH));
 
@@ -9468,6 +9695,60 @@ namespace Fusion.Editor {
       }
     }
 
+    internal static Rect GetMessageBoxRect(GUIContent content, MessageType messageType) {
+      if (content == null) {
+        return default;
+      }
+
+      // well... we do this, because there's no way of knowing the indent and scroll bar existence
+      // when property height is calculated
+      var width = UnityInternal.EditorGUIUtility.contextWidth - /*InlineHelpStyle.MarginOuter -*/ SCROLL_WIDTH - LEFT_HELP_INDENT;
+      var style = ((FusionGUIStyles.GroupBoxType)messageType).GetStyle();
+      var height = style.CalcHeight(content, width);
+      return new Rect(InlineHelpStyle.MarginOuter, 0, width, height);
+    }
+
+    internal static void DrawMesssageBox(GUIContent content, MessageType messageType, Rect propertyRect, Rect boxRect) {
+      using (new FusionEditorGUI.EnabledScope(true)) {
+        if (Event.current.type == EventType.Repaint) {
+
+          var style = ((FusionGUIStyles.GroupBoxType)messageType).GetStyle();
+
+          int extraPadding = 0;
+          // main bar
+          var rect = new Rect() {
+            xMin = LEFT_HELP_INDENT,
+            // This assumes that any style used has equal padding on left and right, and determines the padding/margin from the property xMin
+            xMax = propertyRect.xMax + propertyRect.xMin - SCROLL_WIDTH,
+            yMin = propertyRect.yMin,
+            yMax = propertyRect.yMax,
+          };
+
+          // extra space that needs to be accounted for, like when there's no scrollbar
+          extraPadding = Mathf.FloorToInt(Mathf.Max(0, rect.width - (boxRect.width)));
+
+          if (boxRect.height > 0) {
+            Rect irect = new Rect(boxRect) {
+              x = rect.x,
+              y = propertyRect.yMax - boxRect.height,
+            };
+
+            if (extraPadding > 0.0f) {
+              style.padding.right += extraPadding;
+              irect.width += extraPadding;
+            }
+            try {
+              style.Draw(irect, content, false, false, false, false);
+            } finally {
+              if (extraPadding > 0.0f) {
+                style.padding.right -= extraPadding;
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
 }
 
@@ -9525,6 +9806,11 @@ namespace Fusion.Editor {
     public static void LogConfig(string msg) {
       Debug.Log($"{ConfigPrefix} {msg}");
     }
+
+    public static void ErrorConfig(string msg) {
+      Debug.LogError($"{ConfigPrefix} {msg}");
+    }
+
 
     public static void LogInstaller(string msg) {
       Debug.Log($"{InstallerPrefix} {msg}");
