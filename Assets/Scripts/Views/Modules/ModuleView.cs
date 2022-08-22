@@ -2,6 +2,7 @@
 using Fusion;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,17 +31,10 @@ namespace Assets.Scripts.Views
         [Networked] public NetworkBool Engaged { get; set; }
         [Networked] public Vector3 EngageDir { get; set; }
 
-        protected bool localModuleReadyOld;
-        protected bool localModuleReadyCurrent;
-        
-        protected bool localEngagedOld;
-        protected bool localEngagedCurrent;
-
-        private bool oldEngage = false;
-        private bool oldModuleReady = false;
-
         private TickTimer toggleTimer;
         private TickTimer engageTimer;
+        private NetworkBool oldReady;
+        private NetworkBool oldEngaged;
 
         private void Awake() => Animator = GetComponent<Animator>();
 
@@ -48,48 +42,35 @@ namespace Assets.Scripts.Views
         {
             if (Runner.TryGetInputForPlayer<GameplayInput>(Object.InputAuthority, out var input))
             {
-                if (ToggleAction(input))
+                if (ToggleAction(input) && toggleTimer.ExpiredOrNotRunning(Runner))
                 {
-                    Toggle(localModuleReadyCurrent);
+                    ModuleReady = !ModuleReady;
+                    InitToggleTimer();
                 }
 
-                if (localModuleReadyCurrent && EngageAction(input))
+                if (EngageAction(input) && ModuleReady && engageTimer.ExpiredOrNotRunning(Runner) && !Engaged)
                 {
-                    Engage(true, InputEngageDirection);
+                    Engaged = true;
+                    EngageDir = InputEngageDirection;
+                    StartCoroutine(nameof(Disengage), EngageTime);
+                    InitEngageTimer();
                 }
             }
 
-            if (oldModuleReady != ModuleReady)
+            if (Runner.IsServer || Runner.IsResimulation)
             {
-                ToggleVisual(ModuleReady);
-                oldModuleReady = ModuleReady;
+                if (oldReady != ModuleReady)
+                {
+                    ToggleVisual(ModuleReady);
+                    oldReady = ModuleReady;
+                }
+
+                if (oldEngaged != Engaged)
+                {
+                    EngageVisual(Engaged);
+                    oldEngaged = Engaged;
+                }
             }
-
-
-            if (oldEngage != Engaged)
-            {
-                EngageVisual(Engaged);
-                oldEngage = Engaged;
-            }
-                
-        }
-
-        public virtual void Toggle(bool toggle)
-        {
-            if (!toggleTimer.ExpiredOrNotRunning(Runner))
-                return;
-
-            localModuleReadyOld = localModuleReadyCurrent;
-            localModuleReadyCurrent = !toggle;
-
-            if (Runner.IsServer)
-            {
-                ModuleReady = localModuleReadyCurrent;
-                InitToggleTimer();
-            }
-
-            if (localModuleReadyOld != localModuleReadyCurrent)
-                ToggleVisual(localModuleReadyCurrent);
         }
 
         protected virtual void ToggleVisual(bool state)
@@ -97,30 +78,6 @@ namespace Assets.Scripts.Views
             HatchOpenRequest?.Invoke(HatchName, this);
 
             Animator.SetBool(AnimationReadyBool, state);
-        }
-
-        public virtual void Engage(bool engage, Vector3 direction = default)
-        {
-            if (engage && !engageTimer.ExpiredOrNotRunning(Runner))
-                return;
-
-            localEngagedOld = localEngagedCurrent;
-            localEngagedCurrent = engage;
-
-            if (Runner.IsServer)
-            {
-                Engaged = localEngagedCurrent;
-                EngageDir = direction;
-
-                if (localEngagedCurrent)
-                {
-                    StartCoroutine(nameof(Disengage), EngageTime);
-                    InitEngageTimer();
-                }
-            }
-
-            if (localEngagedOld != localEngagedCurrent)
-                EngageVisual(localEngagedCurrent);
         }
 
         protected virtual void EngageVisual(bool engage)
@@ -132,8 +89,10 @@ namespace Assets.Scripts.Views
         protected virtual IEnumerator Disengage(float interval)
         {
             yield return new WaitForSeconds(interval);
-            Engage(false, default);
+            Engaged = false;
+            EngageDir = default;
         }
+
         private void InitToggleTimer() =>
             toggleTimer = TickTimer.CreateFromSeconds(Runner, ToggleDelayInSeconds);
 
