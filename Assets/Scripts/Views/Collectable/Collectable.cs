@@ -118,8 +118,6 @@ namespace Assets.Scripts.Views
 
         public override void Spawned()
         {
-            Debug.Log($"Spawned {Object.Id}");
-
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using Fusion;
-using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
@@ -11,7 +10,7 @@ namespace Assets.Scripts.Views
         private Vector3 direction;
         private bool shot;
         private Rigidbody rb;
-        private readonly float speed = 10.0f;
+        private readonly float speed = 15.0f;
 
         private void Awake()
         {
@@ -21,18 +20,18 @@ namespace Assets.Scripts.Views
         {
             this.direction = direction;
             shot = false;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.rotation = Quaternion.identity;
             bullet.SetParent(null);
             bullet.gameObject.SetActive(true);
         }
         public void Park()
         {
+            bullet.gameObject.SetActive(false);
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.rotation = Quaternion.identity;
             bullet.SetParent(transform);
             bullet.localPosition = Vector3.zero;
             bullet.localRotation = Quaternion.identity;
-            bullet.gameObject.SetActive(false);
         }
         public override void FixedUpdateNetwork()
         {
@@ -44,7 +43,6 @@ namespace Assets.Scripts.Views
                     shot = true;
                 }
                 rb.AddForce(direction * 40, ForceMode.Acceleration);
-
             }
             //bullet.position += Runner.DeltaTime * speed * direction;
 
