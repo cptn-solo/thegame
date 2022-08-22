@@ -10,8 +10,8 @@ namespace Assets.Scripts.Views
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
-        private NetworkRigidbody rb;
-        private bool collectableHit;
+
+        private Rigidbody rb;
 
         public CollectableType CollectableType { get; private set; }
 
@@ -31,30 +31,17 @@ namespace Assets.Scripts.Views
 
         private void Awake()
         {
-            rb = GetComponent<NetworkRigidbody>();
+            rb = GetComponent<Rigidbody>();
 
             var infoComponent = GetComponentInChildren<CollectableInfo>();
             if (infoComponent)
                 CollectableType = infoComponent.CollectableType;
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-        }
         private void OnCollisionEnter(Collision collision)
         {
-            collectableHit = true;
-        }
-
-        public override void FixedUpdateNetwork()
-        {
-            if (Runner.IsServer && collectableHit)
-            {
-                Debug.Log($"Collectable hit");
-                rb.Rigidbody.useGravity = true;
-                rb.Rigidbody.mass = 1.0f;
-                collectableHit = false;
-            }
+            rb.useGravity = true;
+            rb.mass = 1.0f;
         }
 
         internal void SetCollectedState()
