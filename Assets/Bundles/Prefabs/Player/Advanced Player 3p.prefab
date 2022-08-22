@@ -676,7 +676,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3404506835854552814}
   - {fileID: 4272371880869346541}
@@ -1156,10 +1156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  jetpackView: {fileID: 133694220121986374}
-  boosterView: {fileID: 1450622454077737511}
-  droneView: {fileID: 2221435378249028871}
-  ballView: {fileID: 584540990121840022}
   hatchesAnimator: {fileID: 3715801328242183250}
 --- !u!1 &7769940011521358883
 GameObject:

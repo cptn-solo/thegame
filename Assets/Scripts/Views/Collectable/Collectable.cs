@@ -10,7 +10,9 @@ namespace Assets.Scripts.Views
         private const string animator_collected_bool = "collected_bool";
 
         [SerializeField] private Animator animator = null;
-        
+
+        private Rigidbody rb;
+
         public CollectableType CollectableType { get; private set; }
 
         [Networked(OnChanged = nameof(OnCollectionStateChange))]
@@ -29,9 +31,17 @@ namespace Assets.Scripts.Views
 
         private void Awake()
         {
+            rb = GetComponent<Rigidbody>();
+
             var infoComponent = GetComponentInChildren<CollectableInfo>();
             if (infoComponent)
                 CollectableType = infoComponent.CollectableType;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            rb.useGravity = true;
+            rb.mass = 1.0f;
         }
 
         internal void SetCollectedState()
@@ -118,8 +128,6 @@ namespace Assets.Scripts.Views
 
         public override void Spawned()
         {
-            Debug.Log($"Spawned {Object.Id}");
-
         }
 
     }
