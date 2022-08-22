@@ -12,7 +12,7 @@ namespace Assets.Scripts.Views
 
         protected override string HatchName => "top";
         protected override string EngageName => "engage";
-        protected override float EngageTime => 2.0f;
+        protected override float EngageTime => .5f;
         protected override bool ToggleAction(GameplayInput input) => input.Button1;
         protected override bool EngageAction(GameplayInput input) => input.LMB;
         protected override Vector3 InputEngageDirection => kcc.FixedData.ShotDirection;

@@ -10,7 +10,7 @@ namespace Assets.Scripts.Views
         private Vector3 direction;
         private bool shot;
         private Rigidbody rb;
-        private readonly float speed = 15.0f;
+        private readonly float speed = 35.0f;
 
         private void Awake()
         {
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Views
                     rb.AddForce(direction * speed, ForceMode.VelocityChange);
                     shot = true;
                 }
-                rb.AddForce(direction * 40, ForceMode.Acceleration);
+                rb.AddForce(direction * 80, ForceMode.Acceleration);
             }
             //bullet.position += Runner.DeltaTime * speed * direction;
 
