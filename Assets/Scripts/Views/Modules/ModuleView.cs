@@ -76,14 +76,14 @@ namespace Assets.Scripts.Views
         protected virtual void ToggleVisual(bool state)
         {
             HatchOpenRequest?.Invoke(HatchName, this);
-
-            Animator.SetBool(AnimationReadyBool, state);
+            if (AnimationReadyBool != null)
+                Animator?.SetBool(AnimationReadyBool, state);
         }
 
         protected virtual void EngageVisual(bool engage)
         {
             if (EngageName != null)
-                Animator.SetBool(EngageName, engage);
+                Animator?.SetBool(EngageName, engage);
         }
 
         protected virtual IEnumerator Disengage(float interval)

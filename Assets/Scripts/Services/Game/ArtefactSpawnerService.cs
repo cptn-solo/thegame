@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Services.Game
 {
+
     public class ArtefactSpawnerService : MonoBehaviour
     {
         [SerializeField] private float mass = 0.05f;
