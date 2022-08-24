@@ -28,6 +28,7 @@ namespace Assets.Scripts.Services.Game
 
         private float meshSide;
         private float meshHeight;
+        private float floorHeight;
 
         private NetworkRunner runner;
         private Dictionary<Vector3, GenBlockView> requestedBlocks = new();
@@ -41,24 +42,26 @@ namespace Assets.Scripts.Services.Game
 
             meshSide = sampleBlockMesh.bounds.size.x;
             meshHeight = sampleBlockMesh.bounds.size.y;
+            floorHeight = 5.0f;
         }
 
         public void StopSpawning(NetworkRunner runner)
         {
         }
 
-        public void RequestBlocksAround(Vector3 pos, NetworkRunner runner, float floorY = default)
+        public void RequestBlocksAround(Vector3 pos, NetworkRunner runner, float floorY)
         {
-            var floorYbuff = worldY;// floorY == default ? pos.y - 2 : floorY;
+            //var floorYbuff = worldY;
+            var floorYbuff = floorY;
 
             Debug.Log($"RequestBlocksAround {pos} runner {runner.LocalPlayer}");
             var globalXOffset = pos.x % meshSide;
             var globalZOffset = pos.z % meshSide;
-            var globalYOffset = floorYbuff % meshHeight;
+            var globalYOffset = floorYbuff % floorHeight;
 
             var globalX = (pos.x - globalXOffset) / meshSide;
             var globalZ = (pos.z - globalZOffset) / meshSide;
-            var globalY = (floorYbuff - globalYOffset) / meshHeight;
+            var globalY = (floorYbuff - globalYOffset) / floorHeight;
 
             var buff = Vector3.zero;
             var globalBuff = Vector3.zero;
@@ -71,7 +74,7 @@ namespace Assets.Scripts.Services.Game
                 {
                     buff.x = globalX + x;
                     buff.z = globalZ + z;
-                    buff.y = globalY;
+                    buff.y = globalY - 1; //the flow below the player
 
                     if (requestedBlocks.TryGetValue(buff, out var block))
                     {
@@ -81,7 +84,7 @@ namespace Assets.Scripts.Services.Game
                     {
                         globalBuff.x = buff.x * meshSide;
                         globalBuff.z = buff.z * meshSide;
-                        globalBuff.y = floorYbuff;
+                        globalBuff.y = buff.y * floorHeight;
 
                         var obj = Instantiate(genBlockPrefab, globalBuff, Quaternion.identity);
                         //runner.Spawn(genBlockPrefab, globalBuff);

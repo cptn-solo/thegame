@@ -4,6 +4,8 @@ using Zenject;
 using Assets.Scripts.Services.Game;
 using System.Collections;
 using Assets.Scripts.Views;
+using Fusion.KCC;
+using Example;
 
 namespace Assets.Scripts
 {
@@ -16,11 +18,23 @@ namespace Assets.Scripts
 
         [SerializeField] private LayerMask airBridgeLayer;
         
+        private KCC kcc;
+        private Vector3 moveDir;
+
+        private void Awake()
+        {
+            kcc = GetBehaviour<KCC>();
+        }
+
         public void ManualToggleGen(bool toggle)
         {
             scanActiveManual = toggle;
-            if (toggle)
+            if (toggle && !scanActive)
                 StartCoroutine(ScanNeabyGenBlocks(transform.position.y - transform.localScale.y - 1));
+        }
+        public override void FixedUpdateNetwork()
+        {
+            moveDir = kcc.FixedData.InputDirection * (kcc.FixedData.RealSpeed / 2);
         }
 
         private IEnumerator ScanNeabyGenBlocks(float floorY)
@@ -29,7 +43,7 @@ namespace Assets.Scripts
 
             while (scanActive || scanActiveManual)
             {
-                terrain.RequestBlocksAround(transform.position, Runner, floorY);
+                terrain.RequestBlocksAround(transform.position + moveDir, Runner, floorY);
                 yield return new WaitForSeconds(.2f);
             }
         }
@@ -39,7 +53,9 @@ namespace Assets.Scripts
             if (CheckColliderMask(other))
             {
                 scanActive = true;
-                StartCoroutine(ScanNeabyGenBlocks(transform.position.y - transform.localScale.y - 1));
+                
+                if (!scanActiveManual)
+                    StartCoroutine(ScanNeabyGenBlocks(transform.position.y - transform.localScale.y - 1));
             }
         }
 
