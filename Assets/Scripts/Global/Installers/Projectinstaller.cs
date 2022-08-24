@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Services.App;
+using Assets.Scripts.Services.Game;
 using Assets.Scripts.UI;
 using UnityEngine;
 using Zenject;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Global.Installers
     {
         [SerializeField] private PlayerInventoryService playerInventoryService = null;
         [SerializeField] private PlayerSpecsService playerSpecsService = null;
+        [SerializeField] private GenBlockSpawnerService genBlockSpawnerService;
 
         public UIManager UIManager { get; set; }
 
@@ -16,6 +18,7 @@ namespace Assets.Scripts.Global.Installers
         {
             BindPlayerInventoryService();
             BindPlayerSpecsService();
+            BindGenBlockSpawnerService();
 
             BindInstallerInterfaces();
         }
@@ -23,6 +26,11 @@ namespace Assets.Scripts.Global.Installers
         public void Initialize()
         {
             playerInventoryService.Initialize();
+        }
+
+        private void BindGenBlockSpawnerService()
+        {
+            Container.Bind<GenBlockSpawnerService>().FromInstance(genBlockSpawnerService).AsSingle();
         }
 
         private void BindPlayerInventoryService()

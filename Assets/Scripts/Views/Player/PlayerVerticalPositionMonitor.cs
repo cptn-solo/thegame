@@ -7,6 +7,7 @@ using Example;
 
 namespace Assets.Scripts
 {
+
     public class PlayerVerticalPositionMonitor : NetworkBehaviour
     {
         [SerializeField] private float fallFromIslandY = -100.0f;
