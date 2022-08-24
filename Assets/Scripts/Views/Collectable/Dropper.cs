@@ -7,6 +7,7 @@ using Fusion.KCC;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -20,23 +21,20 @@ namespace Assets.Scripts.Views
 
 
         [SerializeField] private GameObject[] collectablePrefabs;
+        [SerializeField] private LayerMask hitLayerMask;
+
+        private bool hitDetected;
 
         [Networked] private TickTimer spawnTimer { get; set; }
 
         private Collector collector;
         private PlayerInput input;
-        private KCC kcc;
         private readonly float coolDownTime = 1.0f;
-
-        private bool hitDetected;
 
         private void Awake()
         {
             collector = GetComponent<Collector>();
             input = GetComponent<PlayerInput>();
-            kcc = GetComponent<KCC>();
-
-            kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
         }
 
         private void InitSpawnTimer()
@@ -139,21 +137,13 @@ namespace Assets.Scripts.Views
             despawnable.InitForLifeTime(Random.Range(5.0f, 15.0f));
         }
 
-
-        private void OnDestroy()
+        private void OnTriggerEnter(Collider other)
         {
-            kcc.OnCollisionEnter -= Kcc_OnCollisionEnter;
-        }
-
-        private void Kcc_OnCollisionEnter(KCC arg1, KCCCollision arg2)
-        {
-            if ((arg2.NetworkObject.TryGetBehaviour<ShellView>(out var shell) &&
-                (arg2.NetworkObject.isActiveAndEnabled)) ||
-                (arg2.NetworkObject.TryGetBehaviour<Dropper>(out var dropper) &&
-                (arg2.NetworkObject != Object)))
+            if (other.CheckColliderMask(hitLayerMask) && other.gameObject.activeSelf)
             {
-               hitDetected = true;
-                Debug.Log($"Hit with shell {shell}");
+                hitDetected = true;
+                Debug.Log($"Hit with layer {other.gameObject.layer}");
+
             }
         }
     }

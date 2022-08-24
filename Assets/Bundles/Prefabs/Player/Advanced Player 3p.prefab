@@ -1009,6 +1009,9 @@ MonoBehaviour:
   - {fileID: 1047762238677845885, guid: d05eb999a63145144bf842ebeec91d8f, type: 3}
   - {fileID: 1047762238677845885, guid: 7418c192d6100f447a295acc33e8939f, type: 3}
   - {fileID: 1047762238677845885, guid: 2528cbf9ae0b777488877c422b70436a, type: 3}
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 2176
 --- !u!114 &594027641398068154
 MonoBehaviour:
   m_ObjectHideFlags: 0
