@@ -1,7 +1,9 @@
-﻿using Assets.Scripts.UI;
+﻿using Assets.Scripts.Services.Game;
+using Assets.Scripts.UI;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -13,9 +15,10 @@ namespace Assets.Scripts.Services.Scenes
 		#region Inject
 		[Inject] private readonly MainSceneCamera mainCamera;
 		[Inject] private readonly UIManager uiManager;
+		[Inject] private readonly GenBlockSpawnerService terrainSpawner;
         #endregion
-		
-		protected override IEnumerator SwitchScene(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished)
+
+        protected override IEnumerator SwitchScene(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished)
 		{
 			Debug.Log($"Loading scene {newScene} over scene {prevScene}" );
 
@@ -34,8 +37,8 @@ namespace Assets.Scripts.Services.Scenes
 
 				SceneManager.SetActiveScene(loadedScene);
 				sceneObjects = FindNetworkObjects(loadedScene, disable: false);
-
-				uiManager.ToggleHUD(true);
+				
+                uiManager.ToggleHUD(true);
 			}
 
 			finished(sceneObjects);

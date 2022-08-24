@@ -15,9 +15,9 @@ TagManager:
   - Player
   - Gen
   - AirBridge
-  - 
-  - 
-  - 
+  - Collectable
+  - Shell
+  - CollectableTrigger
   - 
   - 
   - 

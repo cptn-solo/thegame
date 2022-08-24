@@ -1,5 +1,4 @@
 using Assets.Scripts.Services.Game;
-using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Views.Gen
@@ -7,10 +6,9 @@ namespace Assets.Scripts.Views.Gen
     public class GenBlockView : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
-
         [SerializeField] private Mesh[] availableMeshes;
 
-        private float defaultLifeTime = .3f;
+        private readonly float defaultLifeTime = .3f;
         private float lifeTime = 0.0f;
         
         public Vector3 WorldAddress { get; set; }
@@ -19,7 +17,7 @@ namespace Assets.Scripts.Views.Gen
             get => blockType;
             set {
                 blockType = value;
-                AttachMesh(Random.Range(0, availableMeshes.Length));
+                AttachMesh((int)value);
             } }
 
         private GenBlockStage blockState;
@@ -44,39 +42,14 @@ namespace Assets.Scripts.Views.Gen
                         }
                     default:
                         {
+                            blockState = value;
                             break;
                         }
                 }
-            } }
-                
-        private void Start()
-        {
-            // demo mode, remove when not needed
-            //StartCoroutine(SwitchMesh());
-        }     
-        
-        private IEnumerator SwitchMesh()
-        {
-            while (true)
-            {
-                AttachMesh(Random.Range(0, availableMeshes.Length));
+            } 
+        }        
 
-                //for (var idx = 0; idx < availableMeshes.Length; idx++)
-                //{
-                //    AttachMesh(idx);
-
-                //    yield return new WaitForSeconds(2.0f);
-                //}
-                yield return new WaitForSeconds(2.0f);
-            }
-        }
-
-        private void AttachMesh(int idx)
-        {
-            var mesh = availableMeshes[idx];
-            //mesh.bounds = new Bounds(Vector3.zero, Vector3.zero);
-            //mesh.RecalculateBounds();
-            meshFilter.mesh = mesh;
-        }
+        private void AttachMesh(int idx) =>
+            meshFilter.mesh = availableMeshes[idx];
     }
 }

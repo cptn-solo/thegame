@@ -3,9 +3,7 @@ using UnityEngine;
 using Zenject;
 using Assets.Scripts.Services.Game;
 using System.Collections;
-using Assets.Scripts.Views;
 using Fusion.KCC;
-using Example;
 
 namespace Assets.Scripts
 {
@@ -50,7 +48,7 @@ namespace Assets.Scripts
 
         private void OnTriggerEnter(Collider other)
         {
-            if (CheckColliderMask(other))
+            if (other.CheckColliderMask(airBridgeLayer))
             {
                 scanActive = true;
                 
@@ -59,20 +57,15 @@ namespace Assets.Scripts
             }
         }
 
-        private bool CheckColliderMask(Collider other)
-        {
-            return (airBridgeLayer.value & (1 << other.transform.gameObject.layer)) > 0;
-        }
-
         private void OnTriggerStay(Collider other)
         {
-            if (CheckColliderMask(other))
+            if (other.CheckColliderMask(airBridgeLayer))
                 scanActive = true;
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (CheckColliderMask(other))
+            if (other.CheckColliderMask(airBridgeLayer))
                 scanActive = false;
         }
     }

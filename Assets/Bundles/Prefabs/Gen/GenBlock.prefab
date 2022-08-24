@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3671895567611158682}
   - component: {fileID: 7153081992940732826}
-  - component: {fileID: 3453719217198722067}
   m_Layer: 0
   m_Name: GenBlock
   m_TagString: Untagged
@@ -47,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 1320164913370654856}
-  meshCollider: {fileID: 0}
   availableMeshes:
   - {fileID: 4300000, guid: 5c7aaffba8e3fe84695b6f6d4f5f91fd, type: 2}
   - {fileID: 4300000, guid: 95af5020440b36c419b01f066eb213ab, type: 2}
@@ -59,19 +57,6 @@ MonoBehaviour:
   - {fileID: 4300000, guid: 051103910948df04885fe5ee943e4afd, type: 2}
   - {fileID: 4300000, guid: 2864d4cb07403f54992c7a442d371e86, type: 2}
   - {fileID: 4300000, guid: b6ea838ae9a183849a54bc5071fa39d5, type: 2}
---- !u!65 &3453719217198722067
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4161010757669698080}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 5, z: 3}
-  m_Center: {x: 0, y: 2.95, z: 0}
 --- !u!1 &4914318745936610041
 GameObject:
   m_ObjectHideFlags: 0

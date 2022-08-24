@@ -61,7 +61,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6439110641031758866, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_Name
-      value: Collectable Variant
+      value: CollectableBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}

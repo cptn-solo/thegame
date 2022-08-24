@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.Data;
 using Assets.Scripts.Services.App;
 using Fusion;
-using Fusion.KCC;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -16,27 +14,19 @@ namespace Assets.Scripts.Views
         [Networked(OnChanged = nameof(OnCollectedChanged)), Capacity(5)]
         public NetworkDictionary<CollectableType, int> Collected => default;
 
-        private KCC kcc;
+        [SerializeField] private LayerMask collectableLayer;
 
         private IPlayerEnhancer[] enhancers;
 
         private void Awake()
         {
-            kcc = GetComponent<KCC>();
-            kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
-
             enhancers = GetComponents<IPlayerEnhancer>();
         }
 
-        private void OnDestroy()
+        private void OnTriggerEnter(Collider other)
         {
-            kcc.OnCollisionEnter -= Kcc_OnCollisionEnter;
-        }
-
-        private void Kcc_OnCollisionEnter(KCC arg1, KCCCollision arg2)
-        {
-            if (arg2.NetworkObject.TryGetBehaviour<Collectable>(out var collectable))
-                collectable.EnqueueForCollector(this);
+            if (other.CheckColliderMask(collectableLayer))
+                other.gameObject.GetComponentInParent<Collectable>().EnqueueForCollector(this);
         }
 
         public void EnqueueForCollection(CollectableType collectableType, int count)
