@@ -5,6 +5,6 @@ namespace Assets.Scripts.Views
 {
     public interface IPlayerEnhancer
     {
-        void Enhance(NetworkDictionary<CollectableType, int> balance);
+        void Enhance(NetworkDictionary<CollectableType, int> balance, float multiplier);
     }
 }

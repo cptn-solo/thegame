@@ -3,14 +3,11 @@ using Assets.Scripts.Services.App;
 using Assets.Scripts.Services.Game;
 using Example;
 using Fusion;
-using Fusion.KCC;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 using Zenject;
 
 namespace Assets.Scripts.Views
@@ -81,7 +78,7 @@ namespace Assets.Scripts.Views
                     ArtefactSpawnerService.RndDirection() :
                     transform.forward;
                 var dropPosition = wasHit ?
-                    transform.position + 1.0f * transform.localScale.y * dropDirection :
+                    transform.position + 2.0f * transform.localScale.y * dropDirection :
                     transform.position + 1.0f * transform.localScale.y * transform.forward;
 
                 yield return null;
@@ -129,8 +126,8 @@ namespace Assets.Scripts.Views
             attachable.InitForAnchorRef(parentObj.Id, dropPosition, Object.transform.forward);
 
             var movable = obj.GetComponent<MovableView>();
-            movable.speed = dropDirection * Random.Range(2f, 4f);
-            movable.mass = .02f;
+            movable.speed = dropDirection * Random.Range(4f, 5f);
+            movable.mass = .1f;
             movable.useGravity = true;
 
             var despawnable = obj.GetComponent<Despawnable>();

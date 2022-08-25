@@ -56,7 +56,7 @@ namespace Assets.Scripts.Services.Game
         public static Vector3 RndDirection() =>
             new(
                 Random.Range(-1.0f, 1.0f),
-                Random.Range(0.0f, 0.3f),
+                Random.Range(0.3f, 0.7f),
                 Random.Range(-1.0f, 1.0f));
 
         private void InitCollectable(NetworkRunner runner, NetworkObject obj, NetworkObject parentObj)
