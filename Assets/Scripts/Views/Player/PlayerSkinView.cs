@@ -26,17 +26,18 @@ namespace Assets.Scripts.Views
             if (Object.HasInputAuthority)
             {
                 AssignColorToBodyRenderer(playerSpecsService.BodyTintColorCached);
-                playerSpecsService.BodyTintColorChange += BodyTintColorChange;
-
                 SetTintHexStringRpc("#" + ColorUtility.ToHtmlStringRGB(playerSpecsService.BodyTintColorCached));
+                playerSpecsService.BodyTintColorChange += BodyTintColorChange;
             }
         }
 
         private void BodyTintColorChange(Color color)
         {
-            AssignColorToBodyRenderer(color);
             if (Object.HasInputAuthority)
+            {
+                AssignColorToBodyRenderer(color);
                 SetTintHexStringRpc("#" + ColorUtility.ToHtmlStringRGB(color));
+            }
         }
 
         private static void PlayerBodyTintColorChange(Changed<PlayerSkinView> changed)
@@ -45,9 +46,7 @@ namespace Assets.Scripts.Views
                 changed.Behaviour.AssignColorToBodyRenderer(color);
         }
 
-        private void AssignColorToBodyRenderer(Color color)
-        {
+        private void AssignColorToBodyRenderer(Color color) =>
             bodyRenderer.materials[1].SetColor("_Color", color);
-        }
     }
 }
