@@ -3,7 +3,6 @@ using Zenject;
 
 namespace Assets.Scripts.Services.App
 {
-    [RequireComponent(typeof(PlayerPreferencesService))]
     public class AudioPlaybackService : MonoBehaviour
     {
         [Inject] private readonly PlayerPreferencesService playerPreferencesService = default;
