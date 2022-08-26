@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.Data;
 using Assets.Scripts.Services.App;
 using Fusion;
-using Fusion.KCC;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -13,37 +11,32 @@ namespace Assets.Scripts.Views
 
         [Inject] private readonly PlayerInventoryService playerInventory;
         
-        [Networked(OnChanged = nameof(OnCollectedChanged)), Capacity(5)]
+        [Networked, Capacity(5)]
         public NetworkDictionary<CollectableType, int> Collected => default;
 
-        private KCC kcc;
+        [Networked]
+        public int ChangeCount { get; set; }
+
+        private int changeCountOld = 0;
+ 
+        [SerializeField] private LayerMask collectableLayer;
 
         private IPlayerEnhancer[] enhancers;
 
         private void Awake()
         {
-            kcc = GetComponent<KCC>();
-            kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
-
             enhancers = GetComponents<IPlayerEnhancer>();
         }
 
-        private void OnDestroy()
+        private void OnTriggerEnter(Collider other)
         {
-            kcc.OnCollisionEnter -= Kcc_OnCollisionEnter;
-        }
-
-        private void Kcc_OnCollisionEnter(KCC arg1, KCCCollision arg2)
-        {
-            if (arg2.NetworkObject.TryGetBehaviour<Collectable>(out var collectable))
-                collectable.EnqueueForCollector(this);
+            if (other.CheckColliderMask(collectableLayer))
+                other.gameObject.GetComponentInParent<Collectable>().EnqueueForCollector(this);
         }
 
         public void EnqueueForCollection(CollectableType collectableType, int count)
         {
-            Debug.Log($"EnqueueForCollection {collectableType} {count} {Object.HasStateAuthority}");
-
-            if (!Object.HasStateAuthority)
+            if (!Runner.IsServer)
                 return;
 
             if (Collected.TryGet(collectableType, out var balance))
@@ -54,29 +47,29 @@ namespace Assets.Scripts.Views
             {
                 Collected.Add(collectableType, count);
             }
+            ChangeCount++;
         }
 
-        public static void OnCollectedChanged(Changed<Collector> changed)
+        public override void FixedUpdateNetwork()
         {
-            var current = changed.Behaviour.Collected;
+            if (Runner.IsServer && ChangeCount != changeCountOld)
+            {
+                Debug.Log($"C FUN server, {ChangeCount} {changeCountOld}");
+                var multiplier = 1.0f;
+                if (TryGetComponent<SizeEnhancer>(out var sizeEnhancer))
+                    multiplier = sizeEnhancer.SizeEnhancerValue;
 
-            changed.LoadOld();
-            var prev = changed.Behaviour.Collected;
-
-            if (!current.Equals(prev))
-                changed.Behaviour.UpdateBalance(current);
-        }
-
-        private void UpdateBalance(NetworkDictionary<CollectableType, int> current)
-        {
-            if (!Object.HasInputAuthority)
-                return;
-
-            foreach(var enhancer in enhancers)
-                enhancer.Enhance(current);
-
-            foreach(var collectable in current)
-                playerInventory.SetCollectableBalance(collectable.Key, collectable.Value);
+                foreach (var enhancer in enhancers)
+                    enhancer.Enhance(Collected, multiplier);
+            }
+            if (Object.HasInputAuthority && ChangeCount != changeCountOld)
+            {
+                Debug.Log($"C FUN IA, {ChangeCount} {changeCountOld}");
+                foreach (var collected in Collected)
+                    if (!playerInventory.Compare(collected.Key, collected.Value))
+                        playerInventory.SetCollectableBalance(collected.Key, collected.Value);
+            }
+            changeCountOld = ChangeCount;
         }
     }
 }

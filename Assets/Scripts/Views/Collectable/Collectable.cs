@@ -15,19 +15,10 @@ namespace Assets.Scripts.Views
 
         public CollectableType CollectableType { get; private set; }
 
-        [Networked(OnChanged = nameof(OnCollectionStateChange))]
+        [Networked]
         public NetworkDictionary<CollectionState, NetworkId> Collected => default;
 
-        private static void OnCollectionStateChange(Changed<Collectable> changed)
-        {
-            var currState = changed.Behaviour.Collected;
-
-            changed.LoadOld();
-            var prevState = changed.Behaviour.Collected;
-
-            if (!currState.Equals(prevState))
-                changed.Behaviour.ApplyCollectionState(currState);
-        }
+        private int oldCount = 0;
 
         private void Awake()
         {
@@ -90,13 +81,19 @@ namespace Assets.Scripts.Views
 
         internal void EnqueueForCollector(Collector collector)
         {
-            Debug.Log($"EnqueueForCollector {collector.Object.Id} {collector.Object.HasStateAuthority} {Runner.IsServer}");
-
-            if (Runner.IsServer)
+            if (Object && Object.HasStateAuthority)
                 Collected.Set(CollectionState.Collecting, collector.Object.Id);
+        }
+        public override void FixedUpdateNetwork()
+        {
+            if (!Runner.IsServer && !Runner.IsResimulation)
+                return;
 
-            //localCollectionState = CollectionState.Collecting;
-            //collectorRef = collector.Object.Id;
+            if (Collected.Count > oldCount)
+            {
+                oldCount = Collected.Count;
+                ApplyCollectionState(Collected);
+            }
         }
 
         void IPredictedSpawnBehaviour.PredictedSpawnSpawned()

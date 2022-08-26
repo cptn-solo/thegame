@@ -51,7 +51,6 @@ namespace Assets.Scripts.Global.Installers
         private void BindArtefactSpawnerService()
         {
             Container.Bind<ArtefactSpawnerService>().FromInstance(artefactSpawnerService).AsSingle();
-            Debug.Log("BindArtefactSpawnerService");
         }
 
         private void BindMainSceneCamera()

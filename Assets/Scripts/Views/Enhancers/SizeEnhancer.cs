@@ -5,24 +5,24 @@ namespace Assets.Scripts.Views
 {
     public class SizeEnhancer : PlayerEnhancerBase
     {
-        [Networked]
+        [Networked(OnChanged = nameof(OnChanged))]
         public float SizeEnhancerValue { get; set; } = 1.0f;
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void EnhanceSizeRPC(float multiplier)
+        protected override void EnhancementApplier(int count, float multiplier)
         {
-            SizeEnhancerValue = multiplier;
-        }
-
-        protected override void EnhancementApplier(int count)
-        {
+            // multiplier is skipped for size enhancement bc it is a source for this enhancement
             var enhancement = 1 + Step * Mathf.Min(count, MaxBalance);
-            EnhanceSizeRPC(enhancement);
-            playerSpecsService.HUDScreen.SizeValue = enhancement.ToString("0.00");
+            SizeEnhancerValue = enhancement;
         }
+        public static void OnChanged(Changed<SizeEnhancer> changed) =>
+            changed.Behaviour.HudUpdater(changed.Behaviour.SizeEnhancerValue);
+
+        private void HudUpdater(float value) =>
+            playerSpecsService.HUDScreen.SizeValue = value.ToString("0.00");
 
         public override void Render()
         {
+            base.Render();
             transform.localScale = Vector3.one * SizeEnhancerValue;
         }
     }

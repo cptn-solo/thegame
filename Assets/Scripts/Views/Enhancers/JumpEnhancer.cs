@@ -6,28 +6,25 @@ namespace Assets.Scripts.Views
 {
     public class JumpEnhancer : PlayerEnhancerBase
     {
-        [Networked]
+        [Networked(OnChanged = nameof(OnChanged))]
         public float JumpEnhancerValue { get; set; } = 1.0f;
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void EnhanceJumpRPC(float multiplier)
+        protected override void EnhancementApplier(int count, float multiplier)
         {
-            JumpEnhancerValue = multiplier;
+            var enhancement = (1 + Step * Mathf.Min(count, MaxBalance)) * multiplier;
+            JumpEnhancerValue = enhancement;
         }
 
-        protected override void EnhancementApplier(int count)
-        {
-            var enhancement = 1 + Step * Mathf.Min(count, MaxBalance);
-            EnhanceJumpRPC(enhancement);
-            playerSpecsService.HUDScreen.JumpValue = enhancement.ToString("0.00");
-        }
+        public static void OnChanged(Changed<JumpEnhancer> changed) =>
+            changed.Behaviour.HudUpdater(changed.Behaviour.JumpEnhancerValue);
+
+        private void HudUpdater(float value) =>
+            playerSpecsService.HUDScreen.JumpValue = value.ToString("0.00");
 
         public void Enhance(KCC kcc, KCCData data)
         {
             if (JumpEnhancerValue != 0.0f)
-            {
                 data.JumpEnhancerValue = JumpEnhancerValue;
-            }
         }
 
     }

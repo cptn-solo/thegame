@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -3209483005462396930}
   - component: {fileID: 5476107116214388322}
   - component: {fileID: -6058369606155573967}
+  - component: {fileID: 8476094844964606659}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -78,6 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInventoryService: {fileID: 5476107116214388322}
   playerSpecsService: {fileID: -6058369606155573967}
+  genBlockSpawnerService: {fileID: 8476094844964606659}
 --- !u!114 &5476107116214388322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,3 +104,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7625cdc8e1fdf94182a8a5485248268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8476094844964606659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728136529630326835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83cb8555391e5c4eb6a071f596d001f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sampleBlockMesh: {fileID: 4300000, guid: 5c7aaffba8e3fe84695b6f6d4f5f91fd, type: 2}
+  spotSize: 2
+  worldY: -50
+  genBlockPrefab: {fileID: 4161010757669698080, guid: 90f85571351884141899547897ad8675, type: 3}
