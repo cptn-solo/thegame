@@ -53,7 +53,6 @@ namespace Assets.Scripts.UI
             var color = TransformNormalValueToColor(bodyColorSlider.value);
 
             playerSpecsService.BodyTintColor = color;
-            playerSpecsService.BodyTintColorCached = color;
 
             ApplyBodyColorSliderValue(color);
         }

@@ -1,6 +1,9 @@
 ﻿using Assets.Scripts.Data;
 using Assets.Scripts.Services.App;
 using Fusion;
+using System;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -10,8 +13,9 @@ namespace Assets.Scripts.Views
     {
 
         [Inject] private readonly PlayerInventoryService playerInventory;
-        
-        [Networked, Capacity(5)]
+        [Inject] private readonly PlayerSpecsService playerSpecsService;
+
+        [Networked(OnChanged = nameof(CollectedOnChange)), Capacity(5)]
         public NetworkDictionary<CollectableType, int> Collected => default;
 
         [Networked]
@@ -70,6 +74,16 @@ namespace Assets.Scripts.Views
                         playerInventory.SetCollectableBalance(collected.Key, collected.Value);
             }
             changeCountOld = ChangeCount;
+        }
+        private static void CollectedOnChange(Changed<Collector> changed)
+        {
+            changed.Behaviour.UpdatePlayerInfo(changed.Behaviour.Collected);
+        }
+
+        private void UpdatePlayerInfo(NetworkDictionary<CollectableType, int> collected)
+        {
+            if (Object.HasInputAuthority)
+                playerSpecsService.Score = collected.Sum(x => x.Value);
         }
     }
 }
