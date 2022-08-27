@@ -3,13 +3,11 @@ using Assets.Scripts.Services.App;
 using Assets.Scripts.Services.Game;
 using Example;
 using Fusion;
-using Fusion.KCC;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 using Zenject;
 
 namespace Assets.Scripts.Views
@@ -20,23 +18,20 @@ namespace Assets.Scripts.Views
 
 
         [SerializeField] private GameObject[] collectablePrefabs;
+        [SerializeField] private LayerMask hitLayerMask;
+
+        private bool hitDetected;
 
         [Networked] private TickTimer spawnTimer { get; set; }
 
         private Collector collector;
         private PlayerInput input;
-        private KCC kcc;
         private readonly float coolDownTime = 1.0f;
-
-        private bool hitDetected;
 
         private void Awake()
         {
             collector = GetComponent<Collector>();
             input = GetComponent<PlayerInput>();
-            kcc = GetComponent<KCC>();
-
-            kcc.OnCollisionEnter += Kcc_OnCollisionEnter;
         }
 
         private void InitSpawnTimer()
@@ -83,7 +78,7 @@ namespace Assets.Scripts.Views
                     ArtefactSpawnerService.RndDirection() :
                     transform.forward;
                 var dropPosition = wasHit ?
-                    transform.position + 1.0f * transform.localScale.y * dropDirection :
+                    transform.position + 2.0f * transform.localScale.y * dropDirection :
                     transform.position + 1.0f * transform.localScale.y * transform.forward;
 
                 yield return null;
@@ -131,29 +126,21 @@ namespace Assets.Scripts.Views
             attachable.InitForAnchorRef(parentObj.Id, dropPosition, Object.transform.forward);
 
             var movable = obj.GetComponent<MovableView>();
-            movable.speed = dropDirection * Random.Range(2f, 4f);
-            movable.mass = .02f;
+            movable.speed = dropDirection * Random.Range(4f, 5f);
+            movable.mass = .1f;
             movable.useGravity = true;
 
             var despawnable = obj.GetComponent<Despawnable>();
             despawnable.InitForLifeTime(Random.Range(5.0f, 15.0f));
         }
 
-
-        private void OnDestroy()
+        private void OnTriggerEnter(Collider other)
         {
-            kcc.OnCollisionEnter -= Kcc_OnCollisionEnter;
-        }
-
-        private void Kcc_OnCollisionEnter(KCC arg1, KCCCollision arg2)
-        {
-            if ((arg2.NetworkObject.TryGetBehaviour<ShellView>(out var shell) &&
-                (arg2.NetworkObject.isActiveAndEnabled)) ||
-                (arg2.NetworkObject.TryGetBehaviour<Dropper>(out var dropper) &&
-                (arg2.NetworkObject != Object)))
+            if (other.CheckColliderMask(hitLayerMask) && other.gameObject.activeSelf)
             {
-               hitDetected = true;
-                Debug.Log($"Hit with shell {shell}");
+                hitDetected = true;
+                Debug.Log($"Hit with layer {other.gameObject.layer}");
+
             }
         }
     }

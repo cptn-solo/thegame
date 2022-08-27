@@ -29,5 +29,9 @@ namespace Assets.Scripts.Services.App
             OnInventoryChange?.Invoke(new KeyValuePair<CollectableType, int>(collectableType, balance));
         }
 
+        public bool Compare(CollectableType collectableType, int count)
+        {
+            return collectables[collectableType] == count;
+        }
     }
 }

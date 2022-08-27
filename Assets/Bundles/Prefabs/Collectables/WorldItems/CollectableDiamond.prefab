@@ -67,9 +67,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: CollectableDiamond
       objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8264275471743424186, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: 0491377aa405c7e4db16c61ee8ff67d8, type: 2}
+      objectReference: {fileID: 4300000, guid: 662e63bc0e18127409e5f5313c3f1866, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
