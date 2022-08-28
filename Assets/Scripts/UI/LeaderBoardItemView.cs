@@ -16,6 +16,8 @@ namespace Assets.Scripts.UI
         private Image bgImage;
         
         private RectTransform rectTransform;
+
+        public PlayerInfo Info { get; private set; }
         public void Attach(RectTransform parent, NetworkId networkId, float scale)
         {
             rectTransform.SetParent(parent);
@@ -30,12 +32,15 @@ namespace Assets.Scripts.UI
             nameLabel.color = info.BodyTintColor;
             balanceLabel.text = $"{info.Score}";
             bgImage.enabled = localPlayer;
+
+            Info = info;
         }
 
         internal void Detach()
         {
             rectTransform.parent = null;
             networkId = default;
+            Info = default;
             this.gameObject.SetActive(false);
         }
         private void Awake()
@@ -44,5 +49,15 @@ namespace Assets.Scripts.UI
             bgImage = GetComponent<Image>();
         }
 
+        internal void SetLeader(bool leader)
+        {
+            if (leader)
+                rectTransform.SetAsFirstSibling();
+            
+            var fontStyle = leader ? FontStyles.Bold : FontStyles.Normal; ;
+            
+            nameLabel.fontStyle = fontStyle;
+            balanceLabel.fontStyle = fontStyle;
+        }
     }
 }

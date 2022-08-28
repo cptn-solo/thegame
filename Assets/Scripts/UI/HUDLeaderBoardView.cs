@@ -2,6 +2,7 @@ using Assets.Scripts.Services.App;
 using Fusion;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,7 +43,12 @@ namespace Assets.Scripts.UI
         internal void UpdatePlayer(NetworkId id, PlayerInfo playerInfo, bool localPlayer)
         {
             if (leaders.TryGetValue(id, out var leaderView) && !leaderView.gameObject.IsDestroyed())
+            {
                 leaderView.SetInfo(playerInfo, localPlayer);
+                var maxScore = leaders.Values.Max(x => x.Info.Score);
+                leaderView.SetLeader(playerInfo.Score == maxScore);
+
+            }
         }
     }
 }
