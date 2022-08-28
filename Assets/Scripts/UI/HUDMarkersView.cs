@@ -14,7 +14,7 @@ namespace Assets.Scripts.UI
         internal HUDMarkerView AddPlayer(Transform transform)
         {
             var marker = Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
-            marker.Attach(rectTransform, transform);
+            marker.Attach(rectTransform, transform, rectTransform.localScale.x);
             markers.Add(transform, marker);
             return marker;
         }

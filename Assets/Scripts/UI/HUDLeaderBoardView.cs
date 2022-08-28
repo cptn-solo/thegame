@@ -13,15 +13,20 @@ namespace Assets.Scripts.UI
         [SerializeField] private GridLayoutGroup layoutGroup;
         [SerializeField] private GameObject itemPrefab;
         
+        private RectTransform rectTransform;
+
         private readonly Dictionary<NetworkId, LeaderBoardItemView> leaders = new();
 
-
+        private void Awake()
+        {
+            rectTransform = GetComponent<RectTransform>();
+        }
 
         internal void AddPlayer(NetworkId id)
         {
             var playerView = Instantiate(itemPrefab).GetComponent<LeaderBoardItemView>();
             var listRectTransform = layoutGroup.GetComponent<RectTransform>();
-            playerView.Attach(listRectTransform, id);
+            playerView.Attach(listRectTransform, id, rectTransform.localScale.x);
             playerView.SetInfo(new PlayerInfo(), false);
             leaders.Add(id, playerView);
         }

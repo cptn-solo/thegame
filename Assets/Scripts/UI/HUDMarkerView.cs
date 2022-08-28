@@ -21,9 +21,11 @@ namespace Assets.Scripts.UI
             rectTransform = GetComponent<RectTransform>();
         }
 
-        public void Attach(RectTransform parent, Transform worldTarget)
+        public void Attach(RectTransform parent, Transform worldTarget, float scale)
         {
             rectTransform.SetParent(parent);
+            rectTransform.localScale *= scale;
+
             this.worldTarget = worldTarget;
         }
 

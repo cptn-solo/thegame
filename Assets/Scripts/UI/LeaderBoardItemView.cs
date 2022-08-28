@@ -16,9 +16,11 @@ namespace Assets.Scripts.UI
         private Image bgImage;
         
         private RectTransform rectTransform;
-        public void Attach(RectTransform parent, NetworkId networkId)
+        public void Attach(RectTransform parent, NetworkId networkId, float scale)
         {
             rectTransform.SetParent(parent);
+            rectTransform.localScale *= scale;
+
             this.networkId = networkId;
         }
 
