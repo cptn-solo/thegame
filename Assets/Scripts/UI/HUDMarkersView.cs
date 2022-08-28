@@ -1,35 +1,39 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-public class HUDMarkersView : MonoBehaviour
+
+namespace Assets.Scripts.UI
 {
-    [SerializeField] private GameObject markerPrefab;
-    private readonly Dictionary<Transform, HUDMarkerView> markers = new();
-    
-    private RectTransform rectTransform;
-
-    internal HUDMarkerView AddPlayer(Transform transform)
+    public class HUDMarkersView : MonoBehaviour
     {
-        var marker = GameObject.Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
-        marker.Attach(rectTransform, transform);
-        markers.Add(transform, marker);
-        return marker;
-    }
+        [SerializeField] private GameObject markerPrefab;
+        private readonly Dictionary<Transform, HUDMarkerView> markers = new();
 
-    internal void RemovePlayer(Transform transform)
-    {
-        if (markers.TryGetValue(transform, out var marker) && !marker.gameObject.IsDestroyed())
+        private RectTransform rectTransform;
+
+        internal HUDMarkerView AddPlayer(Transform transform)
         {
-            marker.Detach();
-            GameObject.Destroy(marker.gameObject);
+            var marker = Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
+            marker.Attach(rectTransform, transform);
+            markers.Add(transform, marker);
+            return marker;
         }
-    }
 
-    internal void UpdatePlayer(Transform transform, Assets.Scripts.Services.App.PlayerInfo playerInfo)
-    {
-        if (markers.TryGetValue(transform, out var marker) && !marker.gameObject.IsDestroyed())
-            marker.SetInfo(playerInfo.NickName, playerInfo.BodyTintColor, $"{playerInfo.Score}");
-    }
+        internal void RemovePlayer(Transform transform)
+        {
+            if (markers.TryGetValue(transform, out var marker) && !marker.gameObject.IsDestroyed())
+            {
+                marker.Detach();
+                Destroy(marker.gameObject);
+            }
+        }
 
-    private void Awake() => rectTransform = GetComponent<RectTransform>();
+        internal void UpdatePlayer(Transform transform, Services.App.PlayerInfo playerInfo)
+        {
+            if (markers.TryGetValue(transform, out var marker) && !marker.gameObject.IsDestroyed())
+                marker.SetInfo(playerInfo.NickName, playerInfo.BodyTintColor, $"{playerInfo.Score}");
+        }
+
+        private void Awake() => rectTransform = GetComponent<RectTransform>();
+    }
 }

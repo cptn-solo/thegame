@@ -44,10 +44,21 @@ namespace Assets.Scripts.UI
             bodyColorSlider.colors = colors;
         }
 
-        public void OnPlayerNickNameChange(string value) => playerSpecsService.NickName = value;
+        public void OnPlayerNickNameChange(string value)
+        {
+            if (playerSpecsService == null)
+                return;
+            
+            playerSpecsService.NickName = value;
+            if (value != playerSpecsService.NickName)
+                nickNameField.text = playerSpecsService.NickName;
+        }
 
         public void OnBodyColorChange(float value)
         {
+            if (playerSpecsService == null)
+                return;
+
             playerSpecsService.BodyTintColorSlider = bodyColorSlider.value;
 
             var color = TransformNormalValueToColor(bodyColorSlider.value);
@@ -57,13 +68,37 @@ namespace Assets.Scripts.UI
             ApplyBodyColorSliderValue(color);
         }
 
-        public void OnMusicSliderChange(float value) => audioPlaybackService.MusicVolume = musicSlider.normalizedValue;
+        public void OnMusicSliderChange()
+        {
+            if (audioPlaybackService == null)
+                return;
 
-        public void OnSfxSliderChange(float value) => audioPlaybackService.SfxVolume = sfxSlider.normalizedValue;
+            audioPlaybackService.MusicVolume = musicSlider.normalizedValue;
+        }
 
-        public void OnMusicToggleChange(bool value) => audioPlaybackService.MusicToggle = musicToggle.isOn;
+        public void OnSfxSliderChange()
+        {
+            if (audioPlaybackService == null)
+                return;
 
-        public void OnSfxToggleChange(bool value) => audioPlaybackService.SfxToggle = sfxToggle.isOn;
+            audioPlaybackService.SfxVolume = sfxSlider.normalizedValue;
+        } 
+
+        public void OnMusicToggleChange(bool value)
+        {
+            if (audioPlaybackService == null)
+                return;
+
+            audioPlaybackService.MusicToggle = musicToggle.isOn;
+        }
+
+        public void OnSfxToggleChange(bool value)
+        {
+            if (audioPlaybackService == null)
+                return;
+
+            audioPlaybackService.SfxToggle = sfxToggle.isOn;
+        }
 
         internal Color TransformNormalValueToColor(float value)
         {
