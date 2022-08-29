@@ -14,6 +14,10 @@ GameObject:
   - component: {fileID: 5476107116214388322}
   - component: {fileID: -6058369606155573967}
   - component: {fileID: 8476094844964606659}
+  - component: {fileID: 431597564451224899}
+  - component: {fileID: -5336237346833368978}
+  - component: {fileID: 5578627555676360083}
+  - component: {fileID: -8355973155444984081}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -80,6 +84,10 @@ MonoBehaviour:
   playerInventoryService: {fileID: 5476107116214388322}
   playerSpecsService: {fileID: -6058369606155573967}
   genBlockSpawnerService: {fileID: 8476094844964606659}
+  applicationService: {fileID: 431597564451224899}
+  playerPreferencesService: {fileID: 5578627555676360083}
+  artefactSpawnerService: {fileID: -5336237346833368978}
+  audioPlaybackService: {fileID: -8355973155444984081}
 --- !u!114 &5476107116214388322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,4 +127,56 @@ MonoBehaviour:
   sampleBlockMesh: {fileID: 4300000, guid: 5c7aaffba8e3fe84695b6f6d4f5f91fd, type: 2}
   spotSize: 2
   worldY: -50
-  genBlockPrefab: {fileID: 4161010757669698080, guid: 90f85571351884141899547897ad8675, type: 3}
+--- !u!114 &431597564451224899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728136529630326835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd0c69c3879d674e8f141d43aec440d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Level01
+--- !u!114 &-5336237346833368978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728136529630326835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dabb0390029eae4a93e077104b189df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 0.05
+  speed: 0.5
+  spawnFrequency: 5
+  offsetMax: 5
+--- !u!114 &5578627555676360083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728136529630326835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c82bce6def19b4289fe994d4bbb625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8355973155444984081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728136529630326835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7befd0a51f0d5bd4c8aca45f75c23495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Zenject;
 
 namespace Assets.Scripts.UI
 {

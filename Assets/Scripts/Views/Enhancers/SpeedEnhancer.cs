@@ -6,7 +6,9 @@ namespace Assets.Scripts.Views
 {
     public class SpeedEnhancer : PlayerEnhancerBase
     {
-		[Networked(OnChanged = nameof(OnChanged))]
+		[Networked(
+            OnChanged = nameof(OnChanged),
+            OnChangedTargets = OnChangedTargets.InputAuthority)]
 		public float SpeedEnhancerValue { get; set; } = 1.0f;
 
         protected override void EnhancementApplier(int count, float multiplier)
