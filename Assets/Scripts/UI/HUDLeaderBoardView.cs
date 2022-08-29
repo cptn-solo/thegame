@@ -45,9 +45,11 @@ namespace Assets.Scripts.UI
             if (leaders.TryGetValue(id, out var leaderView) && !leaderView.gameObject.IsDestroyed())
             {
                 leaderView.SetInfo(playerInfo, localPlayer);
-                var maxScore = leaders.Values.Max(x => x.Info.Score);
-                leaderView.SetLeader(playerInfo.Score == maxScore);
 
+                var sorted = leaders.Values.OrderByDescending(x => x.Info.Score).ToArray();
+
+                for (int idx = 0; idx < sorted.Count(); idx++)
+                    sorted[idx].SetListPosition(idx);
             }
         }
     }

@@ -49,6 +49,11 @@ namespace Assets.Scripts.UI
             bgImage = GetComponent<Image>();
         }
 
+        internal void SetListPosition(int pos)
+        {
+            rectTransform.SetSiblingIndex(pos);
+            SetLeader(pos == 0);
+        }
         internal void SetLeader(bool leader)
         {
             if (leader)
