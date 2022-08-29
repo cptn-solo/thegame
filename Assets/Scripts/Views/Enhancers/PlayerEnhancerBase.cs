@@ -17,10 +17,16 @@ namespace Assets.Scripts.Views
         protected float Step => step;
         protected int MaxBalance => maxBalance;
 
-        public void Enhance(NetworkDictionary<CollectableType, int> balance, float multiplier)
+        public void Enhance(NetworkDictionary<CollectableType, int> balance, float multiplier = 1)
         {
             if (balance.TryGet(collectable, out var count))
+            {
                 EnhancementApplier(count, multiplier);
+            }
+            else if (multiplier != 1)
+            {   // enhance anyway if multiplier isn't 1
+                EnhancementApplier(1, multiplier);
+            }
         }
 
         protected virtual void EnhancementApplier(int count, float multiplier = 1.0f) { }

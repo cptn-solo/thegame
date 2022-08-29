@@ -61,9 +61,12 @@ namespace Assets.Scripts.Views
                 Debug.Log($"C FUN server, {ChangeCount} {changeCountOld}");
                 var multiplier = 1.0f;
                 if (TryGetComponent<SizeEnhancer>(out var sizeEnhancer))
+                {
+                    sizeEnhancer.Enhance(Collected);
                     multiplier = sizeEnhancer.SizeEnhancerValue;
+                }
 
-                foreach (var enhancer in enhancers)
+                foreach (var enhancer in enhancers.Where(x => x.GetType() != typeof(SizeEnhancer)))
                     enhancer.Enhance(Collected, multiplier);
             }
             if (Object.HasInputAuthority && ChangeCount != changeCountOld)

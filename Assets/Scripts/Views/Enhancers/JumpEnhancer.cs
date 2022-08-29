@@ -6,7 +6,9 @@ namespace Assets.Scripts.Views
 {
     public class JumpEnhancer : PlayerEnhancerBase
     {
-        [Networked(OnChanged = nameof(OnChanged))]
+        [Networked(
+            OnChanged = nameof(OnChanged),
+            OnChangedTargets = OnChangedTargets.InputAuthority)]
         public float JumpEnhancerValue { get; set; } = 1.0f;
 
         protected override void EnhancementApplier(int count, float multiplier)

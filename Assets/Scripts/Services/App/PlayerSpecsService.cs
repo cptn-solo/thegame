@@ -13,10 +13,13 @@ namespace Assets.Scripts.Services.App
 
         public string NickName
         {
-            get => PlayerPrefs.GetString(PlayerPreferencesService.NickNameKey);
+            get =>PlayerPrefs.GetString(PlayerPreferencesService.NickNameKey);
             set
             {
-                PlayerPrefs.SetString(PlayerPreferencesService.NickNameKey, value);
+                var truncated = value;
+                if (truncated.Length > 16)
+                    truncated = truncated.Substring(0, 16);
+                PlayerPrefs.SetString(PlayerPreferencesService.NickNameKey, truncated);
                 PlayerInfoCached = PlayerInfo.Serialize();
             } 
         }

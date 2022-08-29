@@ -1,7 +1,7 @@
 using Assets.Scripts.Services.App;
+using Assets.Scripts.UI;
 using Fusion;
 using UnityEngine;
-using UnityEngine.Timeline;
 using Zenject;
 
 namespace Assets.Scripts.Views
@@ -13,10 +13,10 @@ namespace Assets.Scripts.Views
         [SerializeField] private Renderer bodyRenderer = null;
 
         [Networked(OnChanged = nameof(PlayerInfoStringChange))]
-        public string PlayerInfoString { get; set; }
+        public NetworkString<_64> PlayerInfoString { get; set; }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        private void UpdatePlayerInfoStringRpc(string info)
+        private void UpdatePlayerInfoStringRpc(NetworkString<_64> info)
         {
             PlayerInfoString = info;
         }
@@ -33,48 +33,57 @@ namespace Assets.Scripts.Views
         public override void Spawned()
         {
             marker = playerSpecsService.HUDScreen.MarkersView.AddPlayer(transform.parent);
+            playerSpecsService.HUDScreen.LeaderBoardView.AddPlayer(Object.Id);
 
             if (OwnedByMe)
             {
                 marker.gameObject.SetActive(false);
 
-                AssignColorToBodyRenderer(playerSpecsService.BodyTintColorCached);
                 ApplyPlayerInfo(playerSpecsService.PlayerInfoCached);
                 UpdatePlayerInfoStringRpc(playerSpecsService.PlayerInfoCached);
                 playerSpecsService.PlayerInfoChanged += PlayerInfoChange;
             }
         }
 
+        public override void Despawned(NetworkRunner runner, bool hasState)
+        {
+            playerSpecsService.HUDScreen.MarkersView.RemovePlayer(transform.parent);
+            playerSpecsService.HUDScreen.LeaderBoardView.RemovePlayer(Object.Id);
+
+            if (OwnedByMe)
+                playerSpecsService.PlayerInfoChanged -= PlayerInfoChange;
+        }
         private void PlayerInfoChange(string info)
         {
             if (OwnedByMe)
             {
-                AssignColorToBodyRenderer(playerSpecsService.BodyTintColorCached);
+                ApplyPlayerInfo(playerSpecsService.PlayerInfoCached);
                 UpdatePlayerInfoStringRpc(info);
             }
         }
 
         private static void PlayerInfoStringChange(Changed<PlayerSkinView> changed)
         {
-            changed.Behaviour.ApplyPlayerInfo(changed.Behaviour.PlayerInfoString);
+            if (changed.Behaviour.PlayerInfoString.Length > 0)
+                changed.Behaviour.ApplyPlayerInfo(changed.Behaviour.PlayerInfoString.Value);
         }
         private void ApplyPlayerInfo(string playerInfoString)
         {
+            if (playerInfoString.Length == 0)
+                return;
+
             var playerInfo = PlayerInfo.Deserialize(playerInfoString);
 
             AssignColorToBodyRenderer(playerInfo.BodyTintColor);
 
-            playerSpecsService.HUDScreen.MarkersView.UpdatePlayer(transform.parent, playerInfo);
+            playerSpecsService.HUDScreen.MarkersView.UpdatePlayer(
+                transform.parent, playerInfo);
+
+            playerSpecsService.HUDScreen.LeaderBoardView.UpdatePlayer(
+                Object.Id, playerInfo, Object.InputAuthority == Runner.LocalPlayer);
         }
 
         private void AssignColorToBodyRenderer(Color color) =>
             bodyRenderer.materials[1].SetColor("_Color", color);
-
-        private void OnDestroy()
-        {
-            playerSpecsService.HUDScreen.MarkersView.RemovePlayer(transform.parent);
-            if (OwnedByMe)
-                playerSpecsService.PlayerInfoChanged -= PlayerInfoChange;
-        }
     }
 }

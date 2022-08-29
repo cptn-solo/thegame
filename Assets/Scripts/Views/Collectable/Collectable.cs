@@ -45,7 +45,6 @@ namespace Assets.Scripts.Views
         {
             foreach (var state in current)
             {
-                Debug.Log($"ApplyCollectionState {state.Key} {state.Value}");
                 switch (state.Key)
                 {
                     case CollectionState.Collected:

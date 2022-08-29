@@ -22,6 +22,8 @@ namespace Assets.Scripts.Services.App
 
         public static PlayerInfo Deserialize(string playerInfo)
         {
+            Debug.Log($"PlayerInfo Deserialize {playerInfo}");
+
             var props = playerInfo.Split(":");
 
             PlayerInfo info = default;

@@ -1,25 +1,28 @@
 ﻿using UnityEngine;
 
-public struct MarkerInfo
+namespace Assets.Scripts.UI
 {
-    public string Label;
-    public Color LabelColor;
-    public string Info;
-
-    public static MarkerInfo Get(string label, Color color, string info)
+    public struct MarkerInfo
     {
-        MarkerInfo marker = default;
-        marker.Label = label;
-        marker.LabelColor = color;
-        marker.Info = info;
+        public string Label;
+        public Color LabelColor;
+        public string Info;
 
-        return marker;
-    }
+        public static MarkerInfo Get(string label, Color color, string info)
+        {
+            MarkerInfo marker = default;
+            marker.Label = label;
+            marker.LabelColor = color;
+            marker.Info = info;
 
-    public void SetInfo(string label, Color color, string info)
-    {
-        Label = label;
-        LabelColor = color;
-        Info = info;
+            return marker;
+        }
+
+        public void SetInfo(string label, Color color, string info)
+        {
+            Label = label;
+            LabelColor = color;
+            Info = info;
+        }
     }
 }
