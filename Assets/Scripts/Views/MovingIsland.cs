@@ -7,6 +7,7 @@ namespace Assets.Scripts.Views
 	using UnityEngine;
 	using Fusion;
 	using Fusion.KCC;
+	using System.Linq;
 
 	[RequireComponent(typeof(Rigidbody))]
 	[OrderBefore(typeof(NetworkAreaOfInterestBehaviour))]
@@ -41,8 +42,20 @@ namespace Assets.Scripts.Views
 		private int _renderDirection;
 		private Vector3 _renderPosition;
 		private RawInterpolator _entitiesInterpolator;
+        [Networked]
+		private TickTimer movementPaused { get; set; }
 
-		public override int PositionWordOffset => 0;
+        [Networked]
+        private TickTimer tillNextFlip { get; set; }
+
+        [SerializeField]
+		private bool stopMovementIfPlayerSnapped;
+        private const float restartMovementDelaySeconds = 5.0f;
+
+		[SerializeField]
+		private Transform visualsTransform;
+
+        public override int PositionWordOffset => 0;
 
 		public override void Spawned()
 		{
@@ -55,13 +68,34 @@ namespace Assets.Scripts.Views
 			_renderWaypoint = _waypoint;
 			_renderDirection = _direction;
 			_entitiesInterpolator = GetInterpolator(nameof(_entities));
+
+			StartCoroutine(ScheduleVisualFlip());
 		}
 
-		public override void FixedUpdateNetwork()
+		private IEnumerator ScheduleVisualFlip()
 		{
-			// Calculate next position of the platform.
+			InitForTillNextFlipTime(15.0f);
 
-			CalculateNextPosition(_waypoint, _direction, _position, Runner.DeltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
+			yield return new WaitForSeconds(15.0f);
+		}
+
+		public void InitForPausedTime(float lifeTime)
+        {
+            movementPaused = TickTimer.CreateFromSeconds(Runner, lifeTime);
+        }
+        public void InitForTillNextFlipTime(float lifeTime)
+        {
+            tillNextFlip = TickTimer.CreateFromSeconds(Runner, lifeTime);
+        }
+
+        public override void FixedUpdateNetwork()
+		{
+            if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
+                return;
+
+            // Calculate next position of the platform.
+
+            CalculateNextPosition(_waypoint, _direction, _position, Runner.DeltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
 
 			_position += positionDelta;
 			_waypoint = nextWaypoint;
@@ -105,12 +139,15 @@ namespace Assets.Scripts.Views
 
 		public override void Render()
 		{
-			float renderTime = Runner.SimulationTime + Runner.DeltaTime * Runner.Simulation.StateAlpha;
+            if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
+                return;
+
+            float renderTime = Runner.SimulationTime + Runner.DeltaTime * Runner.Simulation.StateAlpha;
 			float deltaTime = renderTime - _renderTime;
 
 			// Calculate next render position of the platform.
 			// We always have to calculate delta against previous render frame to avoid clearing render changes from other sources.
-
+			
 			CalculateNextPosition(_renderWaypoint, _renderDirection, _renderPosition, deltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
 
 			_renderTime = renderTime;
@@ -122,6 +159,11 @@ namespace Assets.Scripts.Views
 			_rigidbody.position = _renderPosition;
 
 			ApplyPositionDelta(positionDelta);
+		}
+
+		private bool LandedPlayersPresent()
+		{
+			return movementPaused.IsRunning && !movementPaused.Expired(Runner);
 		}
 
 		// MonoBehaviour INTERFACE
@@ -152,6 +194,8 @@ namespace Assets.Scripts.Views
 		public override void SetInputProperties(KCC kcc, KCCData data)
 		{
 			// Prediction correction can produce glitches on platforms with higher velocity when direction flips.
+			if (stopMovementIfPlayerSnapped)
+				return;
 
 			kcc.SuppressFeature(EKCCFeature.PredictionCorrection);
 		}
@@ -163,9 +207,17 @@ namespace Assets.Scripts.Views
 
 			if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
 			{
-				// Find the KCC in the list and increase SpaceAlpha if it exists.
+                if (stopMovementIfPlayerSnapped)
+                {
+                    if (movementPaused.ExpiredOrNotRunning(Runner) || movementPaused.RemainingTicks(Runner) < 3)
+	                        InitForPausedTime(restartMovementDelaySeconds);
 
-				for (int i = 0; i < _entities.Length; ++i)
+                    return;
+                }
+
+                // Find the KCC in the list and increase SpaceAlpha if it exists.
+
+                for (int i = 0; i < _entities.Length; ++i)
 				{
 					PlatformEntity entity = _entities.Get(i);
 					if (entity.Id == kcc.Object.Id)
@@ -200,6 +252,9 @@ namespace Assets.Scripts.Views
 
 		public override void OnInterpolate(KCC kcc, KCCData data)
 		{
+			if (stopMovementIfPlayerSnapped)
+				return;
+
 			if (kcc.IsProxy == false)
 				return;
 

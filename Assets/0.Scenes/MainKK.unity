@@ -1474,7 +1474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df993e0bce40330459c166850565f7de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSceneIndex: 1
+  levelSceneIndex: 3
   RunnerPrefab: {fileID: 3427936558554746844, guid: 36ba3480ded34f441a0d952459870465, type: 3}
   StartMode: 0
   AutoStartAs: 2
