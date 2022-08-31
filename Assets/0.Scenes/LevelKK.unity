@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -295,7 +296,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 1766744956}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 0}
 --- !u!114 &12294476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10627,6 +10627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -10636,7 +10637,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 414532990}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 0}
 --- !u!114 &611727913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11365,6 +11365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 647617660}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -11374,7 +11375,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 1778081897}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 647617660}
 --- !u!114 &649787974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16359,6 +16359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -16368,7 +16369,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 1347124190}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 0}
 --- !u!114 &925468304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20489,6 +20489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -20498,7 +20499,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 1222287109}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 0}
 --- !u!114 &1205076147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33293,6 +33293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 1421518174}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -33302,7 +33303,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 65155969}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 1
-  visualsTransform: {fileID: 1421518174}
 --- !u!114 &1904727375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35379,6 +35379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -35388,7 +35389,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 1933129849}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 0
-  visualsTransform: {fileID: 0}
 --- !u!114 &2022538401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37598,6 +37598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  visualsTransform: {fileID: 0}
   _mode: 1
   _speed: 1
   _waypoints:
@@ -37607,7 +37608,6 @@ MonoBehaviour:
   _snapVolume: {fileID: 118627850}
   _spaceTransitionSpeed: 4
   stopMovementIfPlayerSnapped: 1
-  visualsTransform: {fileID: 0}
 --- !u!114 &2131866076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37850,6 +37850,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1852532001819740787}
   - component: {fileID: 1852532001819740788}
+  - component: {fileID: 1852532001819740790}
+  - component: {fileID: 1852532001819740789}
+  - component: {fileID: 1852532001819740792}
+  - component: {fileID: 1852532001819740791}
   m_Layer: 0
   m_Name: "\u043C\u0430\u044F\u043A"
   m_TagString: Untagged
@@ -37953,6 +37957,89 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1852532001819740789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368624412016906441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: 830e628bd3fc403982bff405e82bf776
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1852532001819740790}
+  - {fileID: 1852532001819740792}
+  SimulationBehaviours: []
+--- !u!114 &1852532001819740790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368624412016906441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66308038fa2714b44a03076552e050c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!135 &1852532001819740791
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368624412016906441}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &1852532001819740792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368624412016906441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Animator: {fileID: 1852532001819740788}
+  SyncSettings: 4
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000008783c01969e1086cd2ffeb25108d2a879ff634cfbc463769014b82bcef294ac93c102a092117ed4e
+  TriggerHashes: 00000000
 --- !u!33 &2121841217730173428
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -1,36 +1,36 @@
 ﻿using Assets.Scripts.Data;
 using Assets.Scripts.Services.App;
 using Fusion;
-using System;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
 namespace Assets.Scripts.Views
 {
+    public struct CollectedItems : INetworkStruct
+    {
+        [Networked]
+        public NetworkDictionary<CollectableType, int> Items => default;
+        public int ChangeCount;
+
+    }
     public class Collector : NetworkBehaviour
     {
 
         [Inject] private readonly PlayerInventoryService playerInventory;
         [Inject] private readonly PlayerSpecsService playerSpecsService;
 
-        [Networked(OnChanged = nameof(CollectedOnChange)), Capacity(5)]
-        public NetworkDictionary<CollectableType, int> Collected => default;
+        [Networked(OnChanged = nameof(CollectedOnChange))]
+        private CollectedItems Collected { get; set; }
+        private int changeCountOld;
 
-        [Networked]
-        public int ChangeCount { get; set; }
-
-        private int changeCountOld = 0;
- 
         [SerializeField] private LayerMask collectableLayer;
 
         private IPlayerEnhancer[] enhancers;
+        
 
-        private void Awake()
-        {
+        private void Awake() =>
             enhancers = GetComponents<IPlayerEnhancer>();
-        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -43,44 +43,51 @@ namespace Assets.Scripts.Views
             if (!Runner.IsServer)
                 return;
 
-            if (Collected.TryGet(collectableType, out var balance))
+            var c = Collected;
+
+            if (c.Items.TryGet(collectableType, out var balance))
             {
-                Collected.Set(collectableType, balance + count);
+                c.Items.Set(collectableType, balance + count);
             }
             else
             {
-                Collected.Add(collectableType, count);
+                c.Items.Add(collectableType, count);
             }
-            ChangeCount++;
+            c.ChangeCount++;
+
+            Collected = c;
         }
 
         public override void FixedUpdateNetwork()
         {
-            if (Runner.IsServer && ChangeCount != changeCountOld)
+            if (Collected.ChangeCount == changeCountOld)
+                return;
+
+            if (Runner.IsServer)
             {
-                Debug.Log($"C FUN server, {ChangeCount} {changeCountOld}");
                 var multiplier = 1.0f;
                 if (TryGetComponent<SizeEnhancer>(out var sizeEnhancer))
                 {
-                    sizeEnhancer.Enhance(Collected);
+                    sizeEnhancer.Enhance(Collected.Items);
                     multiplier = sizeEnhancer.SizeEnhancerValue;
                 }
 
                 foreach (var enhancer in enhancers.Where(x => x.GetType() != typeof(SizeEnhancer)))
-                    enhancer.Enhance(Collected, multiplier);
+                    enhancer.Enhance(Collected.Items, multiplier);
             }
-            if (Object.HasInputAuthority && ChangeCount != changeCountOld)
+
+            if (Object.HasInputAuthority)
             {
-                Debug.Log($"C FUN IA, {ChangeCount} {changeCountOld}");
-                foreach (var collected in Collected)
+                foreach (var collected in Collected.Items)
                     if (!playerInventory.Compare(collected.Key, collected.Value))
                         playerInventory.SetCollectableBalance(collected.Key, collected.Value);
             }
-            changeCountOld = ChangeCount;
+            
+            changeCountOld = Collected.ChangeCount;
         }
         private static void CollectedOnChange(Changed<Collector> changed)
         {
-            changed.Behaviour.UpdatePlayerInfo(changed.Behaviour.Collected);
+            changed.Behaviour.UpdatePlayerInfo(changed.Behaviour.Collected.Items);
         }
 
         private void UpdatePlayerInfo(NetworkDictionary<CollectableType, int> collected)

@@ -1,16 +1,13 @@
-﻿using System.Collections;
-
-namespace Assets.Scripts.Views
+﻿namespace Assets.Scripts.Views
 {
 	using System;
 	using UnityEngine;
 	using Fusion;
 	using Fusion.KCC;
-	using Random = UnityEngine.Random;
 
 	[RequireComponent(typeof(Rigidbody))]
 	[OrderBefore(typeof(NetworkAreaOfInterestBehaviour))]
-	public sealed class MovingIsland : NetworkAoIKCCProcessor
+	public sealed partial class MovingIsland : NetworkAoIKCCProcessor
 	{
 		[SerializeField]
 		private EPlatformMode _mode;
@@ -48,26 +45,7 @@ namespace Assets.Scripts.Views
         private bool stopMovementIfPlayerSnapped;
         private const float restartMovementDelaySeconds = 5.0f;
 
-        [Networked(OnChanged = nameof(OnNextRotationChange))]
-		private FlipEvent nextRotationAxis { get; set; }
-        private struct FlipEvent : INetworkStruct
-        {
-            public AxisMapped nextRotationAxis;
-            public int count;
-        }
-		private bool rotating = false;
 
-        [SerializeField]
-		private Transform visualsTransform;
-		private float lerpDuration = 5.0f;
-		private bool flipActivated;
-
-		private enum AxisMapped
-		{
-			NA = 0,
-			x = 1,
-			z = 2
-        }
 
 		public override int PositionWordOffset => 0;
 
@@ -84,63 +62,16 @@ namespace Assets.Scripts.Views
 			_entitiesInterpolator = GetInterpolator(nameof(_entities));			
         }
 
-		private static void OnNextRotationChange(Changed<MovingIsland> changed)
-		{
-			var nextRotation = changed.Behaviour.nextRotationAxis;
-
-			changed.LoadOld();
-
-			var nextRotationOld = changed.Behaviour.nextRotationAxis;
-
-			if (nextRotation.count != nextRotationOld.count)
-				changed.Behaviour.StartRotation(nextRotation.nextRotationAxis);
-
-		}
-
-        private IEnumerator ScheduleVisualFlip()
-		{
-			while (rotating)
-			{
-                yield return new WaitForSeconds(Random.Range(15.0f, 25.0f));
-
-                var x = nextRotationAxis;
-                x.nextRotationAxis = (AxisMapped)Random.Range(1, 3);
-                x.count++;
-                nextRotationAxis = x;
-            }
-        }
-
-        IEnumerator Rotate90(AxisMapped nextRotationAxis)
-        {
-            flipActivated = true;
-
-            var angle = 0.0f;
-			var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;
-
-            while (angle <= 90.0f)
-			{
-				var delta = 30.0f * Time.deltaTime;
-				angle += delta;
-                visualsTransform.RotateAround(visualsTransform.position, axis, delta);
-
-			   yield return null;
-            }
-			// the remainder
-            visualsTransform.RotateAround(visualsTransform.position, axis, 90.0f - angle);
-
-			flipActivated = false;
-        }
         public void InitForPausedTime(float lifeTime)
         {
             movementPaused = TickTimer.CreateFromSeconds(Runner, lifeTime);
         }
 
-		private void StartRotation(AxisMapped nextRotationAxis) =>
-			StartCoroutine(Rotate90(nextRotationAxis));
 
         public override void FixedUpdateNetwork()
 		{
-            if (Runner.IsServer && visualsTransform != null && !rotating)
+            if (Runner.IsServer && visualsTransform != null && !rotating && 
+				keyHoles.Length == 0) // only autorotate if no keyholes to activate
 			{
                 rotating = true;
                 StartCoroutine(ScheduleVisualFlip());
@@ -236,6 +167,8 @@ namespace Assets.Scripts.Views
 			_rigidbody.useGravity = false;
 			_rigidbody.interpolation = RigidbodyInterpolation.None;
 			_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+			keyHoles = GetComponentsInChildren<KeyholeView>();
 		}
 
 		// NetworkKCCProcessor INTERFACE

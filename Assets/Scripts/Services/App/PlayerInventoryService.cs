@@ -20,6 +20,16 @@ namespace Assets.Scripts.Services.App
             collectables.Add(CollectableType.Ring, 0);
             collectables.Add(CollectableType.Frame, 0);
             collectables.Add(CollectableType.SnowFlake, 0);
+            collectables.Add(CollectableType.Key0, 0);
+            collectables.Add(CollectableType.Key1, 0);
+            collectables.Add(CollectableType.Key2, 0);
+            collectables.Add(CollectableType.Key3, 0);
+            collectables.Add(CollectableType.Key4, 0);
+            collectables.Add(CollectableType.Key5, 0);
+            collectables.Add(CollectableType.Key6, 0);
+            collectables.Add(CollectableType.Key7, 0);
+            collectables.Add(CollectableType.Key8, 0);
+            collectables.Add(CollectableType.Key9, 0);
         }
 
         public void SetCollectableBalance(CollectableType collectableType, int balance)
