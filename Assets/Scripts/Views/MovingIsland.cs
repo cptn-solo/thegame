@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEngine;
 
 namespace Assets.Scripts.Views
 {
@@ -7,7 +6,7 @@ namespace Assets.Scripts.Views
 	using UnityEngine;
 	using Fusion;
 	using Fusion.KCC;
-	using System.Linq;
+	using Random = UnityEngine.Random;
 
 	[RequireComponent(typeof(Rigidbody))]
 	[OrderBefore(typeof(NetworkAreaOfInterestBehaviour))]
@@ -42,20 +41,35 @@ namespace Assets.Scripts.Views
 		private int _renderDirection;
 		private Vector3 _renderPosition;
 		private RawInterpolator _entitiesInterpolator;
+
         [Networked]
 		private TickTimer movementPaused { get; set; }
-
-        [Networked]
-        private TickTimer tillNextFlip { get; set; }
-
         [SerializeField]
-		private bool stopMovementIfPlayerSnapped;
+        private bool stopMovementIfPlayerSnapped;
         private const float restartMovementDelaySeconds = 5.0f;
 
-		[SerializeField]
-		private Transform visualsTransform;
+        [Networked(OnChanged = nameof(OnNextRotationChange))]
+		private FlipEvent nextRotationAxis { get; set; }
+        private struct FlipEvent : INetworkStruct
+        {
+            public AxisMapped nextRotationAxis;
+            public int count;
+        }
+		private bool rotating = false;
 
-        public override int PositionWordOffset => 0;
+        [SerializeField]
+		private Transform visualsTransform;
+		private float lerpDuration = 5.0f;
+		private bool flipActivated;
+
+		private enum AxisMapped
+		{
+			NA = 0,
+			x = 1,
+			z = 2
+        }
+
+		public override int PositionWordOffset => 0;
 
 		public override void Spawned()
 		{
@@ -67,29 +81,71 @@ namespace Assets.Scripts.Views
 			_renderPosition = _position;
 			_renderWaypoint = _waypoint;
 			_renderDirection = _direction;
-			_entitiesInterpolator = GetInterpolator(nameof(_entities));
+			_entitiesInterpolator = GetInterpolator(nameof(_entities));			
+        }
 
-			StartCoroutine(ScheduleVisualFlip());
-		}
-
-		private IEnumerator ScheduleVisualFlip()
+		private static void OnNextRotationChange(Changed<MovingIsland> changed)
 		{
-			InitForTillNextFlipTime(15.0f);
+			var nextRotation = changed.Behaviour.nextRotationAxis;
 
-			yield return new WaitForSeconds(15.0f);
+			changed.LoadOld();
+
+			var nextRotationOld = changed.Behaviour.nextRotationAxis;
+
+			if (nextRotation.count != nextRotationOld.count)
+				changed.Behaviour.StartRotation(nextRotation.nextRotationAxis);
+
 		}
 
-		public void InitForPausedTime(float lifeTime)
+        private IEnumerator ScheduleVisualFlip()
+		{
+			while (rotating)
+			{
+                yield return new WaitForSeconds(Random.Range(15.0f, 25.0f));
+
+                var x = nextRotationAxis;
+                x.nextRotationAxis = (AxisMapped)Random.Range(1, 3);
+                x.count++;
+                nextRotationAxis = x;
+            }
+        }
+
+        IEnumerator Rotate90(AxisMapped nextRotationAxis)
+        {
+            flipActivated = true;
+
+            var angle = 0.0f;
+			var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;
+
+            while (angle <= 90.0f)
+			{
+				var delta = 30.0f * Time.deltaTime;
+				angle += delta;
+                visualsTransform.RotateAround(visualsTransform.position, axis, delta);
+
+			   yield return null;
+            }
+			// the remainder
+            visualsTransform.RotateAround(visualsTransform.position, axis, 90.0f - angle);
+
+			flipActivated = false;
+        }
+        public void InitForPausedTime(float lifeTime)
         {
             movementPaused = TickTimer.CreateFromSeconds(Runner, lifeTime);
         }
-        public void InitForTillNextFlipTime(float lifeTime)
-        {
-            tillNextFlip = TickTimer.CreateFromSeconds(Runner, lifeTime);
-        }
+
+		private void StartRotation(AxisMapped nextRotationAxis) =>
+			StartCoroutine(Rotate90(nextRotationAxis));
 
         public override void FixedUpdateNetwork()
 		{
+            if (Runner.IsServer && visualsTransform != null && !rotating)
+			{
+                rotating = true;
+                StartCoroutine(ScheduleVisualFlip());
+            }
+
             if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
                 return;
 
@@ -202,15 +258,18 @@ namespace Assets.Scripts.Views
 
 		public override void OnStay(KCC kcc, KCCData data)
 		{
-			// State authority maintains list of KCCs inside snap volume.
-			// These entities are transitioned from interpolated space to locally predicted space (driven by SpaceAlpha).
+            // State authority maintains list of KCCs inside snap volume.
+            // These entities are transitioned from interpolated space to locally predicted space (driven by SpaceAlpha).
+            if (flipActivated)
+                kcc.AddExternalImpulse(Vector3.up * 1.0f);
 
-			if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
+            if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
 			{
+
                 if (stopMovementIfPlayerSnapped)
                 {
                     if (movementPaused.ExpiredOrNotRunning(Runner) || movementPaused.RemainingTicks(Runner) < 3)
-	                        InitForPausedTime(restartMovementDelaySeconds);
+						InitForPausedTime(restartMovementDelaySeconds);
 
                     return;
                 }
