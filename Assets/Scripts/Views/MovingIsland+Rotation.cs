@@ -157,11 +157,11 @@ namespace Assets.Scripts.Views
 
         IEnumerator Rotate90(AxisMapped nextRotationAxis)
         {
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(5.0f);
 
             flipActivated = true;
             
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(1.0f);
 
             var angle = 0.0f;
             var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;
