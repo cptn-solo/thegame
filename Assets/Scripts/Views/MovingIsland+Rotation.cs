@@ -1,11 +1,9 @@
 ﻿using Assets.Scripts.Data;
 using Fusion;
 using Fusion.KCC;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -117,7 +115,7 @@ namespace Assets.Scripts.Views
         private void IsleFlipperKCCOnStay(KCC kcc)
         {
             if (flipActivated)
-                kcc.AddExternalImpulse(Vector3.up * 1.0f);
+                kcc.AddExternalImpulse(Vector3.up * 1.2f);
         }
 
         private IEnumerator ScheduleVisualFlip()
@@ -161,15 +159,16 @@ namespace Assets.Scripts.Views
 
             flipActivated = true;
             
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(1.5f);
 
             var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;
             var duration = 3.0f;
             var totalAngle = 90.0f;
             
             var rotationCurve = AnimationCurve.EaseInOut(0.0f, 0.0f, duration, totalAngle);
-            AnimationUtility.SetKeyRightTangentMode(rotationCurve, 0, AnimationUtility.TangentMode.ClampedAuto);
-            AnimationUtility.SetKeyLeftTangentMode(rotationCurve, 1, AnimationUtility.TangentMode.ClampedAuto);
+
+            //AnimationUtility.SetKeyRightTangentMode(rotationCurve, 0, AnimationUtility.TangentMode.ClampedAuto);
+            //AnimationUtility.SetKeyLeftTangentMode(rotationCurve, 1, AnimationUtility.TangentMode.ClampedAuto);
 
             var percent = 0.0f;
             var angle = 0.0f;
