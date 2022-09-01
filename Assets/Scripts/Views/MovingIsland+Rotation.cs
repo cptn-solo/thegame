@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -25,7 +26,6 @@ namespace Assets.Scripts.Views
     public sealed partial class MovingIsland
     {
         [SerializeField] private Transform visualsTransform;
-
         [SerializeField] private CollectableType keyCollectableType = CollectableType.Key0;
 
         public CollectableType KeyCollectableType => keyCollectableType;
@@ -163,19 +163,30 @@ namespace Assets.Scripts.Views
             
             yield return new WaitForSeconds(1.0f);
 
-            var angle = 0.0f;
             var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;
+            var duration = 3.0f;
+            var totalAngle = 90.0f;
+            
+            var rotationCurve = AnimationCurve.EaseInOut(0.0f, 0.0f, duration, totalAngle);
+            AnimationUtility.SetKeyRightTangentMode(rotationCurve, 0, AnimationUtility.TangentMode.ClampedAuto);
+            AnimationUtility.SetKeyLeftTangentMode(rotationCurve, 1, AnimationUtility.TangentMode.ClampedAuto);
 
-            while (angle <= 90.0f)
+            var percent = 0.0f;
+            var angle = 0.0f;
+            
+            while (percent <= duration)
             {
-                var delta = 30.0f * Time.deltaTime; // 30 deg. per second
-                angle += delta;
+                percent += Time.deltaTime;
+                var delta = rotationCurve.Evaluate(percent) - angle;
                 visualsTransform.RotateAround(visualsTransform.position, axis, delta);
+                angle += delta;
 
                 yield return null;
             }
             // the remainder
-            visualsTransform.RotateAround(visualsTransform.position, axis, 90.0f - angle);
+            Debug.Log($"Rotated {angle}");
+
+            visualsTransform.RotateAround(visualsTransform.position, axis, totalAngle - angle);
 
             flipActivated = false;
         }
