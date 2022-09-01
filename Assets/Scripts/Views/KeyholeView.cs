@@ -16,9 +16,11 @@ namespace Assets.Scripts.Views
 
         [Networked(OnChanged = nameof(OnReadyChanged))]
         public NetworkBool ready { get; set; }
+        private bool oldReady;
 
         [Networked(OnChanged = nameof(OnActivatedChanged))]
         public NetworkBool activated { get; set; }
+        private bool oldActivated;
 
         private void Awake()
         {
@@ -58,19 +60,18 @@ namespace Assets.Scripts.Views
 
         public override void FixedUpdateNetwork()
         {
-
+            if (oldActivated != activated)
+            {
+                oldActivated = activated;
+                movingIsland.OnKeyholeActivated(this);
+            }
         }
 
         internal void SetReadyState(bool ready) =>
             this.ready = ready;
 
-        private void SetLocalActivatedState(bool activated)
-        {
+        private void SetLocalActivatedState(bool activated) =>
             animator.SetBool(AnimatorEngageBoolKey, activated);
-
-            if (activated)
-                movingIsland.OnKeyholeActivated(this);
-        }
 
         private void SetLocalReadyState(bool ready) =>
             animator.SetBool(AnimatorReadyBoolKey, ready);

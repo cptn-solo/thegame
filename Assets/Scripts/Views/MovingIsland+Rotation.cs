@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Data;
 using Fusion;
+using Fusion.KCC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +37,8 @@ namespace Assets.Scripts.Views
         private NetworkBool allSidesUnlocked { get; set; }
         
         private bool rotating = false;
-        private float lerpDuration = 5.0f;
+        private bool keyHoleRotating = false;
+
         private bool flipActivated;
         private List<AxisMapped> sidesSequence = new()
         {
@@ -83,8 +85,39 @@ namespace Assets.Scripts.Views
             var readyKeyholes = keyHoles.Where(x => x.ready).ToArray();
             var activatedKeyholes = keyHoles.Where(x => x.activated).ToArray();
             
-            if (readyKeyholes.Length == 0 && activatedKeyholes.Length < keyHoles.Length)
+            if (readyKeyholes.Length > 0 && activatedKeyholes.Length == readyKeyholes.Length &&
+                activatedKeyholes.Length < keyHoles.Length)
                 EnqueueRotation();
+        }
+
+        private void IsleFlipperOnAwake()
+        {
+            keyHoles = GetComponentsInChildren<KeyholeView>();
+        }
+
+        private void IsleFlipperOnFUN()
+        {
+            if (Runner.IsServer && visualsTransform != null)
+            {
+                if (!rotating && keyHoles.Length == 0) // only autorotate if no keyholes to activate
+                {
+                    rotating = true;
+                    StartCoroutine(ScheduleVisualFlip());
+                }
+
+                if (!keyHoleRotating && keyHoles.Length > 0)
+                {
+                    keyHoleRotating = true;
+                    StartCoroutine(ScheduleNextKeyHolesReady());
+                }
+            }
+
+        }
+
+        private void IsleFlipperKCCOnStay(KCC kcc)
+        {
+            if (flipActivated)
+                kcc.AddExternalImpulse(Vector3.up * 1.0f);
         }
 
         private IEnumerator ScheduleVisualFlip()
@@ -124,7 +157,11 @@ namespace Assets.Scripts.Views
 
         IEnumerator Rotate90(AxisMapped nextRotationAxis)
         {
+            yield return new WaitForSeconds(2.0f);
+
             flipActivated = true;
+            
+            yield return new WaitForSeconds(.2f);
 
             var angle = 0.0f;
             var axis = nextRotationAxis == AxisMapped.x ? Vector3.right : Vector3.forward;

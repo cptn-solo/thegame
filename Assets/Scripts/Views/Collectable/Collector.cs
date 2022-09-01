@@ -69,7 +69,7 @@ namespace Assets.Scripts.Views
         {
             var availableCount = Collected.Items.Where(c => c.Key == collectableType).Select(c => c.Value).Sum();
 
-            if (dropInstantly)
+            if (dropInstantly && availableCount > 0)
                 EnqueueForCollection(collectableType, -1);
 
             return availableCount > 0;

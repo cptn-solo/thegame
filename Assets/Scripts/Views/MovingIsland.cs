@@ -42,7 +42,7 @@
         [Networked]
 		private TickTimer movementPaused { get; set; }
         [SerializeField]
-        private bool stopMovementIfPlayerSnapped;
+        private bool stopMovementIfPlayerSnapped = true;
         private const float restartMovementDelaySeconds = 5.0f;
 
 
@@ -70,12 +70,7 @@
 
         public override void FixedUpdateNetwork()
 		{
-            if (Runner.IsServer && visualsTransform != null && !rotating && 
-				keyHoles.Length == 0) // only autorotate if no keyholes to activate
-			{
-                rotating = true;
-                StartCoroutine(ScheduleVisualFlip());
-            }
+			IsleFlipperOnFUN();
 
             if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
                 return;
@@ -124,7 +119,7 @@
 			ApplyPositionDelta(positionDelta);
 		}
 
-		public override void Render()
+        public override void Render()
 		{
             if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
                 return;
@@ -168,12 +163,12 @@
 			_rigidbody.interpolation = RigidbodyInterpolation.None;
 			_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-			keyHoles = GetComponentsInChildren<KeyholeView>();
+			IsleFlipperOnAwake();
 		}
 
-		// NetworkKCCProcessor INTERFACE
+        // NetworkKCCProcessor INTERFACE
 
-		public override float Priority => float.MaxValue;
+        public override float Priority => float.MaxValue;
 
 		public override EKCCStages GetValidStages(KCC kcc, KCCData data)
 		{
@@ -191,10 +186,9 @@
 
 		public override void OnStay(KCC kcc, KCCData data)
 		{
-            // State authority maintains list of KCCs inside snap volume.
-            // These entities are transitioned from interpolated space to locally predicted space (driven by SpaceAlpha).
-            if (flipActivated)
-                kcc.AddExternalImpulse(Vector3.up * 1.0f);
+			// State authority maintains list of KCCs inside snap volume.
+			// These entities are transitioned from interpolated space to locally predicted space (driven by SpaceAlpha).
+			IsleFlipperKCCOnStay(kcc);
 
             if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
 			{
@@ -242,7 +236,7 @@
 			}
 		}
 
-		public override void OnInterpolate(KCC kcc, KCCData data)
+        public override void OnInterpolate(KCC kcc, KCCData data)
 		{
 			if (stopMovementIfPlayerSnapped)
 				return;
