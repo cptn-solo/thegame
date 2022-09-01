@@ -9,7 +9,7 @@ namespace Assets.Scripts.Views
 {
     public struct CollectedItems : INetworkStruct
     {
-        [Networked]
+        [Networked, Capacity(15)]
         public NetworkDictionary<CollectableType, int> Items => default;
         public int ChangeCount;
 

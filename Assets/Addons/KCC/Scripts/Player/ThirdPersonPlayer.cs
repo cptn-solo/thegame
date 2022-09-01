@@ -200,7 +200,7 @@ namespace Example
 			if (Input.WasActivated(EGameplayInputAction.LMB) == true)
 			{
 				// Left mouse button action
-				KCC.FixedData.ShotDirection = new Ray(
+				KCC.FixedData.Shot1Direction = new Ray(
 					CameraHandle.transform.position,
                     aimPoint.position - CameraHandle.transform.position)
 					.direction;
@@ -208,10 +208,14 @@ namespace Example
 
 			if (Input.WasActivated(EGameplayInputAction.RMB) == true)
 			{
-				// Right mouse button action
-			}
+                // Right mouse button action
+                KCC.FixedData.Shot1Direction = new Ray(
+					CameraHandle.transform.position,
+					aimPoint.position - CameraHandle.transform.position)
+					.direction;
+            }
 
-			if (Input.WasActivated(EGameplayInputAction.MMB) == true)
+            if (Input.WasActivated(EGameplayInputAction.MMB) == true)
 			{
 				// Middle mouse button action
 			}

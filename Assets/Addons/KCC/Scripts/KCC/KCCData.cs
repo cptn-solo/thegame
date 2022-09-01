@@ -15,11 +15,12 @@ namespace Fusion.KCC
 		public float JumpEnhancerValue;
 		public float SpeedEnhancerValue;
 		
-		public Vector3 ShotDirection;
+		public Vector3 Shot1Direction;
+		public Vector3 Shot2Direction;
 
-		// PARTIAL METHODS
+        // PARTIAL METHODS
 
-		partial void ClearUserData()
+        partial void ClearUserData()
 		{
 			// Full cleanup here (lists, pools, cached data, ...)
 		}
@@ -34,7 +35,8 @@ namespace Fusion.KCC
 
 			JumpEnhancerValue = other.JumpEnhancerValue;
 			SpeedEnhancerValue = other.SpeedEnhancerValue;
-			ShotDirection = other.ShotDirection;
-		}
+			Shot1Direction = other.Shot1Direction;
+			Shot2Direction = other.Shot2Direction;
+        }
 	}
 }

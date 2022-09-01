@@ -15,7 +15,7 @@ namespace Assets.Scripts.Views
         protected override float EngageTime => .5f;
         protected override bool ToggleAction(GameplayInput input) => input.Button1;
         protected override bool EngageAction(GameplayInput input) => input.LMB;
-        protected override Vector3 InputEngageDirection => kcc.FixedData.ShotDirection;
+        protected override Vector3 InputEngageDirection => kcc.FixedData.Shot1Direction;
 
 
         private void Start()
