@@ -1,4 +1,5 @@
-﻿using Fusion;
+﻿using Assets.Scripts.Data;
+using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,10 @@ namespace Assets.Scripts.Views
     public sealed partial class MovingIsland
     {
         [SerializeField] private Transform visualsTransform;
+
+        [SerializeField] private CollectableType keyCollectableType = CollectableType.Key0;
+
+        public CollectableType KeyCollectableType => keyCollectableType;
 
         [Networked(OnChanged = nameof(OnNextRotationChange))]
         private FlipEvent nextRotationAxis { get; set; }

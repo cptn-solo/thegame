@@ -57,6 +57,38 @@ namespace Assets.Scripts.Views
 
             Collected = c;
         }
+        public int GetRandomDropCount()
+        {
+            var totalCount = Collected.Items.Where(c => c.Value > 0).Select(c => c.Value).Sum();
+            if (totalCount == 0)
+                return 0;
+
+            return Random.Range(1, Mathf.FloorToInt(Mathf.Sqrt(totalCount)));
+        }
+        public bool TryGetCollectableTypeToDrop(CollectableType collectableType, bool dropInstantly = false)
+        {
+            var availableCount = Collected.Items.Where(c => c.Key == collectableType).Select(c => c.Value).Sum();
+
+            if (dropInstantly)
+                EnqueueForCollection(collectableType, -1);
+
+            return availableCount > 0;
+        }
+
+        public bool TryGetCollectableToDrop(out CollectableType collectableType)
+        {
+            collectableType = default;
+
+            var available = Collected.Items.Where(c => c.Value > 0).Select(c => c.Key).ToArray();
+            if (available.Length > 0)
+            {
+                collectableType = available[Random.Range(0, available.Length)];
+                return true;
+            }
+
+            return false;
+        }
+
 
         public override void FixedUpdateNetwork()
         {
@@ -85,6 +117,7 @@ namespace Assets.Scripts.Views
             
             changeCountOld = Collected.ChangeCount;
         }
+
         private static void CollectedOnChange(Changed<Collector> changed)
         {
             changed.Behaviour.UpdatePlayerInfo(changed.Behaviour.Collected.Items);

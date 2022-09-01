@@ -1,11 +1,11 @@
 ﻿namespace Assets.Scripts.Views
 {
-	using System;
-	using UnityEngine;
-	using Fusion;
-	using Fusion.KCC;
+    using System;
+    using UnityEngine;
+    using Fusion;
+    using Fusion.KCC;
 
-	[RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody))]
 	[OrderBefore(typeof(NetworkAreaOfInterestBehaviour))]
 	public sealed partial class MovingIsland : NetworkAoIKCCProcessor
 	{

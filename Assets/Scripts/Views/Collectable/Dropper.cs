@@ -62,7 +62,7 @@ namespace Assets.Scripts.Views
 
         private IEnumerator DropItems(bool wasHit = false)
         {
-            var dropCount = GetRandomDropCount();
+            var dropCount = collector.GetRandomDropCount();
 
             if (!wasHit && dropCount > 0)
                 dropCount = 1;
@@ -71,7 +71,7 @@ namespace Assets.Scripts.Views
 
             for (var i = 0; i < dropCount; i++)
             {
-                if (!TryGetCollectableToDrop(out CollectableType collectableType))
+                if (!collector.TryGetCollectableToDrop(out CollectableType collectableType))
                     break;
 
                 var dropDirection = wasHit ?
@@ -90,29 +90,6 @@ namespace Assets.Scripts.Views
             }
 
             hitDetected = false;
-        }
-
-        private int GetRandomDropCount()
-        {
-            var totalCount = collector.Collected.Where(c => c.Value > 0).Select(c => c.Value).Sum();
-            if (totalCount == 0)
-                return 0;
-                
-            return Random.Range(1, Mathf.FloorToInt(Mathf.Sqrt(totalCount)));
-        }
-
-        private bool TryGetCollectableToDrop(out CollectableType collectableType)
-        {
-            collectableType = default;
-
-            var available = collector.Collected.Where(c => c.Value > 0).Select(c => c.Key).ToArray();
-            if (available.Length > 0)
-            {
-                collectableType = available[Random.Range(0, available.Length)];
-                return true;
-            }
-
-            return false;
         }
 
         private void InitDroppedCollectable(NetworkRunner runner, NetworkObject obj, Vector3 dropPosition, Vector3 dropDirection)
