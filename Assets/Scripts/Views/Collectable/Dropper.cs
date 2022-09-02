@@ -6,7 +6,6 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +16,7 @@ namespace Assets.Scripts.Views
         [Inject] private readonly PlayerInventoryService playerInventory;
 
 
-        [SerializeField] private GameObject[] collectablePrefabs;
+        [SerializeField] private SerializableDictionary<CollectableType, GameObject> collectablePrefabs;
         [SerializeField] private LayerMask hitLayerMask;
 
         private bool hitDetected;
@@ -83,7 +82,7 @@ namespace Assets.Scripts.Views
 
                 yield return null;
 
-                Runner.Spawn(collectablePrefabs[(int)collectableType], dropPosition, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj, dropPosition, dropDirection));
+                Runner.Spawn(collectablePrefabs[collectableType], dropPosition, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj, dropPosition, dropDirection));
 
                 collector.EnqueueForCollection(collectableType, -1);
                 yield return null;

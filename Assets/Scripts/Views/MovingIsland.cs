@@ -238,10 +238,15 @@
 
         public override void OnInterpolate(KCC kcc, KCCData data)
 		{
-			if (stopMovementIfPlayerSnapped)
-				return;
+            if (stopMovementIfPlayerSnapped)
+            {
+                if (movementPaused.ExpiredOrNotRunning(Runner) || movementPaused.RemainingTicks(Runner) < 3)
+                    InitForPausedTime(restartMovementDelaySeconds);
 
-			if (kcc.IsProxy == false)
+                return;
+            }
+
+            if (kcc.IsProxy == false)
 				return;
 
 			// KCC proxy tries to find itself in the list and lerp between its interpolated space position and predicted platform space position + offset

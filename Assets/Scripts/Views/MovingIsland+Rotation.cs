@@ -23,7 +23,7 @@ namespace Assets.Scripts.Views
 
     public sealed partial class MovingIsland
     {
-        [SerializeField] private Transform visualsTransform;
+        [SerializeField] private NetworkTransform visualsTransform;
         [SerializeField] private CollectableType keyCollectableType = CollectableType.Key0;
 
         public CollectableType KeyCollectableType => keyCollectableType;
@@ -37,7 +37,11 @@ namespace Assets.Scripts.Views
         private bool rotating = false;
         private bool keyHoleRotating = false;
 
-        private bool flipActivated;
+        [Networked]
+        private NetworkBool flipActivated { get; set; }
+
+        private bool prevFlipActivated;
+
         private List<AxisMapped> sidesSequence = new()
         {
             AxisMapped.x,
@@ -49,6 +53,8 @@ namespace Assets.Scripts.Views
         };
 
         private KeyholeView[] keyHoles;
+
+        [SerializeField] private float hopImpulse = 60.0f;
 
         private static void OnNextRotationChange(Changed<MovingIsland> changed)
         {
@@ -109,13 +115,12 @@ namespace Assets.Scripts.Views
                     StartCoroutine(ScheduleNextKeyHolesReady());
                 }
             }
-
         }
 
         private void IsleFlipperKCCOnStay(KCC kcc)
         {
-            if (flipActivated)
-                kcc.AddExternalImpulse(Vector3.up * 1.2f);
+            if (flipActivated && (Runner.IsServer || Runner.IsResimulation))
+                kcc.SetExternalForce(Vector3.up * hopImpulse);
         }
 
         private IEnumerator ScheduleVisualFlip()
@@ -149,6 +154,9 @@ namespace Assets.Scripts.Views
 
         private void EngageFlip(AxisMapped nextRotationAxis)
         {
+            if (!Runner.IsServer)
+                return;
+
             StartCoroutine(Rotate90(nextRotationAxis));
             StartCoroutine(ScheduleNextKeyHolesReady());
         }
@@ -166,18 +174,21 @@ namespace Assets.Scripts.Views
             var totalAngle = 90.0f;
             
             var rotationCurve = AnimationCurve.EaseInOut(0.0f, 0.0f, duration, totalAngle);
-
-            //AnimationUtility.SetKeyRightTangentMode(rotationCurve, 0, AnimationUtility.TangentMode.ClampedAuto);
-            //AnimationUtility.SetKeyLeftTangentMode(rotationCurve, 1, AnimationUtility.TangentMode.ClampedAuto);
+            rotationCurve.keys[0].outTangent = .0f;
+            rotationCurve.keys[0].weightedMode = WeightedMode.Out;
+            rotationCurve.keys[0].outWeight = .2f;
+            rotationCurve.keys[1].inTangent = .5f;
+            rotationCurve.keys[1].weightedMode = WeightedMode.In;
+            rotationCurve.keys[1].inWeight = .2f;
 
             var percent = 0.0f;
             var angle = 0.0f;
             
             while (percent <= duration)
             {
-                percent += Time.deltaTime;
+                percent += Runner.DeltaTime;
                 var delta = rotationCurve.Evaluate(percent) - angle;
-                visualsTransform.RotateAround(visualsTransform.position, axis, delta);
+                visualsTransform.Transform.RotateAround(visualsTransform.Transform.position, axis, delta);
                 angle += delta;
 
                 yield return null;
@@ -185,7 +196,7 @@ namespace Assets.Scripts.Views
             // the remainder
             Debug.Log($"Rotated {angle}");
 
-            visualsTransform.RotateAround(visualsTransform.position, axis, totalAngle - angle);
+            visualsTransform.Transform.RotateAround(visualsTransform.Transform.position, axis, totalAngle - angle);
 
             flipActivated = false;
         }
