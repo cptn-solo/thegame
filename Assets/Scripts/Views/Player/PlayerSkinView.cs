@@ -10,7 +10,7 @@ namespace Assets.Scripts.Views
     {
         [Inject] private readonly PlayerSpecsService playerSpecsService = null;
 
-        [SerializeField] private Renderer bodyRenderer = null;
+        [SerializeField] private SerializableDictionary<Renderer, int> skinRenderers;
 
         [Networked(OnChanged = nameof(PlayerInfoStringChange))]
         public NetworkString<_64> PlayerInfoString { get; set; }
@@ -83,7 +83,11 @@ namespace Assets.Scripts.Views
                 Object.Id, playerInfo, Object.InputAuthority == Runner.LocalPlayer);
         }
 
-        private void AssignColorToBodyRenderer(Color color) =>
-            bodyRenderer.materials[1].SetColor("_Color", color);
+        private void AssignColorToBodyRenderer(Color color)
+        {
+            foreach (var br in skinRenderers)
+                br.Key.materials[br.Value].SetColor("_Color", color);
+        }
+            
     }
 }
