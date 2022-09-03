@@ -20,19 +20,13 @@ namespace Assets.Scripts
         public override void FixedUpdateNetwork()
         {
             if (Runner.Stage == SimulationStages.Forward &&
+                kcc.IsInFixedUpdate &&
                 transform.position.y < fallFromIslandY)
             {
                 List<PlayerSpawnPoint> spawnPoints = Runner.SimulationUnityScene.GetComponents<PlayerSpawnPoint>();
                 Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].transform;
 
-                transform.position = spawnPoint.position;
-
                 kcc.SetPosition(spawnPoint.position);
-
-                kcc.SetLookRotation(spawnPoint.rotation, true);
-                kcc.SetDynamicVelocity(Vector3.zero);
-                kcc.SetKinematicVelocity(Vector3.zero);
-
             }
         }
     }

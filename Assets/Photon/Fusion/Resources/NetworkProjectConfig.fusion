@@ -46,7 +46,6 @@
         "DefaultPlayers": 10,
         "ReplicationMode": 0,
         "ObjectInterest": true,
-        "SimulationCulling": false,
         "ServerPacketInterval": 1,
         "ClientPacketInterval": 1
     },

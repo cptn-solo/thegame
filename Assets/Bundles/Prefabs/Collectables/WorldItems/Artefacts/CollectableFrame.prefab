@@ -7,13 +7,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1117178859623902687, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: a130d2b84a8c1b244ae999533be38b2c, type: 2}
     - target: {fileID: 1160627986272127395, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
-      value: 1460628245764988624
+      value: 4904157033000933492
       objectReference: {fileID: 0}
     - target: {fileID: 1160627986272127395, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
-      value: -8134123323974813621
+      value: -6947954490933106310
       objectReference: {fileID: 0}
     - target: {fileID: 5915339226451451560, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_RootOrder
@@ -61,11 +65,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6416654292541759145, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: collectableType
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6439110641031758866, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_Name
-      value: CollectableDiamond
+      value: CollectableFrame
       objectReference: {fileID: 0}
     - target: {fileID: 6514375072736587760, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -90,6 +94,6 @@ PrefabInstance:
     - target: {fileID: 8264275471743424186, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: 662e63bc0e18127409e5f5313c3f1866, type: 2}
+      objectReference: {fileID: 4300000, guid: a130d2b84a8c1b244ae999533be38b2c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e37400ca93ab33e48aee39750ee1eec6, type: 3}

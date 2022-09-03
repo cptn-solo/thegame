@@ -12,9 +12,6 @@ namespace Assets.Scripts.UI
         [Inject] private readonly PlayerInventoryService playerInventory = default;
 
         [SerializeField] private new MeshRenderer renderer;
-
-        [SerializeField] private Material materialOff;
-        [SerializeField] private Material materialOn;
         
         private CollectableType collectableType;
 
@@ -27,7 +24,6 @@ namespace Assets.Scripts.UI
 
         void Start()
         {
-            renderer.material = materialOn;
             playerInventory.OnInventoryChange += PlayerInventory_OnInventoryChange;
             
             ToggleHighlightedState(playerInventory.Collectables[collectableType] > 0);
@@ -41,7 +37,10 @@ namespace Assets.Scripts.UI
 
         public void ToggleHighlightedState(bool toggle)
         {
-            renderer.material = toggle ? materialOn : materialOff;
+            if (toggle)
+                renderer.material.EnableKeyword("_EMISSION");
+            else
+                renderer.material.DisableKeyword("_EMISSION");
         }
         private void OnDestroy()
         {

@@ -6,7 +6,6 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +16,7 @@ namespace Assets.Scripts.Views
         [Inject] private readonly PlayerInventoryService playerInventory;
 
 
-        [SerializeField] private GameObject[] collectablePrefabs;
+        [SerializeField] private SerializableDictionary<CollectableType, GameObject> collectablePrefabs;
         [SerializeField] private LayerMask hitLayerMask;
 
         private bool hitDetected;
@@ -62,7 +61,7 @@ namespace Assets.Scripts.Views
 
         private IEnumerator DropItems(bool wasHit = false)
         {
-            var dropCount = GetRandomDropCount();
+            var dropCount = collector.GetRandomDropCount();
 
             if (!wasHit && dropCount > 0)
                 dropCount = 1;
@@ -71,7 +70,7 @@ namespace Assets.Scripts.Views
 
             for (var i = 0; i < dropCount; i++)
             {
-                if (!TryGetCollectableToDrop(out CollectableType collectableType))
+                if (!collector.TryGetCollectableToDrop(out CollectableType collectableType))
                     break;
 
                 var dropDirection = wasHit ?
@@ -83,36 +82,13 @@ namespace Assets.Scripts.Views
 
                 yield return null;
 
-                Runner.Spawn(collectablePrefabs[(int)collectableType], dropPosition, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj, dropPosition, dropDirection));
+                Runner.Spawn(collectablePrefabs[collectableType], dropPosition, Quaternion.identity, null, (runner, obj) => InitDroppedCollectable(runner, obj, dropPosition, dropDirection));
 
                 collector.EnqueueForCollection(collectableType, -1);
                 yield return null;
             }
 
             hitDetected = false;
-        }
-
-        private int GetRandomDropCount()
-        {
-            var totalCount = collector.Collected.Where(c => c.Value > 0).Select(c => c.Value).Sum();
-            if (totalCount == 0)
-                return 0;
-                
-            return Random.Range(1, Mathf.FloorToInt(Mathf.Sqrt(totalCount)));
-        }
-
-        private bool TryGetCollectableToDrop(out CollectableType collectableType)
-        {
-            collectableType = default;
-
-            var available = collector.Collected.Where(c => c.Value > 0).Select(c => c.Key).ToArray();
-            if (available.Length > 0)
-            {
-                collectableType = available[Random.Range(0, available.Length)];
-                return true;
-            }
-
-            return false;
         }
 
         private void InitDroppedCollectable(NetworkRunner runner, NetworkObject obj, Vector3 dropPosition, Vector3 dropDirection)
