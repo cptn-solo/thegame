@@ -7,5 +7,7 @@ namespace Assets.Scripts.Views
     {
         event UnityAction<string, IModuleView> HatchOpenRequest;
         NetworkBool ModuleReady { get; set; }
+
+        IModuleView PrimaryModule { get; }
     }
 }

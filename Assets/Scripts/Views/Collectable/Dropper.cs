@@ -51,7 +51,7 @@ namespace Assets.Scripts.Views
             if (Runner.IsServer &&
                 spawnTimer.ExpiredOrNotRunning(Runner) &&
                 ((Runner.TryGetInputForPlayer<GameplayInput>(Object.InputAuthority, out var gameplayInput) &&
-                gameplayInput.RMB) || hitDetected))
+                gameplayInput.MMB) || hitDetected))
             {
                 InitSpawnTimer();
 

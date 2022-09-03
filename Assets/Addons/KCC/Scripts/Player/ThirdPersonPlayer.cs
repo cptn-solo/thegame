@@ -209,7 +209,7 @@ namespace Example
 			if (Input.WasActivated(EGameplayInputAction.RMB) == true)
 			{
                 // Right mouse button action
-                KCC.FixedData.Shot1Direction = new Ray(
+                KCC.FixedData.Shot2Direction = new Ray(
 					CameraHandle.transform.position,
 					aimPoint.position - CameraHandle.transform.position)
 					.direction;
