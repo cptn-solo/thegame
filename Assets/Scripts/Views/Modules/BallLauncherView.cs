@@ -48,6 +48,7 @@ namespace Assets.Scripts.Views
             beam.SetParent(transform);
             beam.localPosition = Vector3.zero;
             beam.localRotation = Quaternion.identity;
+            beamCollisionsBuffer.Clear();
 
             bullet.gameObject.SetActive(false);
             rb.velocity = Vector3.zero;
@@ -64,53 +65,62 @@ namespace Assets.Scripts.Views
 
             if (bullet.parent == null)
             {
-                if (!shot)
-                {
-                    rb.AddForce(direction * speed, ForceMode.VelocityChange);
-                    shot = true;
-                }
-                rb.AddForce(direction * 80, ForceMode.Acceleration);
+                ProcessShellShot();
             }
 
             if (beam.parent == null)
-            {
-                Vector3 dir = default;
-                if (!shot)
-                {
-                    dir = Vector3.RotateTowards(
-                        beam.forward,
-                        direction, speed, 0.0f);
-                        beam.rotation = Quaternion.LookRotation(dir);
-                    beam.position += beam.forward * beamDistance;
-                    shot = true;
-                    beamShotPosition = beam.position;
-                }
-                dir = (transform.position - beam.position).normalized;
-                beam.rotation = Quaternion.LookRotation(dir);
-                var distance = Vector3.Distance(beam.position, transform.position);
-                if (distance < 5.0f)
-                    beam.position = beamShotPosition;
-                
-                beam.position += beamSpeed * Runner.DeltaTime * beam.forward;                
-                beam.RotateAround(beam.position, beam.forward, distance);
-                var collectableHits = Runner.GetPhysicsScene().OverlapSphere(
-                    beam.position, 2.0f, beamCollisionsBuffer, beamMask, QueryTriggerInteraction.UseGlobal);
-                if (collectableHits > 0)
-                {
-                    for (int i = 0; i < collectableHits; i++)
-                    {
-                        var collectableRb = beamCollisionsBuffer[i].gameObject.GetComponent<Rigidbody>();
-                        collectableRb.AddForce(
-                            (transform.root.position - collectableRb.position).normalized * beamForceSpeed, 
-                            ForceMode.VelocityChange);
-                    }
-
-                    beamCollisionsBuffer.Clear();
-                }
-            }
+                ProcessBeamShot();
 
             //bullet.position += Runner.DeltaTime * speed * direction;
 
+        }
+
+        private void ProcessBeamShot()
+        {
+            Vector3 dir = default;
+            if (!shot)
+            {
+                dir = Vector3.RotateTowards(beam.forward, direction, speed, 0.0f);
+                beam.SetPositionAndRotation(beam.forward * beamDistance, Quaternion.LookRotation(dir));
+                shot = true;
+                beamShotPosition = beam.position;
+            }
+            dir = (transform.position - beam.position).normalized;
+            beam.rotation = Quaternion.LookRotation(dir);
+            
+            var distance = Vector3.Distance(beam.position, transform.position);
+            
+            if (distance < 5.0f)
+                beam.position = beamShotPosition;
+
+            beam.position += beamSpeed * Runner.DeltaTime * beam.forward;
+            beam.RotateAround(beam.position, beam.forward, distance);
+            
+            var collectableHits = Runner.GetPhysicsScene().OverlapSphere(
+                beam.position, 2.0f, beamCollisionsBuffer, beamMask, QueryTriggerInteraction.UseGlobal);
+            
+            if (collectableHits > 0)
+            {
+                for (int i = 0; i < collectableHits; i++)
+                {
+                    var collectableRb = beamCollisionsBuffer[i].gameObject.GetComponent<Rigidbody>();
+                    collectableRb.AddForce(
+                        (transform.root.position - collectableRb.position).normalized * beamForceSpeed,
+                        ForceMode.VelocityChange);
+                }
+
+                beamCollisionsBuffer.Clear();
+            }
+        }
+
+        private void ProcessShellShot()
+        {
+            if (!shot)
+            {
+                rb.AddForce(direction * speed, ForceMode.VelocityChange);
+                shot = true;
+            }
+            rb.AddForce(direction * 80, ForceMode.Acceleration);
         }
     }
 }
