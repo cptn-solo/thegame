@@ -12,14 +12,14 @@ namespace Assets.Scripts.Views
         protected override float EngageTime => .1f;
 
         [SerializeField] private ParticleSystem[] jets;
-        [SerializeField] private Vector3 impulse = new Vector3(0, 20.0f, 10.0f);
+        [SerializeField] private Vector3 impulse = new Vector3(0, 20.0f, 30.0f);
 
         protected override void EngageVisual(bool engage)
         {
             if (engage)
             {
                 StartCoroutine(nameof(ToggleJetsVisual));
-                kcc.AddExternalVelocity(impulse);
+                kcc.AddExternalVelocity(kcc.FixedData.InputDirection * impulse.z + impulse.y * Vector3.up);
             }
             else
                 foreach (var jet in jets)
