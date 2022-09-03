@@ -64,9 +64,7 @@ namespace Assets.Scripts.Views
                 return;
 
             if (bullet.parent == null)
-            {
                 ProcessShellShot();
-            }
 
             if (beam.parent == null)
                 ProcessBeamShot();
@@ -77,16 +75,15 @@ namespace Assets.Scripts.Views
 
         private void ProcessBeamShot()
         {
-            Vector3 dir = default;
             if (!shot)
             {
-                dir = Vector3.RotateTowards(beam.forward, direction, speed, 0.0f);
-                beam.SetPositionAndRotation(beam.forward * beamDistance, Quaternion.LookRotation(dir));
+                beam.SetPositionAndRotation(
+                    transform.position + direction * beamDistance,
+                    Quaternion.LookRotation((transform.position - beam.position).normalized));
                 shot = true;
                 beamShotPosition = beam.position;
             }
-            dir = (transform.position - beam.position).normalized;
-            beam.rotation = Quaternion.LookRotation(dir);
+            beam.rotation = Quaternion.LookRotation((transform.position - beam.position).normalized);
             
             var distance = Vector3.Distance(beam.position, transform.position);
             
