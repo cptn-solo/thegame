@@ -1,5 +1,6 @@
 ﻿using Example;
 using Fusion;
+using Fusion.KCC;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Views
         protected virtual string AnimationReadyBool { get; } = "ready";
 
         public event UnityAction<string, IModuleView> HatchOpenRequest;
+        public virtual IModuleView PrimaryModule { get; } = null;
 
         [Networked] public NetworkBool ModuleReady { get; set; }
         [Networked] public NetworkBool Engaged { get; set; }
@@ -36,8 +38,21 @@ namespace Assets.Scripts.Views
         private NetworkBool oldReady;
         private NetworkBool oldEngaged;
 
-        private void Awake() => Animator = GetComponent<Animator>();
+        protected KCC kcc;
 
+        private void Start() => OnStart();
+
+        private void Awake() => OnAwake();
+
+        protected virtual void OnAwake()
+        {
+            Animator = GetComponent<Animator>();
+        }
+
+        protected virtual void OnStart()
+        {
+            kcc = GetComponentInParent<KCC>();
+        }
         public override void FixedUpdateNetwork()
         {
             if (Runner.TryGetInputForPlayer<GameplayInput>(Object.InputAuthority, out var input))
@@ -48,7 +63,9 @@ namespace Assets.Scripts.Views
                     InitToggleTimer();
                 }
 
-                if (EngageAction(input) && ModuleReady && engageTimer.ExpiredOrNotRunning(Runner) && !Engaged)
+                if (EngageAction(input) &&
+                    (ModuleReady || (PrimaryModule != null && PrimaryModule.ModuleReady)) &&
+                    engageTimer.ExpiredOrNotRunning(Runner) && !Engaged)
                 {
                     Engaged = true;
                     EngageDir = InputEngageDirection;

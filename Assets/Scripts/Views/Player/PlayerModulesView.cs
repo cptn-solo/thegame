@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Views
@@ -13,12 +14,14 @@ namespace Assets.Scripts.Views
 
         private void Start()
         {            
-            foreach (var module in GetComponentsInChildren<IModuleView>())
+            foreach (var module in GetComponentsInChildren<IModuleView>()
+                .Where(m => m.PrimaryModule == null))
                 module.HatchOpenRequest += OnHatchOpenRequest;
         }
         private void OnDestroy()
         {
-            foreach (var module in GetComponentsInChildren<IModuleView>())
+            foreach (var module in GetComponentsInChildren<IModuleView>()
+                .Where(m => m.PrimaryModule == null))
                 module.HatchOpenRequest -= OnHatchOpenRequest;
         }
 
