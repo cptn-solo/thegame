@@ -45,8 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 3567684731191888807}
-  materialOff: {fileID: 0}
-  materialOn: {fileID: 0}
 --- !u!1001 &3572545176195797091
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 54b7d83ec25ce214a8369457c4d11b8e, type: 2}
+    - target: {fileID: 2134326832264782215, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5910922364643790750, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}
       propertyPath: m_Name
       value: UIKey0
@@ -114,8 +116,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6868311856012931734, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}
+--- !u!1 &3173520526217163236 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2134326832264782215, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}
+  m_PrefabInstance: {fileID: 3572545176195797091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4445914717012006999
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3173520526217163236}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b99ce0d581d4ebd48b1b5277bb75092f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!23 &3567684731191888807 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6417525275925444, guid: 5d6c9185268e403459c4f95c80869dcf, type: 3}

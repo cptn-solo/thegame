@@ -37,10 +37,11 @@ namespace Assets.Scripts.UI
 
         public void ToggleHighlightedState(bool toggle)
         {
-            if (toggle)
-                renderer.material.EnableKeyword("_EMISSION");
-            else
-                renderer.material.DisableKeyword("_EMISSION");
+            foreach (var mat in renderer.materials)
+                if (toggle)
+                    mat.EnableKeyword("_EMISSION");
+                else
+                    mat.DisableKeyword("_EMISSION");
         }
         private void OnDestroy()
         {
