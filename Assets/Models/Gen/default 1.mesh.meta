@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Models/Gen/default 1.mesh.meta
 guid: 95af5020440b36c419b01f066eb213ab
-========
-guid: b22e847b65fb2f346bb0678e208fd2e5
->>>>>>>> main:Assets/Models/Collectables/fixed/artefact2.mesh.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 4300000
