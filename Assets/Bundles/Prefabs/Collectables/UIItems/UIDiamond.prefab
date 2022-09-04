@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65f94b0cd3c37c14cbff950594b3a025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 2849463726202557844}
+  renderer: {fileID: 3978661287955110243}
   materialOff: {fileID: 2100000, guid: 7b4e3de1e1ac3af40852c01774861cdc, type: 2}
   materialOn: {fileID: 2100000, guid: cc87754f6c2c260458df90fadce54364, type: 2}
 --- !u!1001 &9022882134253141062
@@ -130,40 +130,19 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: cc87754f6c2c260458df90fadce54364, type: 2}
+    - target: {fileID: 6922056114842659111, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
---- !u!23 &2849463726202557844 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 6538350724500842962, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
-  m_PrefabInstance: {fileID: 9022882134253141062}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3893913173616900370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5421843673954796884, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
   m_PrefabInstance: {fileID: 9022882134253141062}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4670213204254989169 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4465417250913216311, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
+--- !u!23 &3978661287955110243 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5332468814637032741, guid: cfecadf716a8a8c42834baa0264d823d, type: 3}
   m_PrefabInstance: {fileID: 9022882134253141062}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &8664550579446661584
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4670213204254989169}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b99ce0d581d4ebd48b1b5277bb75092f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

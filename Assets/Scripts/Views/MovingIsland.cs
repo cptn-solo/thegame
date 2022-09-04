@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace Assets.Scripts.Views
+﻿namespace Assets.Scripts.Views
 {
-	using System;
-	using UnityEngine;
-	using Fusion;
-	using Fusion.KCC;
+    using System;
+    using UnityEngine;
+    using Fusion;
+    using Fusion.KCC;
 
-	[RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody))]
 	[OrderBefore(typeof(NetworkAreaOfInterestBehaviour))]
-	public sealed class MovingIsland : NetworkAoIKCCProcessor
+	public sealed partial class MovingIsland : NetworkAoIKCCProcessor
 	{
 		[SerializeField]
 		private EPlatformMode _mode;
@@ -42,6 +39,14 @@ namespace Assets.Scripts.Views
 		private Vector3 _renderPosition;
 		private RawInterpolator _entitiesInterpolator;
 
+        [Networked]
+		private TickTimer movementPaused { get; set; }
+        [SerializeField]
+        private bool stopMovementIfPlayerSnapped = true;
+        private const float restartMovementDelaySeconds = 5.0f;
+
+
+
 		public override int PositionWordOffset => 0;
 
 		public override void Spawned()
@@ -54,14 +59,25 @@ namespace Assets.Scripts.Views
 			_renderPosition = _position;
 			_renderWaypoint = _waypoint;
 			_renderDirection = _direction;
-			_entitiesInterpolator = GetInterpolator(nameof(_entities));
-		}
+			_entitiesInterpolator = GetInterpolator(nameof(_entities));			
+        }
 
-		public override void FixedUpdateNetwork()
+        public void InitForPausedTime(float lifeTime)
+        {
+            movementPaused = TickTimer.CreateFromSeconds(Runner, lifeTime);
+        }
+
+
+        public override void FixedUpdateNetwork()
 		{
-			// Calculate next position of the platform.
+			IsleFlipperOnFUN();
 
-			CalculateNextPosition(_waypoint, _direction, _position, Runner.DeltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
+            if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
+                return;
+
+            // Calculate next position of the platform.
+
+            CalculateNextPosition(_waypoint, _direction, _position, Runner.DeltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
 
 			_position += positionDelta;
 			_waypoint = nextWaypoint;
@@ -103,14 +119,17 @@ namespace Assets.Scripts.Views
 			ApplyPositionDelta(positionDelta);
 		}
 
-		public override void Render()
+        public override void Render()
 		{
-			float renderTime = Runner.SimulationTime + Runner.DeltaTime * Runner.Simulation.StateAlpha;
+            if (stopMovementIfPlayerSnapped && LandedPlayersPresent())
+                return;
+
+            float renderTime = Runner.SimulationTime + Runner.DeltaTime * Runner.Simulation.StateAlpha;
 			float deltaTime = renderTime - _renderTime;
 
 			// Calculate next render position of the platform.
 			// We always have to calculate delta against previous render frame to avoid clearing render changes from other sources.
-
+			
 			CalculateNextPosition(_renderWaypoint, _renderDirection, _renderPosition, deltaTime, out int nextWaypoint, out int nextDirection, out Vector3 positionDelta);
 
 			_renderTime = renderTime;
@@ -122,6 +141,11 @@ namespace Assets.Scripts.Views
 			_rigidbody.position = _renderPosition;
 
 			ApplyPositionDelta(positionDelta);
+		}
+
+		private bool LandedPlayersPresent()
+		{
+			return movementPaused.IsRunning && !movementPaused.Expired(Runner);
 		}
 
 		// MonoBehaviour INTERFACE
@@ -138,11 +162,13 @@ namespace Assets.Scripts.Views
 			_rigidbody.useGravity = false;
 			_rigidbody.interpolation = RigidbodyInterpolation.None;
 			_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+			IsleFlipperOnAwake();
 		}
 
-		// NetworkKCCProcessor INTERFACE
+        // NetworkKCCProcessor INTERFACE
 
-		public override float Priority => float.MaxValue;
+        public override float Priority => float.MaxValue;
 
 		public override EKCCStages GetValidStages(KCC kcc, KCCData data)
 		{
@@ -152,6 +178,8 @@ namespace Assets.Scripts.Views
 		public override void SetInputProperties(KCC kcc, KCCData data)
 		{
 			// Prediction correction can produce glitches on platforms with higher velocity when direction flips.
+			if (stopMovementIfPlayerSnapped)
+				return;
 
 			kcc.SuppressFeature(EKCCFeature.PredictionCorrection);
 		}
@@ -160,12 +188,22 @@ namespace Assets.Scripts.Views
 		{
 			// State authority maintains list of KCCs inside snap volume.
 			// These entities are transitioned from interpolated space to locally predicted space (driven by SpaceAlpha).
+			IsleFlipperKCCOnStay(kcc);
 
-			if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
+            if (kcc.IsInFixedUpdate == true && Object.HasStateAuthority == true && _snapVolume.ClosestPoint(data.TargetPosition).AlmostEquals(data.TargetPosition) == true)
 			{
-				// Find the KCC in the list and increase SpaceAlpha if it exists.
 
-				for (int i = 0; i < _entities.Length; ++i)
+                if (stopMovementIfPlayerSnapped)
+                {
+                    if (movementPaused.ExpiredOrNotRunning(Runner) || movementPaused.RemainingTicks(Runner) < 3)
+						InitForPausedTime(restartMovementDelaySeconds);
+
+                    return;
+                }
+
+                // Find the KCC in the list and increase SpaceAlpha if it exists.
+
+                for (int i = 0; i < _entities.Length; ++i)
 				{
 					PlatformEntity entity = _entities.Get(i);
 					if (entity.Id == kcc.Object.Id)
@@ -198,9 +236,17 @@ namespace Assets.Scripts.Views
 			}
 		}
 
-		public override void OnInterpolate(KCC kcc, KCCData data)
+        public override void OnInterpolate(KCC kcc, KCCData data)
 		{
-			if (kcc.IsProxy == false)
+            if (stopMovementIfPlayerSnapped)
+            {
+                if (movementPaused.ExpiredOrNotRunning(Runner) || movementPaused.RemainingTicks(Runner) < 3)
+                    InitForPausedTime(restartMovementDelaySeconds);
+
+                return;
+            }
+
+            if (kcc.IsProxy == false)
 				return;
 
 			// KCC proxy tries to find itself in the list and lerp between its interpolated space position and predicted platform space position + offset

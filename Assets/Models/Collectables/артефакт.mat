@@ -13,7 +13,6 @@ Material:
   - _ALPHABLEND_ON
   - _EMISSION
   - _METALLICGLOSSMAP
-  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
@@ -74,12 +73,12 @@ Material:
     - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SmoothnessTextureChannel: 1
+    - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.16078432, g: 0.098440506, b: 0.07058824, a: 1}
+    - _Color: {r: 0.8018868, g: 0.59511095, b: 0.59511095, a: 1}
+    - _EmissionColor: {r: 3.0745099, g: 1.945098, b: 1.4431373, a: 1}
   m_BuildTextureStacks: []

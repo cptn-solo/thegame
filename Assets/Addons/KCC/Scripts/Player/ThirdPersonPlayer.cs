@@ -13,6 +13,7 @@ namespace Example
 	public sealed class ThirdPersonPlayer : AdvancedPlayer
 	{
 		// PRIVATE MEMBERS
+		[SerializeField] private Transform aimPoint;
 
 		[SerializeField][Tooltip("Visual should always face player move direction.")]
 		private bool _faceMoveDirection;
@@ -199,15 +200,22 @@ namespace Example
 			if (Input.WasActivated(EGameplayInputAction.LMB) == true)
 			{
 				// Left mouse button action
-				KCC.FixedData.ShotDirection = CameraPivot.forward.normalized;
+				KCC.FixedData.Shot1Direction = new Ray(
+					CameraHandle.transform.position,
+                    aimPoint.position - CameraHandle.transform.position)
+					.direction;
 			}
 
 			if (Input.WasActivated(EGameplayInputAction.RMB) == true)
 			{
-				// Right mouse button action
-			}
+                // Right mouse button action
+                KCC.FixedData.Shot2Direction = new Ray(
+					CameraHandle.transform.position,
+					aimPoint.position - CameraHandle.transform.position)
+					.direction;
+            }
 
-			if (Input.WasActivated(EGameplayInputAction.MMB) == true)
+            if (Input.WasActivated(EGameplayInputAction.MMB) == true)
 			{
 				// Middle mouse button action
 			}
