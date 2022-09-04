@@ -1,12 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Models/Collectables/fixed/artefact1.mesh.meta
-guid: 662e63bc0e18127409e5f5313c3f1866
-========
-guid: 6c404d3555ff25f419e70e4bca1fd31f
->>>>>>>> main:Assets/Models/Collectables/fixed/artefact3.mesh.meta
+guid: 9a345867263db4668a3bdcee65508070
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 4300000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
