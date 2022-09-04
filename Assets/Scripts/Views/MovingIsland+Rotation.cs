@@ -119,8 +119,10 @@ namespace Assets.Scripts.Views
 
         private void IsleFlipperKCCOnStay(KCC kcc)
         {
-            if (flipActivated && (Runner.IsServer || Runner.IsResimulation))
-                kcc.SetExternalForce(Vector3.up * hopImpulse);
+            if (flipActivated &&
+                (Runner.IsServer || Runner.IsResimulation) 
+                && kcc.FixedData.ExternalImpulse == default)
+                kcc.AddExternalImpulse(Vector3.up * hopImpulse);
         }
 
         private IEnumerator ScheduleVisualFlip()
