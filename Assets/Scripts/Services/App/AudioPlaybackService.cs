@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using Zenject;
 
 namespace Assets.Scripts.Services.App
@@ -6,6 +7,13 @@ namespace Assets.Scripts.Services.App
     public class AudioPlaybackService : MonoBehaviour
     {
         [Inject] private readonly PlayerPreferencesService playerPreferencesService = default;
+
+        private AudioMixerGroup mixerGroup;
+
+        private void Start()
+        {
+            
+        }
 
         public bool SfxToggle
         {
