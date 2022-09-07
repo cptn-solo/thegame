@@ -67,9 +67,6 @@ namespace Assets.Scripts.Views
                 //audioSource.Pause();
             }
 
-
-            Debug.Log($"forward {forward}");
-
         }
     }
 }
