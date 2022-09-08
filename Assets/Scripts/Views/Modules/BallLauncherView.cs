@@ -21,10 +21,13 @@ namespace Assets.Scripts.Views
         private readonly float speed = 35.0f;
         private Collider[] beamCollisionsBuffer;
 
+        private AudioSource audioSource;
+
         private void Awake()
         {
             rb = bullet.gameObject.GetComponent<Rigidbody>();
             beamCollisionsBuffer = new Collider[5];
+            audioSource = GetComponent<AudioSource>();
         }
         public void Launch(Vector3 direction, bool secondary = false)
         {
@@ -82,6 +85,8 @@ namespace Assets.Scripts.Views
                     Quaternion.LookRotation((transform.position - beam.position).normalized));
                 shot = true;
                 beamShotPosition = beam.position;
+                audioSource.pitch = 0.7f;
+                audioSource.PlayOneShot(audioSource.clip);
             }
             beam.rotation = Quaternion.LookRotation((transform.position - beam.position).normalized);
             
@@ -116,6 +121,8 @@ namespace Assets.Scripts.Views
             {
                 rb.AddForce(direction * speed, ForceMode.VelocityChange);
                 shot = true;
+                audioSource.pitch = 1.2f;
+                audioSource.PlayOneShot(audioSource.clip);
             }
             rb.AddForce(direction * 80, ForceMode.Acceleration);
         }

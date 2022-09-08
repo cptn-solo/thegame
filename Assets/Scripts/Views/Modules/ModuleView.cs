@@ -38,6 +38,8 @@ namespace Assets.Scripts.Views
         private NetworkBool oldReady;
         private NetworkBool oldEngaged;
 
+        private AudioSource[] audioSource;
+
         protected KCC kcc;
 
         private void Start() => OnStart();
@@ -52,6 +54,7 @@ namespace Assets.Scripts.Views
         protected virtual void OnStart()
         {
             kcc = GetComponentInParent<KCC>();
+            audioSource = GetComponentsInParent<AudioSource>();
         }
         public override void FixedUpdateNetwork()
         {
@@ -95,6 +98,12 @@ namespace Assets.Scripts.Views
             HatchOpenRequest?.Invoke(HatchName, this);
             if (AnimationReadyBool != null)
                 Animator?.SetBool(AnimationReadyBool, state);
+
+            if (audioSource != null && audioSource.Length == 2)
+            {
+                var current = audioSource[state ? 0 : 1];
+                current.PlayOneShot(current.clip);
+            }
         }
 
         protected virtual void EngageVisual(bool engage)
